@@ -213,7 +213,7 @@
                 self.loadingCell = nil;
                 UILabel *view1 = (UILabel *)[cell viewWithTag:1];
                 MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:cell animated:YES];
-                hud.frame = CGRectInset(hud.frame, view1.frame.origin.x + view1.frame.size.width + 8, 0);
+                //hud.frame = CGRectInset(hud.frame, view1.frame.origin.x + view1.frame.size.width + 8, 0);
             } 
             [self.news getNextNews];
         }

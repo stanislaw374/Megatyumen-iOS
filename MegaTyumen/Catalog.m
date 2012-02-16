@@ -28,7 +28,12 @@
 @property (nonatomic, strong) NSString *tmp_name;
 @property (nonatomic, strong) CatalogCategory *requeiredCategory;
 @property (nonatomic, unsafe_unretained) CLLocation *userLocation;
+- (void)didGetCatalogByDistance:(ASIHTTPRequest *)request;
+- (void)didGetTypes:(ASIHTTPRequest *)request;
+- (void)didGetCuisines:(ASIHTTPRequest *)request;
 - (void)loadLocal;
+- (void)didGetCatalogByCategory:(ASIHTTPRequest *)request;
+- (void)didGetCatalogByName:(ASIHTTPRequest *)request;
 @end
 
 @implementation Catalog
@@ -172,9 +177,12 @@
 }
 
 - (void)getCatalogByDistanceWithLat:(double)lat andLng:(double)lng {
-    lng = 57.07288; lat = 65.33060;
+    //lng = 57.07288; lat = 65.33060;
     NSString *lat_ = [NSString stringWithFormat:@"%lf", lat];
     NSString *lng_ = [NSString stringWithFormat:@"%lf", lng];
+    NSString *tmp = lat_;
+    lat_ = lng_;
+    lng_ = tmp;
     NSString *token = [Authorization sharedAuthorization].token;
     
     NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_by_distance", @"request", lat_, @"lat", lng_, @"lng", token, @"token", nil];
@@ -186,7 +194,7 @@
     request.didFinishSelector = @selector(didGetCatalogByDistance:);
     [request startAsynchronous];
     
-    NSLog(@"getCatalogByDistance: %@", requestDict.description);
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), requestDict.description);
 }
 
 - (void)didGetCatalogByDistance:(ASIHTTPRequest *)request {
@@ -199,7 +207,7 @@
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
     NSArray *catalog = [jsonParser objectWithString:[request responseString]];
     
-    NSLog(@"%@: %@", NSStringFromSelector(_cmd), catalog.description);
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), catalog.description);
     
     //UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Ошибка" message:[request responseString] delegate:self cancelButtonTitle:@"Okay" otherButtonTitles: nil];
     //[alertView show];
@@ -548,6 +556,7 @@
 }
 
 #warning Заглушка
+
 - (void)didGetCatalogByCategory:(ASIHTTPRequest *)request {
     
     self.sections = 1;
@@ -590,6 +599,7 @@
 }
 
 #warning Заглушка
+
 - (void)getCatalogByName:(NSString *)name andLat:(double)lat andLng:(double)lng {
     self.tmp_name = name;
     
@@ -618,94 +628,6 @@
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_CATALOG_BY_NAME object:nil];
 }
-
-+ (int)feedbacksCount {
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"catalog" ofType:@"txt"];
-    NSString *catalogStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-    
-    NSArray *items = [jsonParser objectWithString:catalogStr];
-    
-    int result = 0;
-    for (NSDictionary *item in items) {        
-        // Отзывы
-        NSArray *feedbacks = [item objectForKey:@"feedbacks"];
-        result += feedbacks.count;
-    }
-    return result;
-}
-
-//+ (NSArray *)getAllFeedbacks {
-//    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"catalog" ofType:@"txt"];
-//    NSString *catalogStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-//    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-//    
-//    NSArray *items = [jsonParser objectWithString:catalogStr];
-//    
-//    NSMutableArray *result = [[NSMutableArray alloc] init];
-//    for (NSDictionary *item in items) {
-//        // Отзывы
-//        NSArray *feedbacks = [item objectForKey:@"feedbacks"];
-//        for (NSDictionary *feedback in feedbacks) {
-//            Feedback *feedbackObj = [[Feedback alloc] init];
-//            NSString *image = [feedback objectForKey:@"image"];
-//            if (!image) image = @"";
-//            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
-//            feedbackObj.imageUrl = imageUrl;
-//            feedbackObj.user = [feedback objectForKey:@"user"];
-//            feedbackObj.to = [item objectForKey:@"name"];
-//            feedbackObj.text = [feedback objectForKey:@"text"];
-//            feedbackObj.attitude = [[feedback objectForKey:@"attitude"] intValue];
-//            feedbackObj.date = [NSDate dateWithTimeIntervalSince1970:[[feedback objectForKey:@"date"] intValue]];
-//
-//            [result addObject:feedbackObj];
-//        }
-//    }
-//    return result;
-//}
-
-+ (int)eventsCount {
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"catalog" ofType:@"txt"];
-    NSString *catalogStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-    
-    NSArray *items = [jsonParser objectWithString:catalogStr];
-    
-    int result = 0;
-    for (NSDictionary *item in items) {        
-        // Отзывы
-        NSArray *events = [item objectForKey:@"events"];
-        result += events.count;
-    }
-    return result;
-}
-
-//+ (NSArray *)getAllEvents {
-//    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"catalog" ofType:@"txt"];
-//    NSString *catalogStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-//    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-//    
-//    NSArray *items = [jsonParser objectWithString:catalogStr];
-//    
-//    NSMutableArray *result = [[NSMutableArray alloc] init];
-//    for (NSDictionary *item in items) {                
-//        // События
-//        NSArray *events = [item objectForKey:@"events"];
-//        for (NSDictionary *event in events) {
-//            Event *eventObj = [[Event alloc] init];
-//            NSString *image = [event objectForKey:@"image"];
-//            if (!image) image = @"";
-//            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
-//            eventObj.imageUrl = imageUrl;
-//            eventObj.user = [event objectForKey:@"user"];
-//            eventObj.text = [[[[event objectForKey:@"text"] stringByStrippingHTML] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@"\t" withString:@""];
-//            eventObj.date = [NSDate dateWithTimeIntervalSince1970:[[event objectForKey:@"date"] intValue]];
-//
-//            [result addObject:eventObj];
-//        }
-//    }
-//    return result;
-//}
 
 @end
 

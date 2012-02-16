@@ -89,6 +89,7 @@
 								</object>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">1</int>
+								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 								<float key="IBUIMinimumFontSize">10</float>
 								<object class="IBUIFontDescription" key="IBUIFontDescription">
 									<int key="type">2</int>
@@ -106,7 +107,6 @@
 								<string key="NSFrame">{{92, 73}, {191, 21}}</string>
 								<reference key="NSSuperview" ref="904617555"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:328</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -145,6 +145,9 @@
 								<bool key="IBUIMultipleTouchEnabled">YES</bool>
 								<int key="IBUITag">3</int>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<bool key="IBUIScrollEnabled">NO</bool>
+								<bool key="IBUIShowsHorizontalScrollIndicator">NO</bool>
+								<bool key="IBUIShowsVerticalScrollIndicator">NO</bool>
 								<bool key="IBUIEditable">NO</bool>
 								<string key="IBUIText">Lorem ipsum dolor </string>
 								<object class="IBUITextInputTraits" key="IBUITextInputTraits">
@@ -162,7 +165,7 @@
 								</object>
 							</object>
 						</array>
-						<string key="NSFrameSize">{320, 103}</string>
+						<string key="NSFrameSize">{287, 103}</string>
 						<reference key="NSSuperview" ref="435047421"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="665713069"/>
@@ -181,6 +184,7 @@
 				<reference key="NSNextKeyView" ref="904617555"/>
 				<string key="NSReuseIdentifierKey">_NS:384</string>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+				<int key="IBUIAccessoryType">2</int>
 				<reference key="IBUIContentView" ref="904617555"/>
 				<string key="IBUIReuseIdentifier">EventCell</string>
 			</object>

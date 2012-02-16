@@ -31,30 +31,20 @@
 
 // Запрос заведений по расстоянию
 - (void)getCatalogByDistanceWithLat:(double)lat andLng:(double)lng;  
-- (void)didGetCatalogByDistance:(ASIHTTPRequest *)request;
 
 // Запрос типов заведений
 - (void)getTypes; 
-- (void)didGetTypes:(ASIHTTPRequest *)request;
 
 // Запрос типов кухонь
 - (void)getCuisines; 
-- (void)didGetCuisines:(ASIHTTPRequest *)request;
 
 // Запрос чеков
 - (void)getBills; 
 
 // Запрос каталога по категории
 - (void)getCatalogByCategory:(CatalogCategory *)category andLat:(double)lat andLng:(double)lng;
-- (void)didGetCatalogByCategory:(ASIHTTPRequest *)request;
 
 // Запрос каталога по названию заведения
 - (void)getCatalogByName:(NSString *)name andLat:(double)lat andLng:(double)lng;
-- (void)didGetCatalogByName:(ASIHTTPRequest *)request;
-
-+ (int)feedbacksCount;
-+ (int)eventsCount;
-+ (NSArray *)getAllFeedbacks;
-+ (NSArray *)getAllEvents;
 
 @end

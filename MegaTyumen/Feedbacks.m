@@ -68,7 +68,8 @@
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
     
-    int result = [[dict objectForKey:@"response"] boolValue];
+    BOOL result = [[dict objectForKey:@"response"] boolValue];
+    
     if (result) {
         NSArray *comments = [dict objectForKey:@"comments"];
         
@@ -77,14 +78,17 @@
             f.text = [comment objectForKey:@"text"];
             id attitudeObj = [comment objectForKey:@"attitude"];
             f.attitude = (!attitudeObj || [attitudeObj isKindOfClass:[NSNull class]]) ? 0 : [attitudeObj intValue];
-            f.date = [comment objectForKey:@"date"];
+            NSDateFormatter *df = [[NSDateFormatter alloc] init];
+            [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            f.date = [df dateFromString:[comment objectForKey:@"date"]];
             id nameObj = [comment objectForKey:@"name"];
             f.name = (!nameObj || [nameObj isKindOfClass:[NSNull class]]) ? @"" : nameObj;
             
             [self.items addObject:f];
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
+    
 }
 
 @end

@@ -14,9 +14,8 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UITableView *tableView;
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnCheckin;
 @property (strong, nonatomic) UITableViewCell *eventCell;
+@property (strong, nonatomic) IBOutlet UITableViewCell *loadingCell;
 
 - (IBAction)onCheckinButtonClick;
-
-- (void)getEvents;
 
 @end

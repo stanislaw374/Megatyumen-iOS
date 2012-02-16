@@ -19,24 +19,28 @@
 #import "UIImage+Thumbnail.h"
 
 @interface EventsView()
-//@property (nonatomic, strong) AuthorizationView *authorizationView;
 @property (nonatomic, strong) CheckinCatalogView *checkinView;
 @property (nonatomic, strong) Events *events;
 @property (nonatomic, strong) MainMenu *mainMenu;
 @property (nonatomic, strong) MBProgressHUD *hud;
+@property (nonatomic) int offset;
+@property (nonatomic) BOOL isLoading;
 - (void)didPassAuthorization:(NSNotification *)notification;
 - (void)didGetEvents:(NSNotification *)notification;
+- (void)getEvents;
 @end
 
 @implementation EventsView
 @synthesize tableView;
 @synthesize btnCheckin;
-//@synthesize authorizationView = _authorizationView;
 @synthesize checkinView = _checkinView;
 @synthesize eventCell = _eventCell;
+@synthesize loadingCell = _loadingCell;
 @synthesize events = _events;
 @synthesize mainMenu = _mainMenu;
 @synthesize hud = _hud;
+@synthesize offset = _offset;
+@synthesize isLoading = _isLoading;
 
 - (CheckinCatalogView *)checkinView {
     if (!_checkinView) {
@@ -51,8 +55,7 @@
     if (self) {
         // Custom initialization
         self.title = @"Новости компаний";
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetEvents:) name:kNOTIFICATION_DID_GET_EVENTS object:nil];
+        
     }
     return self;
 }
@@ -71,6 +74,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetEvents:) name:kNOTIFICATION_DID_GET_EVENTS object:nil];
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addMainButton];
     [self.mainMenu addAuthorizeButton];
@@ -78,18 +83,14 @@
     self.events = [[Events alloc] init];
     self.tableView.rowHeight = 104;
     
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        [self.events getItems]; 
-//    });
+    //[self.events getItems:self.offset];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];    
-    
-    //[self performSelectorInBackground:@selector(getEvents) withObject:nil];
-}
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];    
+//    
+//    //[self performSelectorInBackground:@selector(getEvents) withObject:nil];
+//}
 
 - (void)viewDidUnload
 {
@@ -97,6 +98,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     [self setTableView:nil];
     [self setBtnCheckin:nil];
+    [self setLoadingCell:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -124,20 +126,22 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
-//-(void)onAuthorizeButtonClick {
-//    if (!self.authorizationView) {
-//        self.authorizationView = [[AuthorizationView alloc] init];
-//    }
-//    [self.navigationController pushViewController:self.authorizationView animated:YES];
-//}
-
 - (void)didPassAuthorization:(NSNotification *)notification {
     self.navigationItem.rightBarButtonItem = nil;
 }
 
 - (void)didGetEvents:(NSNotification *)notification {
+    self.isLoading = NO;
     [self.tableView reloadData];
     [self.hud hide:YES];
+}
+
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    Event *event = [self.events.items objectAtIndex:indexPath.row];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:event.title message:event.announce delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alert show];
 }
 
 #pragma mark - UITableViewDataSource
@@ -175,43 +179,52 @@
 //}
 
 - (int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.events.items.count;
+    return (!self.events.isLoaded) ? 1 : self.events.items.count + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *kEventCell = @"EventCell";
+    static NSString *kLoadingCell = @"LoadingCell";
     
     UITableViewCell *cell;
-    cell = [tableView_ dequeueReusableCellWithIdentifier:kEventCell];
-    if (!cell) {
-        [[NSBundle mainBundle] loadNibNamed:kEventCell owner:self options:nil];
-        cell = self.eventCell;
-        self.eventCell = nil;
+    if ((!self.events.isLoaded && !self.isLoading) || indexPath.row == self.events.items.count) {
+        cell = [tableView_ dequeueReusableCellWithIdentifier:kLoadingCell];
+        [[NSBundle mainBundle] loadNibNamed:kLoadingCell owner:self options:nil];
+        cell = self.loadingCell;
+        self.loadingCell = nil;
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:cell animated:YES];
+        UILabel *lbl = (UILabel *)[cell viewWithTag:1];
+        //hud.frame = CGRectInset(hud.frame, lbl.frame.origin.x - lbl.frame.size.width - 8, 0);
+        CGRect frame = hud.frame;
+        frame.origin.x = lbl.frame.origin.x - hud.frame.size.width - 8; 
+        hud.frame = frame;
+        //[hud setNeedsDisplay];
+        self.isLoading = YES;
+        [self.events getItems:++self.offset];
     }
-    Event *item = [self.events.items objectAtIndex:indexPath.row];
-    UIImageView *view1 = (UIImageView *)[cell viewWithTag:1];
-    UILabel *view2 = (UILabel *)[cell viewWithTag:2];
-    UITextView *view3 = (UITextView *)[cell viewWithTag:3];
-    UILabel *view4 = (UILabel *)[cell viewWithTag:4];
-    
-    [view1 setImageWithURL:item.imageUrl placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
-//    view1.image = [Constants placeholderImage];
-//    if (item.imageUrl.path) {
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//            UIImage *image = [[UIImage imageWithData:[NSData dataWithContentsOfURL:item.imageUrl]] thumbnailByScalingProportionallyAndCroppingToSize:view1.frame.size];
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                view1.image = image;
-//            });        
-//        });    
-//    }
-    
-//    view2.text = item.user;
-//    view3.text = item.text;
-    //[view3 sizeToFit];
-    
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    df.dateFormat = @"dd MMMM MM:ss";
-    view4.text = [df stringFromDate:item.date];
+    else {
+        cell = [tableView_ dequeueReusableCellWithIdentifier:kEventCell];
+        if (!cell) {
+            [[NSBundle mainBundle] loadNibNamed:kEventCell owner:self options:nil];
+            cell = self.eventCell;
+            self.eventCell = nil;
+        }
+        Event *item = [self.events.items objectAtIndex:indexPath.row];
+        UIImageView *view1 = (UIImageView *)[cell viewWithTag:1];
+        UILabel *view2 = (UILabel *)[cell viewWithTag:2];
+        UITextView *view3 = (UITextView *)[cell viewWithTag:3];
+        UILabel *view4 = (UILabel *)[cell viewWithTag:4];
+        
+        [view1 setImageWithURL:item.imageUrl placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
+        view2.text = item.companyName;
+        //view3.text = item.title;
+        view3.text = item.announce;
+
+        NSDateFormatter *df = [[NSDateFormatter alloc] init];
+        df.dateFormat = @"dd MMMM hh:mm";
+        view4.text = [df stringFromDate:item.date];
+    }
     
     return cell;
 }

@@ -330,7 +330,7 @@
 		861D4EC114A3432E005D8ADA /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		86237618149EDE5D00AD084B /* catalog_feedbackButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = catalog_feedbackButton.png; sourceTree = "<group>"; };
 		86237619149EDE5D00AD084B /* catalog_feedbackButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "catalog_feedbackButton@2x.png"; sourceTree = "<group>"; };
-		8623761D149EF36200AD084B /* EventCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EventCell.xib; path = MegaTyumen/EventCell.xib; sourceTree = "<group>"; };
+		8623761D149EF36200AD084B /* EventCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EventCell.xib; path = ../MegaTyumen/EventCell.xib; sourceTree = "<group>"; };
 		862989E71496A94400108CD3 /* CheckinView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckinView.h; path = MegaTyumen/CheckinView.h; sourceTree = "<group>"; };
 		862989E81496A94400108CD3 /* CheckinView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckinView.m; path = MegaTyumen/CheckinView.m; sourceTree = "<group>"; };
 		862989E91496A94400108CD3 /* CheckinView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CheckinView.xib; path = MegaTyumen/CheckinView.xib; sourceTree = "<group>"; };
@@ -886,13 +886,13 @@
 		865BF8AB147C26940001002F /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				86F2FF1514DB528F00229870 /* Загрузчик фотографий O_O) */,
+				86F2FF1514DB528F00229870 /* Загрузчик фотографий O_O */,
 				86C91EB8148BAF6C0078164D /* Авторизация */,
 				86C91EB9148BAF7D0078164D /* Лента новостей */,
 				86C91EC2148BD7090078164D /* Каталог */,
 				866EDA03149F17A400EE77C6 /* Отзывы */,
-				866ED9FF149F11C500EE77C6 /* Новости компаний */,
 				866EDA04149F17AB00EE77C6 /* Анонсы вечеринок */,
+				866ED9FF149F11C500EE77C6 /* Новости компаний */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -963,7 +963,6 @@
 				866BAFCA149E3C9C004E35ED /* CatalogItemView.m */,
 				866BAFCB149E3C9C004E35ED /* CatalogItemView.xib */,
 				86EA8462149E69A000008F5D /* MenuCell.xib */,
-				8623761D149EF36200AD084B /* EventCell.xib */,
 			);
 			name = "Карточка заведения";
 			sourceTree = "<group>";
@@ -971,6 +970,7 @@
 		866C6E0714D832B80025DB64 /* XIBs */ = {
 			isa = PBXGroup;
 			children = (
+				8623761D149EF36200AD084B /* EventCell.xib */,
 				86F6AF681475CAB000B574ED /* DemoScreenView.xib */,
 				86F6AF6E1475D1A700B574ED /* MainView.xib */,
 				86F6F5861475AF8B00DDE2E8 /* AuthorizationView.xib */,
@@ -1061,14 +1061,14 @@
 			name = "Карта";
 			sourceTree = "<group>";
 		};
-		866ED9F9149F112300EE77C6 /* Лента событий */ = {
+		866ED9F9149F112300EE77C6 /* Новости компаний */ = {
 			isa = PBXGroup;
 			children = (
 				866ED9FA149F11BF00EE77C6 /* EventsView.h */,
 				866ED9FB149F11BF00EE77C6 /* EventsView.m */,
 				866ED9FC149F11BF00EE77C6 /* EventsView.xib */,
 			);
-			name = "Лента событий";
+			name = "Новости компаний";
 			sourceTree = "<group>";
 		};
 		866ED9FF149F11C500EE77C6 /* Новости компаний */ = {
@@ -1224,7 +1224,7 @@
 				86C91EBA148BB8610078164D /* Отмечалка */,
 				86298A041496BA4E00108CD3 /* Каталог */,
 				866EDA0F149F20B800EE77C6 /* Отзывы */,
-				866ED9F9149F112300EE77C6 /* Лента событий */,
+				866ED9F9149F112300EE77C6 /* Новости компаний */,
 				866EDA0E149F20B500EE77C6 /* Анонсы вечеринок */,
 				866ED9E3149F030700EE77C6 /* Карта */,
 				868F803714A7CDDF0007288E /* Просмотр фото */,
@@ -1361,13 +1361,13 @@
 			name = "Custom Badge";
 			sourceTree = "<group>";
 		};
-		86F2FF1514DB528F00229870 /* Загрузчик фотографий O_O) */ = {
+		86F2FF1514DB528F00229870 /* Загрузчик фотографий O_O */ = {
 			isa = PBXGroup;
 			children = (
 				869A5C3614840FB900C004F3 /* PhotoDownloader.h */,
 				869A5C3714840FB900C004F3 /* PhotoDownloader.m */,
 			);
-			name = "Загрузчик фотографий O_O)";
+			name = "Загрузчик фотографий O_O";
 			sourceTree = "<group>";
 		};
 		86F6AF5B1475C2DA00B574ED /* Пользовательское соглашение */ = {

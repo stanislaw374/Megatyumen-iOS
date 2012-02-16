@@ -206,12 +206,11 @@
         // Дата отзыва
         UILabel *view5 = [[UILabel alloc] initWithFrame:CGRectMake(view4.frame.origin.x, view4.frame.origin.y + view4.frame.size.height + ySpace, view4.frame.size.width, 0)];
         NSDateFormatter *df = [[NSDateFormatter alloc] init];
-        df.dateFormat = @"dd LLLL hh:mm";
+        df.dateFormat = @"dd MMMM hh:mm";
         view5.font = [UIFont systemFontOfSize:14];
         view5.textColor = [UIColor grayColor];
         view5.backgroundColor = [UIColor clearColor];
-        //view5.text = [df stringFromDate:item.date];
-        view5.text = @"O_O";
+        view5.text = [df stringFromDate:item.date];
         [view5 sizeToFit];
         [self.feedbackView addSubview:view5];
         
@@ -235,10 +234,10 @@
     
     [self.hud hide:YES];
     
-//    self.offset += 10;
-//    if (self.offset <= 90) {
-//        [self.feedback getItems:self.offset];
-//    }
+    self.offset += 1;
+    if (self.offset <= 9) {
+        [self.feedback getItems:self.offset];
+    }
 }
 
 #pragma mark - UIAlertViewDelegate

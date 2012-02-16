@@ -58,7 +58,6 @@
 
 - (void)getCatalog {    
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
     [self.catalog getCatalogByDistanceWithLat:self.locationManager.location.coordinate.latitude andLng:self.locationManager.location.coordinate.longitude];
 }
 
@@ -76,7 +75,6 @@
     if (self) {
         // Custom initialization
         self.title = @"Отметиться";
-        self.catalog = [[Catalog alloc] init];
     }
     return self;
 }
@@ -94,21 +92,26 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalog:) name:kNOTIFICATION_DID_GET_CATALOG_BY_DISTANCE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogByName:) name:kNOTIFICATION_DID_GET_CATALOG_BY_NAME object:nil];
+    
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addMainButton];
     
+    self.catalog = [[Catalog alloc] init];
+    
     self.tableView.rowHeight = 104;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalog:) name:kNOTIFICATION_DID_GET_CATALOG_BY_DISTANCE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogByName:) name:kNOTIFICATION_DID_GET_CATALOG_BY_NAME object:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+#pragma warning O_O
+    
     if ([CLLocationManager locationServicesEnabled]) {
         [self.locationManager startUpdatingLocation];
     }
     [super viewWillAppear:animated];
     
-    [self getCatalog];
+    //[self getCatalog];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -174,6 +177,7 @@
 //    if (newLocation.speed == 0) {
 //        [self.tableView reloadData];
 //    }
+    [self getCatalog];
 }
 
 #pragma mark - Table view data source
