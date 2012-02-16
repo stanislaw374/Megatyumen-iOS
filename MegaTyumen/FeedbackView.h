@@ -15,9 +15,7 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnAddFeedback;
 @property (unsafe_unretained, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *borderButton;
-@property (strong, nonatomic) MBProgressHUD *hud;
 
 - (IBAction)onFeedbackButtonClick;
-- (void)getFeedback;
 
 @end

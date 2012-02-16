@@ -9,12 +9,9 @@
 #import "Feedback.h"
 
 @implementation Feedback
-//@synthesize image = _ava;
-@synthesize user = _author;
 @synthesize text = _text;
 @synthesize date = _date;
 @synthesize attitude = _attitude;
-@synthesize imageUrl = _imageUrl;
-@synthesize to = _to;
+@synthesize name = _name;
 
 @end

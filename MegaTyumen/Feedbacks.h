@@ -9,17 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "ASIHTTPRequest.h"
 
-//NSString *const kNOTIFICATION_DID_GET_FEEDBACK = @"megatyumen.didGetFeedback";
 #define kNOTIFICATION_DID_GET_FEEDBACK @"megatyumen.didGetFeedback"
 
 @interface Feedbacks : NSObject <ASIHTTPRequestDelegate>
 
 @property (nonatomic, strong) NSMutableArray *items;
 
-+ (int)count;
-+ (int)readCount;
+//+ (int)readCount;
 
-- (void)getItem:(int)index;
-- (void)getItems;
+- (void)getItems:(int)offset;
 
 @end

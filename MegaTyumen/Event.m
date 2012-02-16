@@ -13,11 +13,12 @@
 @end
 
 @implementation Event
-//@synthesize image = _image;
-@synthesize user = _user;
-@synthesize text = _text;
+@synthesize companyID = _companyID;
+@synthesize companyName = _companyName;
+@synthesize announce = _announce;
 @synthesize date = _date;
 @synthesize downloader = _downloader;
 @synthesize imageUrl = _imageUrl;
+@synthesize title = _title;
 
 @end

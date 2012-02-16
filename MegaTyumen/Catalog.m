@@ -116,44 +116,44 @@
         }
 
         // Отзывы
-        NSArray *feedbacks = [item objectForKey:@"feedbacks"];
-        int i = 0;
-        for (NSDictionary *feedback in feedbacks) {
-            Feedback *feedbackObj = [[Feedback alloc] init];
-            NSString *image = [feedback objectForKey:@"image"];
-            if (!image) image = @"";
-            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
-            feedbackObj.imageUrl = imageUrl;
-            //feedbackObj.image = [UIImage imageNamed:@"placeholder.png"];
-            feedbackObj.user = [feedback objectForKey:@"user"];
-            feedbackObj.to = catalogItem.name;
-            feedbackObj.text = [feedback objectForKey:@"text"];
-            feedbackObj.attitude = [[feedback objectForKey:@"attitude"] intValue];
-            feedbackObj.date = [NSDate dateWithTimeIntervalSince1970:[[feedback objectForKey:@"date"] intValue]];
-            [catalogItem.feedbacks insertObject:feedbackObj atIndex:i];
-            i++;
-        }
+//        NSArray *feedbacks = [item objectForKey:@"feedbacks"];
+//        int i = 0;
+//        for (NSDictionary *feedback in feedbacks) {
+//            Feedback *feedbackObj = [[Feedback alloc] init];
+//            NSString *image = [feedback objectForKey:@"image"];
+//            if (!image) image = @"";
+//            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
+//            feedbackObj.imageUrl = imageUrl;
+//            //feedbackObj.image = [UIImage imageNamed:@"placeholder.png"];
+//            feedbackObj.user = [feedback objectForKey:@"user"];
+//            feedbackObj.to = catalogItem.name;
+//            feedbackObj.text = [feedback objectForKey:@"text"];
+//            feedbackObj.attitude = [[feedback objectForKey:@"attitude"] intValue];
+//            feedbackObj.date = [NSDate dateWithTimeIntervalSince1970:[[feedback objectForKey:@"date"] intValue]];
+//            [catalogItem.feedbacks insertObject:feedbackObj atIndex:i];
+//            i++;
+//        }
         
         // События
-        NSArray *events = [item objectForKey:@"events"];
-        i = 0;
-        for (NSDictionary *event in events) {
-            Event *eventObj = [[Event alloc] init];
-            NSString *image = [event objectForKey:@"image"];
-            if (!image) image = @"";
-            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
-            eventObj.imageUrl = imageUrl;
-            //eventObj.image = [UIImage imageNamed:@"placeholder.png"];
-            eventObj.user = [event objectForKey:@"user"];
-            eventObj.text = [[[[event objectForKey:@"text"] stringByStrippingHTML] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@"\t" withString:@""];
-            eventObj.date = [NSDate dateWithTimeIntervalSince1970:[[event objectForKey:@"date"] intValue]];
-            [catalogItem.events insertObject:eventObj atIndex:i];
-            i++;
-        }
+//        NSArray *events = [item objectForKey:@"events"];
+//        i = 0;
+//        for (NSDictionary *event in events) {
+//            Event *eventObj = [[Event alloc] init];
+//            NSString *image = [event objectForKey:@"image"];
+//            if (!image) image = @"";
+//            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
+//            eventObj.imageUrl = imageUrl;
+//            //eventObj.image = [UIImage imageNamed:@"placeholder.png"];
+//            eventObj.user = [event objectForKey:@"user"];
+//            eventObj.text = [[[[event objectForKey:@"text"] stringByStrippingHTML] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@"\t" withString:@""];
+//            eventObj.date = [NSDate dateWithTimeIntervalSince1970:[[event objectForKey:@"date"] intValue]];
+//            [catalogItem.events insertObject:eventObj atIndex:i];
+//            i++;
+//        }
       
         // Фотки
         NSArray *photosUrls = [item objectForKey:@"photos"];
-        i = 0;
+        int i = 0;
         for (NSString *photoUrl in photosUrls) {
             NSURL *url = [NSURL URLWithString:[kWEBSITE stringByAppendingString:photoUrl]];
             [catalogItem.photosUrls insertObject:url atIndex:i++];
@@ -635,34 +635,34 @@
     return result;
 }
 
-+ (NSArray *)getAllFeedbacks {
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"catalog" ofType:@"txt"];
-    NSString *catalogStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-    
-    NSArray *items = [jsonParser objectWithString:catalogStr];
-    
-    NSMutableArray *result = [[NSMutableArray alloc] init];
-    for (NSDictionary *item in items) {
-        // Отзывы
-        NSArray *feedbacks = [item objectForKey:@"feedbacks"];
-        for (NSDictionary *feedback in feedbacks) {
-            Feedback *feedbackObj = [[Feedback alloc] init];
-            NSString *image = [feedback objectForKey:@"image"];
-            if (!image) image = @"";
-            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
-            feedbackObj.imageUrl = imageUrl;
-            feedbackObj.user = [feedback objectForKey:@"user"];
-            feedbackObj.to = [item objectForKey:@"name"];
-            feedbackObj.text = [feedback objectForKey:@"text"];
-            feedbackObj.attitude = [[feedback objectForKey:@"attitude"] intValue];
-            feedbackObj.date = [NSDate dateWithTimeIntervalSince1970:[[feedback objectForKey:@"date"] intValue]];
-
-            [result addObject:feedbackObj];
-        }
-    }
-    return result;
-}
+//+ (NSArray *)getAllFeedbacks {
+//    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"catalog" ofType:@"txt"];
+//    NSString *catalogStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+//    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+//    
+//    NSArray *items = [jsonParser objectWithString:catalogStr];
+//    
+//    NSMutableArray *result = [[NSMutableArray alloc] init];
+//    for (NSDictionary *item in items) {
+//        // Отзывы
+//        NSArray *feedbacks = [item objectForKey:@"feedbacks"];
+//        for (NSDictionary *feedback in feedbacks) {
+//            Feedback *feedbackObj = [[Feedback alloc] init];
+//            NSString *image = [feedback objectForKey:@"image"];
+//            if (!image) image = @"";
+//            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
+//            feedbackObj.imageUrl = imageUrl;
+//            feedbackObj.user = [feedback objectForKey:@"user"];
+//            feedbackObj.to = [item objectForKey:@"name"];
+//            feedbackObj.text = [feedback objectForKey:@"text"];
+//            feedbackObj.attitude = [[feedback objectForKey:@"attitude"] intValue];
+//            feedbackObj.date = [NSDate dateWithTimeIntervalSince1970:[[feedback objectForKey:@"date"] intValue]];
+//
+//            [result addObject:feedbackObj];
+//        }
+//    }
+//    return result;
+//}
 
 + (int)eventsCount {
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"catalog" ofType:@"txt"];
@@ -680,32 +680,32 @@
     return result;
 }
 
-+ (NSArray *)getAllEvents {
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"catalog" ofType:@"txt"];
-    NSString *catalogStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-    
-    NSArray *items = [jsonParser objectWithString:catalogStr];
-    
-    NSMutableArray *result = [[NSMutableArray alloc] init];
-    for (NSDictionary *item in items) {                
-        // События
-        NSArray *events = [item objectForKey:@"events"];
-        for (NSDictionary *event in events) {
-            Event *eventObj = [[Event alloc] init];
-            NSString *image = [event objectForKey:@"image"];
-            if (!image) image = @"";
-            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
-            eventObj.imageUrl = imageUrl;
-            eventObj.user = [event objectForKey:@"user"];
-            eventObj.text = [[[[event objectForKey:@"text"] stringByStrippingHTML] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@"\t" withString:@""];
-            eventObj.date = [NSDate dateWithTimeIntervalSince1970:[[event objectForKey:@"date"] intValue]];
-
-            [result addObject:eventObj];
-        }
-    }
-    return result;
-}
+//+ (NSArray *)getAllEvents {
+//    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"catalog" ofType:@"txt"];
+//    NSString *catalogStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+//    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+//    
+//    NSArray *items = [jsonParser objectWithString:catalogStr];
+//    
+//    NSMutableArray *result = [[NSMutableArray alloc] init];
+//    for (NSDictionary *item in items) {                
+//        // События
+//        NSArray *events = [item objectForKey:@"events"];
+//        for (NSDictionary *event in events) {
+//            Event *eventObj = [[Event alloc] init];
+//            NSString *image = [event objectForKey:@"image"];
+//            if (!image) image = @"";
+//            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
+//            eventObj.imageUrl = imageUrl;
+//            eventObj.user = [event objectForKey:@"user"];
+//            eventObj.text = [[[[event objectForKey:@"text"] stringByStrippingHTML] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@"\t" withString:@""];
+//            eventObj.date = [NSDate dateWithTimeIntervalSince1970:[[event objectForKey:@"date"] intValue]];
+//
+//            [result addObject:eventObj];
+//        }
+//    }
+//    return result;
+//}
 
 @end
 

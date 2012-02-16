@@ -443,13 +443,13 @@
         
         // Ава
         UIImageView *view1 = [[UIImageView alloc] initWithFrame:CGRectMake(20, height + dy, 32, 32)];
-        [view1 setImageWithURL:item.imageUrl placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:CGSizeMake(32, 32)];
+        //[view1 setImageWithURL:item.imageUrl placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:CGSizeMake(32, 32)];
         [self.feedbackView addSubview:view1];
         
         // Автор отзыва
         UILabel *view2 = [[UILabel alloc] initWithFrame:CGRectMake(view1.frame.origin.x + view1.frame.size.width + 8, view1.frame.origin.y, 280 - view1.frame.size.width, 0)];
         view2.font = [UIFont boldSystemFontOfSize:14];
-        view2.text = item.user;
+        //view2.text = item.user;
         [view2 sizeToFit];
         [self.feedbackView addSubview:view2];
         
@@ -630,8 +630,8 @@
         UILabel *view4 = (UILabel *)[cell viewWithTag:4];
         
         [view1 setImageWithURL:item.imageUrl placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
-        view2.text = item.user;
-        view3.text = item.text;
+        //view2.text = item.user;
+        //view3.text = item.text;
         NSDateFormatter *df = [[NSDateFormatter alloc] init];
         df.dateFormat = @"dd MMMM MM:ss";
         view4.text = [df stringFromDate:item.date];

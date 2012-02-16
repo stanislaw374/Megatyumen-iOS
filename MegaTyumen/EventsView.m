@@ -80,9 +80,9 @@
     
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self.events getItems]; 
-    });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        [self.events getItems]; 
+//    });
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -205,8 +205,8 @@
 //        });    
 //    }
     
-    view2.text = item.user;
-    view3.text = item.text;
+//    view2.text = item.user;
+//    view3.text = item.text;
     //[view3 sizeToFit];
     
     NSDateFormatter *df = [[NSDateFormatter alloc] init];

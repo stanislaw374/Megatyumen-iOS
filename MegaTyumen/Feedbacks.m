@@ -18,16 +18,15 @@
 #define KEY_OFFSET @"offset"
 
 @interface Feedbacks() 
-- (void)didGetItem:(ASIHTTPRequest *)request;
+@property (nonatomic) int loaded;
 - (void)didGetItems:(ASIHTTPRequest *)request;
 @end
 
 @implementation Feedbacks
 @synthesize items = _items;
+@synthesize loaded = _loaded;
 
-//Запрос отзывов
-// {"request":"companies_feedback","offset":"20"}
- 
+#pragma mark - Lazy Instantiation
 
 - (NSMutableArray *)items {
     if (!_items) {
@@ -36,65 +35,56 @@
     return _items;
 }
 
-+ (int)readCount {
-    static NSString *kFeedbacksReadCount = @"FeedbacksReadCount";
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    int read = 0;
-    if ([defaults objectForKey:kFeedbacksReadCount]) {
-        read = [defaults integerForKey:kFeedbacksReadCount];
-    }
-    
-    return read;
-}
+//+ (int)readCount {
+//    static NSString *kFeedbacksReadCount = @"FeedbacksReadCount";
+//    
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    int read = 0;
+//    if ([defaults objectForKey:kFeedbacksReadCount]) {
+//        read = [defaults integerForKey:kFeedbacksReadCount];
+//    }
+//    
+//    return read;
+//}
+//
+//+ (int)count {
+//    return [Catalog feedbacksCount];
+//}
 
-+ (int)count {
-    return [Catalog feedbacksCount];
-}
-
-- (void)getItem:(int)index {
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:VALUE_FEEDBACK, @"request", index, KEY_OFFSET, nil];
+- (void)getItems:(int)index {
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:VALUE_FEEDBACK, KEY_REQUEST, [NSNumber numberWithInt:index], KEY_OFFSET, nil];
                           
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
-    [request setPostValue:[jsonWriter stringWithObject:dict] forKey:@"jsonData"];
+    [request setPostValue:[jsonWriter stringWithObject:dict] forKey:KEY_JSON_DATA];
     request.delegate = self;
-    request.didFinishSelector = @selector(didGetCatalogByName:);
+    request.didFinishSelector = @selector(didGetItems:);
     [request startAsynchronous];
 }
 
-- (void)didGetItem:(ASIHTTPRequest *)request {
+- (void)didGetItems:(ASIHTTPRequest *)request {
     SBJsonParser *parser = [[SBJsonParser alloc] init];
     NSDictionary *dict = [parser objectWithString:request.responseString];
-    BOOL result = [[dict objectForKey:@"response"] boolValue];
+    
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
+    
+    int result = [[dict objectForKey:@"response"] boolValue];
     if (result) {
-        NSDictionary *comment = [dict objectForKey:@"comment"];
-        NSString *text = [comment objectForKey:@"text"];
-        int attitude = [[comment objectForKey:@"attitude"] intValue];
-        NSDate *date = [comment objectForKey:@"date"];
+        NSArray *comments = [dict objectForKey:@"comments"];
+        
+        for (NSDictionary *comment in comments) {
+            Feedback *f = [[Feedback alloc] init];
+            f.text = [comment objectForKey:@"text"];
+            id attitudeObj = [comment objectForKey:@"attitude"];
+            f.attitude = (!attitudeObj || [attitudeObj isKindOfClass:[NSNull class]]) ? 0 : [attitudeObj intValue];
+            f.date = [comment objectForKey:@"date"];
+            id nameObj = [comment objectForKey:@"name"];
+            f.name = (!nameObj || [nameObj isKindOfClass:[NSNull class]]) ? @"" : nameObj;
+            
+            [self.items addObject:f];
+        }
     }
-}
-
-- (void)getItems {
-//    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:VALUE_FEEDBACK, @"request", , nil
-//    
-//    SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
-//    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
-//    [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
-//    request.delegate = self;
-//    request.didFinishSelector = @selector(didGetCatalogByName:);
-//    [request startAsynchronous];
-
-    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    //    [self didGetItems:nil];
-    //});    
-}
-
-- (void)didGetItems:(ASIHTTPRequest *)request {
-    self.items = [NSMutableArray arrayWithArray:[Catalog getAllFeedbacks]];
-    dispatch_async(dispatch_get_main_queue(), ^{
-       [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_FEEDBACK object:nil]; 
-    });
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
 }
 
 @end

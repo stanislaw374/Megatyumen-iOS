@@ -11,10 +11,11 @@
 
 @interface Event : NSObject <SDWebImageDownloaderDelegate>
 
-//@property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) NSURL *imageUrl;
-@property (nonatomic, strong) NSString *user;
-@property (nonatomic, strong) NSString *text;
+@property (nonatomic, copy) NSString *announce;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *companyName;
+@property (nonatomic) int companyID;
 @property (nonatomic, strong) NSDate *date;
 
 @end
