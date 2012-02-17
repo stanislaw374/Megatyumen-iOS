@@ -89,7 +89,7 @@
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
     NSDictionary *dict = [jsonParser objectWithString:[request responseString]];
     
-    //NSLog(@"%@ %@", NSStringFromSelector(_cmd), dict.description);
+    NSLog(@"%@ %@", NSStringFromSelector(_cmd), dict.description);
     
     self.ID = [[dict objectForKey:@"id"] intValue];
     self.title = [dict objectForKey:@"header"];

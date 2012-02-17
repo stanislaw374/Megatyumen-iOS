@@ -132,18 +132,6 @@
     self.othersCount = [[dict objectForKey:@"other_news"] intValue];
     self.count += self.todayCount + self.yesterdayCount + self.threeDaysAgoCount + self.weekAgoCount + self.othersCount;   
     
-    
-    //NSLog(@"%@ : %@", NSStringFromSelector(_cmd), d
-    
-    // Загрузка данных по первым пяти новостям
-    
-    //rows[0] = self.todayCount;
-    //rows[1] = self.yesterdayCount;
-//    rows[2] = self.threeDaysAgoCount;
-//    rows[3] = self.weekAgoCount;
-//    rows[4] = self.othersCount;
-//    row = section = 0;
-    
     self.row = self.section = 0;
     [self.rows replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:self.todayCount]];
     [self.rows replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:self.yesterdayCount]];

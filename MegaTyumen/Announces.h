@@ -9,14 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "ASIHTTPRequest.h"
 
-#define kNOTIFICATION_DID_GET_ANNOUNCES @"megatyumen.didGetAnnounces"
+//#define kNOTIFICATION_DID_GET_ANNOUNCES @"megatyumen.didGetAnnounces"
 
 @interface Announces : NSObject
 
 @property (nonatomic, strong) NSMutableArray *items;
 
-+ (int)count;
-+ (int)readCount;
+//+ (int)count;
+//+ (int)readCount;
 
 - (void)getItems;
 

@@ -9,12 +9,8 @@
 #import "Announce.h"
 
 @implementation Announce
-@synthesize description = _description;
-//@synthesize image = _image;
-@synthesize what = _what;
-@synthesize where = _where;
-@synthesize when = _when;
-@synthesize comments = _comments;
-@synthesize imageUrl = _imageUrl;
+@synthesize title = _title;
+@synthesize text = _text;
+@synthesize image = _image;
 
 @end

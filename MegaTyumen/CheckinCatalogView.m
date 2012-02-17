@@ -34,6 +34,20 @@
 @synthesize isFeedbackMode = _isFeedbackMode;
 @synthesize mainMenu = _mainMenu;
 
+- (CheckinItemView *)chechinItemView {
+    if (!_chechinItemView) {
+        _chechinItemView = [[CheckinItemView alloc] init];
+    }
+    return _chechinItemView;
+}
+
+- (Catalog *)catalog {
+    if (!_catalog) {
+        _catalog = [[Catalog alloc] initWithUserLocation:self.locationManager.location];
+    }
+    return _catalog;
+}
+
 - (CLLocationManager *)locationManager {
     if (!_locationManager) {
         _locationManager = [[CLLocationManager alloc] init];
@@ -98,20 +112,14 @@
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addMainButton];
     
-    self.catalog = [[Catalog alloc] init];
-    
     self.tableView.rowHeight = 104;
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-#pragma warning O_O
-    
     if ([CLLocationManager locationServicesEnabled]) {
         [self.locationManager startUpdatingLocation];
     }
     [super viewWillAppear:animated];
-    
-    //[self getCatalog];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -174,9 +182,6 @@
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     NSLog(@"New location: %.4lf, %.4lf speed = %.4lf", newLocation.coordinate.latitude, newLocation.coordinate.longitude, newLocation.speed);
     [self.locationManager stopUpdatingLocation];
-//    if (newLocation.speed == 0) {
-//        [self.tableView reloadData];
-//    }
     [self getCatalog];
 }
 
@@ -267,9 +272,7 @@
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (!self.chechinItemView) {
-        self.chechinItemView = [[CheckinItemView alloc] init];
-    }
+    
     CatalogItem *catalogItem = [self.catalog.items objectForKey:indexPath];
     self.chechinItemView.currentItem = catalogItem;
     [self.navigationController pushViewController:self.chechinItemView animated:YES];

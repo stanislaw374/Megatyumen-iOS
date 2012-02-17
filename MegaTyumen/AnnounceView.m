@@ -15,6 +15,8 @@
 #import "Announce.h"
 #import "UIImage+Thumbnail.h"
 #import "UIButton+WebCache.h"
+#import <QuartzCore/QuartzCore.h>
+#import "NSString+HTML.h"
 
 @interface AnnounceView()
 @property (nonatomic, strong) Announce *announce;
@@ -31,6 +33,9 @@
 @synthesize lblTitleWhat;
 @synthesize lblTitleWhere;
 @synthesize lblTitleWhen;
+@synthesize txtTitle;
+@synthesize borderButton;
+@synthesize textWebView;
 @synthesize view1;
 @synthesize view2;
 @synthesize lblWhat;
@@ -38,9 +43,6 @@
 @synthesize lblWhen;
 @synthesize btnImage;
 @synthesize lblDescription;
-//@synthesize tvWhat;
-//@synthesize tvWhere;
-//@synthesize tvWhen;
 @synthesize announce = _announce;
 @synthesize isAnimating = _isAnimating;
 
@@ -91,12 +93,12 @@
     [self setLblWhen:nil];
     [self setBtnImage:nil];
     [self setLblDescription:nil];
-//    [self setTvWhat:nil];
-//    [self setTvWhere:nil];
-//    [self setTvWhen:nil];
     [self setLblTitleWhat:nil];
     [self setLblTitleWhere:nil];
     [self setLblTitleWhen:nil];
+    [self setTxtTitle:nil];
+    [self setBorderButton:nil];
+    [self setTextWebView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -154,9 +156,11 @@
     
     CGRect frame = self.view2.frame;
     frame.size.height = self.view.frame.size.height - 20;
-    self.view2.frame = frame;   
+    self.view2.frame = frame;
     
-    [self maximizeText];    
+    //self.textView.frame = frame;
+    
+    //[self maximizeText];    
     
     self.isAnimating = NO;
     [UIView commitAnimations];
@@ -252,28 +256,22 @@
     frame.size.height = self.view1.frame.size.height;
     self.view2.frame = frame;
     
-    [self minimizeText];
+    //[self minimizeText];
     
     [UIView setAnimationDelegate:self];
     [UIView setAnimationDidStopSelector:@selector(turnPage)];
     [UIView commitAnimations];
 }
 
-- (void)initUI {
-    //UIImage *image = [self.announce.image thumbnailByScalingProportionallyAndCroppingToSize:CGSizeMake(300, 157)];
-    //[self.btnImage setImage:image forState:UIControlStateNormal];
-    [self.btnImage setImageWithURL:self.announce.imageUrl];
-    //self.lblWhat.text = [NSString stringWithFormat:@"%@", self.announce.what];
-    //self.lblWhere.text = [NSString stringWithFormat:@"%@", self.announce.where];
-    //self.lblWhen.text = [NSString stringWithFormat:@"%@", self.announce.when];
-    self.lblWhat.text = self.announce.what;
-    self.lblWhere.text = self.announce.where;
-    self.lblWhen.text = self.announce.when;
-    self.lblDescription.text = self.announce.description;
-//    [self.lblWhat sizeToFit];
-//    [self.lblWhere sizeToFit];
-//    [self.lblWhen sizeToFit];
-    [self.lblDescription sizeToFit];
+- (void)initUI {    
+    [self.btnImage setImageWithURL:self.announce.image];
+    self.txtTitle.text = self.announce.title;
+    CGSize size = [self.txtTitle sizeThatFits:self.txtTitle.frame.size];
+    [self.txtTitle sizeToFit];
+    self.borderButton.frame = CGRectMake(self.borderButton.frame.origin.x, self.borderButton.frame.origin.y, size.width, size.height);
+    
+    //self.textView.text = [self.announce.text stringByStrippingHTML];
+    [self.textWebView loadHTMLString:self.announce.text baseURL:nil];
 }
 
 @end

@@ -34,6 +34,7 @@
 #import "AppDelegate.h"
 #import "ASIFormDataRequest.h"
 #import "Constants.h"
+#import "Items.h"
 
 #define KEY_REQUEST @"request"
 #define VALUE_ITEMS_COUNT @"items_count"
@@ -192,9 +193,8 @@
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetEventsCount:) name:@"didGetEvents" object:nil];
 
     //[self performSelectorInBackground:@selector(initBadges) withObject:nil];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self refreshBadges];
-    });
+    
+    [self refreshBadges];
 }
 
 - (void)viewDidUnload
@@ -234,32 +234,19 @@
     return YES;
 }
 
-- (void)refreshBadges {    
-    int newsCount = [News count];// - [News readCount];
-    //int feedbackCount = [Feedbacks count];// - [Feedbacks readCount];
-    //int announcesCount = [Announces count];// - [Announces readCount];
-    //int eventsCount = [Events count];// - [Events readCount];
-    
-    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:VALUE_ITEMS_COUNT, KEY_REQUEST, nil];
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
-    SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
-    [request setPostValue:[jsonWriter stringWithObject:dict] forKey:KEY_JSON_DATA];
-    //request.delegate = self;
-    //request.didFinishSelector = @selector(didRegister:);
-    [request startSynchronous];
-    
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSDictionary *dict2 = [parser objectWithString:[request responseString]];
-    int feedbackCount = [[dict2 objectForKey:KEY_FEEDBACK_COUNT] intValue];
-    int announcesCount = [[dict2 objectForKey:KEY_ANNOUNCES_COUNT] intValue];
-    int eventsCount = [[dict2 objectForKey:KEY_COMPANY_NEWS_COUNT] intValue];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self refreshNewsBadge:newsCount];
-        [self refreshFeedbacksBadge:feedbackCount];
-        [self refreshAnnouncesBadge:announcesCount];
-        [self refreshEventsBadge:eventsCount];
+- (void)refreshBadges {        
+    dispatch_queue_t queue = dispatch_queue_create("Items count queue", NULL);
+    dispatch_async(queue, ^{
+        Items *items = [[Items alloc] init];
+        [items getCount];        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self refreshNewsBadge:items.newsCount];
+            [self refreshFeedbacksBadge:items.feedbackCount];
+            [self refreshAnnouncesBadge:items.announcesCount];
+            [self refreshEventsBadge:items.eventsCount];
+        });
     });
+    dispatch_release(queue);
 }
 
 - (void)refreshFeedbacksBadge:(int)value {

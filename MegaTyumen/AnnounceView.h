@@ -22,12 +22,13 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnImage;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *lblDescription;
 
-//@property (unsafe_unretained, nonatomic) IBOutlet UITextView *tvWhat;
-//@property (unsafe_unretained, nonatomic) IBOutlet UITextView *tvWhere;
-//@property (unsafe_unretained, nonatomic) IBOutlet UITextView *tvWhen;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *lblTitleWhat;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *lblTitleWhere;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *lblTitleWhen;
+
+@property (unsafe_unretained, nonatomic) IBOutlet UITextView *txtTitle;
+@property (unsafe_unretained, nonatomic) IBOutlet UIButton *borderButton;
+@property (unsafe_unretained, nonatomic) IBOutlet UIWebView *textWebView;
 
 - (id)initWithAnnounce:(Announce *)announce;
 - (IBAction)onImageClick;

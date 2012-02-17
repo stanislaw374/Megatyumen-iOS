@@ -23,12 +23,12 @@ static int kNumberOfPages = 0;
 @property (nonatomic, strong) NSMutableArray *viewControllers;
 @property (nonatomic, strong) MBProgressHUD *hud;
 @property (nonatomic, strong) Announces *announces;
-//@property (nonatomic, strong) AuthorizationView *authorizationView;
 @property (nonatomic, strong) CheckinCatalogView *checkinView;
 @property (nonatomic, strong) MainMenu *mainMenu;
-- (void)didGetAnnounces:(NSNotification *)notification;
+- (void)didGetAnnounces;
 - (void)loadScrollViewWithPage:(int)page;
 - (void)didAuthorize:(NSNotification *)notification;
+- (void)getAnnounces;
 @end
 
 @implementation AnnouncesView
@@ -74,24 +74,21 @@ static int kNumberOfPages = 0;
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAuthorize:) name:kNOTIFICATION_DID_AUTHORIZE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetAnnounces:) name:kNOTIFICATION_DID_GET_ANNOUNCES object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetAnnounces:) name:kNOTIFICATION_DID_GET_ANNOUNCES object:nil];
     
     //[MainMenu addMainButtonForViewController:self];
     //[MainMenu addAuthorizeButtonForViewController:self];
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
-    //[self.mainMenu addBackButton];
     [self.mainMenu addMainButton];
     [self.mainMenu addAuthorizeButton];
     
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    self.announces = [[Announces alloc] init];
-    [self.announces getItems];
+    [self getAnnounces];
 }
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_ANNOUNCES object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_ANNOUNCES object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_AUTHORIZE object:nil];
     [self setPageControl:nil];
     [self setBtnCheckin:nil];
@@ -119,7 +116,7 @@ static int kNumberOfPages = 0;
     [self.navigationController pushViewController:self.checkinView animated:YES];
 }
 
-- (void)didGetAnnounces:(NSNotification *)notification {   
+- (void)didGetAnnounces {
     kNumberOfPages = self.announces.items.count;
     
     self.viewControllers = [[NSMutableArray alloc] init];
@@ -233,6 +230,22 @@ static int kNumberOfPages = 0;
     
 	// Set the boolean used when scrolls originate from the UIPageControl. See scrollViewDidScroll: above.
     pageControlUsed = YES;
+}
+
+- (void)getAnnounces {
+    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    self.announces = [[Announces alloc] init];
+    
+    dispatch_queue_t queue = dispatch_queue_create("Announces queue", NULL);
+    dispatch_async(queue, ^{
+        [self.announces getItems];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self didGetAnnounces];
+        });
+    });
+    
+    dispatch_release(queue);
 }
 
 @end

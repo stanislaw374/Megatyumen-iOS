@@ -10,12 +10,8 @@
 
 @interface Announce : NSObject
 
-@property (nonatomic, strong) NSString *description;
-//@property (nonatomic, strong) UIImage *image;
-@property (nonatomic, strong) NSURL *imageUrl;
-@property (nonatomic, strong) NSString *what;
-@property (nonatomic, strong) NSString *where;
-@property (nonatomic, strong) NSString *when;
-@property (nonatomic) int comments;
+@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) NSURL *image;
 
 @end

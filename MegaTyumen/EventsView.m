@@ -195,11 +195,8 @@
         
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:cell animated:YES];
         UILabel *lbl = (UILabel *)[cell viewWithTag:1];
-        //hud.frame = CGRectInset(hud.frame, lbl.frame.origin.x - lbl.frame.size.width - 8, 0);
-        CGRect frame = hud.frame;
-        frame.origin.x = lbl.frame.origin.x - hud.frame.size.width - 8; 
-        hud.frame = frame;
-        //[hud setNeedsDisplay];
+        //CGSize winSize = [UIScreen mainScreen].bounds.size;
+        hud.xOffset = -lbl.frame.size.width / 2;
         self.isLoading = YES;
         [self.events getItems:++self.offset];
     }

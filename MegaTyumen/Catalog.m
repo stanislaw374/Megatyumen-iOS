@@ -27,7 +27,7 @@
 @property (nonatomic) int counter;
 @property (nonatomic, strong) NSString *tmp_name;
 @property (nonatomic, strong) CatalogCategory *requeiredCategory;
-@property (nonatomic, unsafe_unretained) CLLocation *userLocation;
+@property (nonatomic, strong) CLLocation *userLocation;
 - (void)didGetCatalogByDistance:(ASIHTTPRequest *)request;
 - (void)didGetTypes:(ASIHTTPRequest *)request;
 - (void)didGetCuisines:(ASIHTTPRequest *)request;
@@ -68,113 +68,113 @@
         
         self.userLocation = location;
         
-        [self loadLocal];
+        //[self loadLocal];
     }
     return self;
 }
 
-- (void)loadLocal {
-    self.allSections = 1;
-    self.allRows = [[NSMutableArray alloc] init];
-    self.allItems = [[NSMutableDictionary alloc] init];
-    
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"catalog" ofType:@"txt"];
-    NSString *catalogStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-    
-    NSArray *items = [jsonParser objectWithString:catalogStr];
-    
-    int index = 0;
-    for (NSDictionary *item in items) {
-        CatalogItem *catalogItem = [[CatalogItem alloc] init];
-        catalogItem.ID = [[item objectForKey:@"id"] intValue];
-        catalogItem.name = [item objectForKey:@"name"];
-        catalogItem.type = [item objectForKey:@"type"];
-        catalogItem.cuisine = [item objectForKey:@"kitchen"];
-        catalogItem.weekdayHours = [item objectForKey:@"weekdays_hours"];
-        catalogItem.breakHours = [item objectForKey:@"break_hours"];
-        catalogItem.saturdayHours = [item objectForKey:@"saturday_hours"];
-        catalogItem.sundayHours = [item objectForKey:@"sunday_hours"];
-        catalogItem.phone = [item objectForKey:@"phone"];
-        catalogItem.website = [item objectForKey:@"site"];
-        catalogItem.bill = [[item objectForKey:@"check"] intValue];
-        catalogItem.description = [[item objectForKey:@"description"] stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-        catalogItem.checkins = [[item objectForKey:@"checkins"] intValue];
-        catalogItem.address = [item objectForKey:@"address"];
-        CLLocationDegrees lat = [[item objectForKey:@"lat"] doubleValue];
-        CLLocationDegrees lng = [[item objectForKey:@"lng"] doubleValue];
-        catalogItem.location = [[CLLocation alloc] initWithLatitude:lat longitude:lng];
-        catalogItem.distance = [catalogItem.location distanceFromLocation:self.userLocation];
-
-        // Меню заведения
-        NSDictionary *menu = [item objectForKey:@"menu"];
-        if (menu.count) { 
-            MenuItem *menuItem = [[MenuItem alloc] init];
-            NSString *image = [menu objectForKey:@"image"];
-            if (!image) image = @"";
-            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
-            menuItem.imageUrl = imageUrl;
-            //menuItem.image = [UIImage imageNamed:@"placeholder.png"];
-            menuItem.title = [menu objectForKey:@"title"];
-            menuItem.price = [[menu objectForKey:@"price"] floatValue];
-            [catalogItem.menu insertObject:menuItem atIndex:0];
-        }
-
-        // Отзывы
-//        NSArray *feedbacks = [item objectForKey:@"feedbacks"];
+//- (void)loadLocal {
+//    self.allSections = 1;
+//    self.allRows = [[NSMutableArray alloc] init];
+//    self.allItems = [[NSMutableDictionary alloc] init];
+//    
+//    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"catalog" ofType:@"txt"];
+//    NSString *catalogStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+//    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+//    
+//    NSArray *items = [jsonParser objectWithString:catalogStr];
+//    
+//    int index = 0;
+//    for (NSDictionary *item in items) {
+//        CatalogItem *catalogItem = [[CatalogItem alloc] init];
+//        catalogItem.ID = [[item objectForKey:@"id"] intValue];
+//        catalogItem.name = [item objectForKey:@"name"];
+//        catalogItem.type = [item objectForKey:@"type"];
+//        catalogItem.cuisine = [item objectForKey:@"kitchen"];
+//        catalogItem.weekdayHours = [item objectForKey:@"weekdays_hours"];
+//        catalogItem.breakHours = [item objectForKey:@"break_hours"];
+//        catalogItem.saturdayHours = [item objectForKey:@"saturday_hours"];
+//        catalogItem.sundayHours = [item objectForKey:@"sunday_hours"];
+//        catalogItem.phone = [item objectForKey:@"phone"];
+//        catalogItem.website = [item objectForKey:@"site"];
+//        catalogItem.bill = [[item objectForKey:@"check"] intValue];
+//        catalogItem.description = [[item objectForKey:@"description"] stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+//        catalogItem.checkins = [[item objectForKey:@"checkins"] intValue];
+//        catalogItem.address = [item objectForKey:@"address"];
+//        CLLocationDegrees lat = [[item objectForKey:@"lat"] doubleValue];
+//        CLLocationDegrees lng = [[item objectForKey:@"lng"] doubleValue];
+//        catalogItem.location = [[CLLocation alloc] initWithLatitude:lat longitude:lng];
+//        catalogItem.distance = [catalogItem.location distanceFromLocation:self.userLocation];
+//
+//        // Меню заведения
+//        NSDictionary *menu = [item objectForKey:@"menu"];
+//        if (menu.count) { 
+//            MenuItem *menuItem = [[MenuItem alloc] init];
+//            NSString *image = [menu objectForKey:@"image"];
+//            if (!image) image = @"";
+//            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
+//            menuItem.imageUrl = imageUrl;
+//            //menuItem.image = [UIImage imageNamed:@"placeholder.png"];
+//            menuItem.title = [menu objectForKey:@"title"];
+//            menuItem.price = [[menu objectForKey:@"price"] floatValue];
+//            [catalogItem.menu insertObject:menuItem atIndex:0];
+//        }
+//
+//        // Отзывы
+////        NSArray *feedbacks = [item objectForKey:@"feedbacks"];
+////        int i = 0;
+////        for (NSDictionary *feedback in feedbacks) {
+////            Feedback *feedbackObj = [[Feedback alloc] init];
+////            NSString *image = [feedback objectForKey:@"image"];
+////            if (!image) image = @"";
+////            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
+////            feedbackObj.imageUrl = imageUrl;
+////            //feedbackObj.image = [UIImage imageNamed:@"placeholder.png"];
+////            feedbackObj.user = [feedback objectForKey:@"user"];
+////            feedbackObj.to = catalogItem.name;
+////            feedbackObj.text = [feedback objectForKey:@"text"];
+////            feedbackObj.attitude = [[feedback objectForKey:@"attitude"] intValue];
+////            feedbackObj.date = [NSDate dateWithTimeIntervalSince1970:[[feedback objectForKey:@"date"] intValue]];
+////            [catalogItem.feedbacks insertObject:feedbackObj atIndex:i];
+////            i++;
+////        }
+//        
+//        // События
+////        NSArray *events = [item objectForKey:@"events"];
+////        i = 0;
+////        for (NSDictionary *event in events) {
+////            Event *eventObj = [[Event alloc] init];
+////            NSString *image = [event objectForKey:@"image"];
+////            if (!image) image = @"";
+////            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
+////            eventObj.imageUrl = imageUrl;
+////            //eventObj.image = [UIImage imageNamed:@"placeholder.png"];
+////            eventObj.user = [event objectForKey:@"user"];
+////            eventObj.text = [[[[event objectForKey:@"text"] stringByStrippingHTML] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@"\t" withString:@""];
+////            eventObj.date = [NSDate dateWithTimeIntervalSince1970:[[event objectForKey:@"date"] intValue]];
+////            [catalogItem.events insertObject:eventObj atIndex:i];
+////            i++;
+////        }
+//      
+//        // Фотки
+//        NSArray *photosUrls = [item objectForKey:@"photos"];
 //        int i = 0;
-//        for (NSDictionary *feedback in feedbacks) {
-//            Feedback *feedbackObj = [[Feedback alloc] init];
-//            NSString *image = [feedback objectForKey:@"image"];
-//            if (!image) image = @"";
-//            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
-//            feedbackObj.imageUrl = imageUrl;
-//            //feedbackObj.image = [UIImage imageNamed:@"placeholder.png"];
-//            feedbackObj.user = [feedback objectForKey:@"user"];
-//            feedbackObj.to = catalogItem.name;
-//            feedbackObj.text = [feedback objectForKey:@"text"];
-//            feedbackObj.attitude = [[feedback objectForKey:@"attitude"] intValue];
-//            feedbackObj.date = [NSDate dateWithTimeIntervalSince1970:[[feedback objectForKey:@"date"] intValue]];
-//            [catalogItem.feedbacks insertObject:feedbackObj atIndex:i];
-//            i++;
+//        for (NSString *photoUrl in photosUrls) {
+//            NSURL *url = [NSURL URLWithString:[kWEBSITE stringByAppendingString:photoUrl]];
+//            [catalogItem.photosUrls insertObject:url atIndex:i++];
 //        }
-        
-        // События
-//        NSArray *events = [item objectForKey:@"events"];
-//        i = 0;
-//        for (NSDictionary *event in events) {
-//            Event *eventObj = [[Event alloc] init];
-//            NSString *image = [event objectForKey:@"image"];
-//            if (!image) image = @"";
-//            NSURL *imageUrl = [NSURL URLWithString:[kWEBSITE stringByAppendingString:image]];
-//            eventObj.imageUrl = imageUrl;
-//            //eventObj.image = [UIImage imageNamed:@"placeholder.png"];
-//            eventObj.user = [event objectForKey:@"user"];
-//            eventObj.text = [[[[event objectForKey:@"text"] stringByStrippingHTML] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@"\t" withString:@""];
-//            eventObj.date = [NSDate dateWithTimeIntervalSince1970:[[event objectForKey:@"date"] intValue]];
-//            [catalogItem.events insertObject:eventObj atIndex:i];
-//            i++;
+//        if (!catalogItem.photosUrls.count) {
+//            [catalogItem.photosUrls addObject:@""];
 //        }
-      
-        // Фотки
-        NSArray *photosUrls = [item objectForKey:@"photos"];
-        int i = 0;
-        for (NSString *photoUrl in photosUrls) {
-            NSURL *url = [NSURL URLWithString:[kWEBSITE stringByAppendingString:photoUrl]];
-            [catalogItem.photosUrls insertObject:url atIndex:i++];
-        }
-        if (!catalogItem.photosUrls.count) {
-            [catalogItem.photosUrls addObject:@""];
-        }
-        
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index++ inSection:0];
-        [self.allItems setObject:catalogItem forKey:indexPath];
-        
-        //NSLog(@"Урлы фоток: %@", catalogItem.photosUrls.description);
-    }
-    
-    [self.allRows insertObject:[NSNumber numberWithInt:index] atIndex:0];
-}
+//        
+//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index++ inSection:0];
+//        [self.allItems setObject:catalogItem forKey:indexPath];
+//        
+//        //NSLog(@"Урлы фоток: %@", catalogItem.photosUrls.description);
+//    }
+//    
+//    [self.allRows insertObject:[NSNumber numberWithInt:index] atIndex:0];
+//}
 
 - (void)getCatalogByDistanceWithLat:(double)lat andLng:(double)lng {
     //lng = 57.07288; lat = 65.33060;
