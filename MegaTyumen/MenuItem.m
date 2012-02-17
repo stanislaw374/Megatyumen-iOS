@@ -10,9 +10,8 @@
 
 @implementation MenuItem
 
-//@synthesize image = _image;
 @synthesize title = _name;
 @synthesize price = _price;
-@synthesize imageUrl = _imageUrl;
+@synthesize image = _image;
 
 @end

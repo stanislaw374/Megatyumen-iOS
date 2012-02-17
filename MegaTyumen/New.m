@@ -144,18 +144,21 @@
     
     NSLog(@"%@: %@", NSStringFromSelector(_cmd), responseDict.description);
     
-    self.author = (NSString *)[responseDict objectForKey:@"author"];
+    id authorId = [responseDict objectForKey:@"author"];
+    self.author = (!authorId || [authorId isKindOfClass:[NSNull class]]) ? @"" : authorId;
     self.text = (NSString *)[responseDict objectForKey:@"content"];
-    self.date = [NSDate dateWithTimeIntervalSince1970:[[responseDict objectForKey:@"date"] intValue]];
-    self.photosCount = [((NSNumber *)[responseDict objectForKey:@"photos_count"]) intValue];
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    self.date = [df dateFromString:[responseDict objectForKey:@"date"]];
+    self.photosCount = [[responseDict objectForKey:@"photos_count"] intValue];
     NSString *url = [responseDict objectForKey:@"url"];
     if (!url) url = @"";
-    self.url = [kWEBSITE stringByAppendingString:url];
+    self.url = [NSURL URLWithString:url relativeToURL:kWEBSITE_URL];
     
     // Получение комментариев
-    self.commentsCount = [((NSNumber *)[responseDict objectForKey:@"comments_count"]) intValue];
+    self.commentsCount = [[responseDict objectForKey:@"comments_count"] intValue];
     self.comments = [NSMutableArray arrayWithCapacity:self.commentsCount];
-    NSArray *commentsArray = (NSArray *)[responseDict objectForKey:@"comments"];
+    NSArray *commentsArray = [responseDict objectForKey:@"comments"];
     for (int i = 0; i < self.commentsCount; i++) {
         Comment *comment = [[Comment alloc] init];
         NSDictionary *commentDictionary = [commentsArray objectAtIndex:i];

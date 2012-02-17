@@ -274,7 +274,7 @@
     self.authorLabel.text = self.currentNew.author;
     [self.authorLabel sizeToFit];
     
-    self.commentsHeaderButton.frame = CGRectMake(dx / 2, self.authorLabel.frame.origin.y + self.authorLabel.frame.size.height + dd, 300, 38);
+    self.commentsHeaderButton.frame = CGRectMake(dx / 2, self.dateLabel.frame.origin.y + self.dateLabel.frame.size.height + dd, 300, 38);
     height += dd + self.commentsHeaderButton.frame.size.height + 6;
     
     self.commentsCountLabel.text = [NSString stringWithFormat:@"%d комментариев", self.currentNew.commentsCount];

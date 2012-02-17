@@ -191,7 +191,7 @@
             cell = self.loadingCell;
             self.loadingCell = nil;
             MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:cell animated:YES];
-            hud.xOffset = 60;
+            hud.xOffset = -60;
         }   
     }
     else {
@@ -214,6 +214,7 @@
                 UILabel *view1 = (UILabel *)[cell viewWithTag:1];
                 MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:cell animated:YES];
                 //hud.frame = CGRectInset(hud.frame, view1.frame.origin.x + view1.frame.size.width + 8, 0);
+                hud.xOffset = -60;
             } 
             [self.news getNextNews];
         }

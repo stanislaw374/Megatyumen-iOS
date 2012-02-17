@@ -258,7 +258,15 @@
         view2.text = item.name;
         view3.text = item.address;
         int distance = item.distance;
-        [view4 setTitle:[NSString stringWithFormat:@"%d м", distance] forState:UIControlStateNormal];
+        NSString *distanceStr;
+        if (distance < 1000) {
+            distanceStr = @"м";
+        }
+        else {
+            distance /= 1000;
+            distanceStr = @"км";
+        }
+        [view4 setTitle:[NSString stringWithFormat:@"%d %@", distance, distanceStr] forState:UIControlStateNormal];
         [view4 sizeToFit];
     }
     else {

@@ -36,7 +36,7 @@
 @synthesize phone = _phone;
 @synthesize website = _website;
 @synthesize menu = _menu;
-@synthesize feedbacks = _feedback;
+@synthesize feedbacks = _feedbacks;
 @synthesize events = _events;
 @synthesize type = _type;
 @synthesize cuisine = _cuisine;
@@ -46,18 +46,37 @@
 @synthesize sundayHours = _sundayHours;
 @synthesize location = _location;
 @synthesize bill = _bill;
-@synthesize photosUrls = _photosUrls;
+@synthesize photos = _photos;
 @synthesize distance = _distance;
 
-- (id)init {
-    if (self = [super init]) {
-        self.menu = [[NSMutableArray alloc] init];
-        self.feedbacks = [[NSMutableArray alloc] init];
-        self.events = [[NSMutableArray alloc] init];
-        //self.photos = [[NSMutableArray alloc] init];
-        self.photosUrls = [[NSMutableArray alloc] init];
+#pragma mark - Lazy instantiation
+
+- (NSMutableArray *)menu {
+    if (!_menu) {
+        _menu = [[NSMutableArray alloc] init];
     }
-    return self;
+    return _menu;
+}
+
+- (NSMutableArray *)events {
+    if (!_events) {
+        _events = [[NSMutableArray alloc] init];
+    }
+    return _events;
+}
+
+- (NSMutableArray *)feedbacks {
+    if (!_feedbacks) {
+        _feedbacks = [[NSMutableArray alloc] init];
+    }
+    return _feedbacks;
+}
+
+- (NSMutableArray *)photos {
+    if (!_photos) {
+        _photos = [[NSMutableArray alloc] init];
+    }
+    return _photos;
 }
 
 - (void)getDetails {
@@ -123,7 +142,30 @@
 }
 
 - (void)getMenu {
-    [self didGetMenu:nil];
+    //[self didGetMenu:nil];
+    SBJsonWriter *writer = [[SBJsonWriter alloc] init];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"company_menu", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
+    NSString *query = [writer stringWithObject:dict];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
+    [request setPostValue:query forKey:@"jsonData"];
+    [request startSynchronous];
+    
+    SBJsonParser *parser = [[SBJsonParser alloc] init];
+    NSDictionary *dict2 = [parser objectWithString:request.responseString];
+    BOOL result = [[dict2 objectForKey:@"response"] boolValue];
+    if (result) {
+        NSArray *items = [dict2 objectForKey:@"items"];
+        for (NSDictionary *item in items) {
+            MenuItem *m = [[MenuItem alloc] init];
+            m.title = [item objectForKey:@"title"];
+            m.price = [[item objectForKey:@"cost"] intValue];
+            id imageId = [item objectForKey:@"image"];
+            NSString *imageStr = (!imageId || [imageId isKindOfClass:[NSNull class]]) ? @"" : imageId;
+            m.image = [NSURL URLWithString:imageStr relativeToURL:kWEBSITE_URL];
+            
+            [self.menu addObject:m];
+        }
+    }
 }
 
 - (void)didGetMenu:(ASIHTTPRequest *)request {
@@ -132,7 +174,29 @@
 }
 
 - (void)getFeedbacks {
-    [self didGetFeedback:nil];
+    SBJsonWriter *writer = [[SBJsonWriter alloc] init];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"feedback", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
+    NSString *query = [writer stringWithObject:dict];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
+    [request setPostValue:query forKey:@"jsonData"];
+    [request startSynchronous];
+    
+    SBJsonParser *parser = [[SBJsonParser alloc] init];
+    NSDictionary *dict2 = [parser objectWithString:request.responseString];
+    BOOL result = [[dict2 objectForKey:@"response"] boolValue];
+    if (result) {
+        NSArray *comments = [dict2 objectForKey:@"comments"];
+        for (NSDictionary *comment in comments) {
+            Feedback *f = [[Feedback alloc] init];
+            f.text = [comment objectForKey:@"comment"];
+            f.attitude = [[comment objectForKey:@"attitude"] intValue];
+            NSDateFormatter *df = [[NSDateFormatter alloc] init];
+            [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            f.date = [df dateFromString:[comment objectForKey:@"date"]];
+            
+            [self.events addObject:f];
+        }
+    }
 }
 
 - (void)didGetFeedback:(ASIHTTPRequest *)request {

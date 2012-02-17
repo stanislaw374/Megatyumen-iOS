@@ -31,8 +31,7 @@
 @property (nonatomic, strong) NSMutableArray *menu;     // Меню
 @property (nonatomic, strong) NSMutableArray *feedbacks;// Отзывы
 @property (nonatomic, strong) NSMutableArray *events;   // События
-//@property (nonatomic, strong) NSMutableArray *photos;   // Фотки заведения
-@property (nonatomic, strong) NSMutableArray *photosUrls;//Урлы фоток
+@property (nonatomic, strong) NSMutableArray *photos;   // Урлы фоток
 @property (nonatomic, strong) CLLocation *location;     // Географические координаты
 @property (nonatomic) int bill;                         // Средний чек
 @property (nonatomic) int distance;                     // Расстояние до заведения в метрах

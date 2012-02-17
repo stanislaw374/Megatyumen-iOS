@@ -256,6 +256,8 @@
     frame.size.height = self.view1.frame.size.height;
     self.view2.frame = frame;
     
+    //self.textWebView.frame = frame;
+    
     //[self minimizeText];
     
     [UIView setAnimationDelegate:self];
@@ -266,12 +268,16 @@
 - (void)initUI {    
     [self.btnImage setImageWithURL:self.announce.image];
     self.txtTitle.text = self.announce.title;
-    CGSize size = [self.txtTitle sizeThatFits:self.txtTitle.frame.size];
+    //CGSize size = [self.txtTitle sizeThatFits:self.txtTitle.frame.size];
     [self.txtTitle sizeToFit];
-    self.borderButton.frame = CGRectMake(self.borderButton.frame.origin.x, self.borderButton.frame.origin.y, size.width, size.height);
+    //self.borderButton.frame = CGRectMake(self.borderButton.frame.origin.x, self.borderButton.frame.origin.y, size.width, size.height);
     
+    NSString *text = [[@"<html><body style=\"background-color: black; font-size: 16; font-family: Helvetica; color: #FFFFFF\">" stringByAppendingString:self.announce.text] stringByAppendingString:@"</body></html>"];
+    text = [text stringByReplacingOccurrencesOfString:@"Что:" withString:@"<span style=\"color:#FF9600\">Что:</span>"];
+    text = [text stringByReplacingOccurrencesOfString:@"Где:" withString:@"<span style=\"color:#FF9600\">Где:</span>"];
+    text = [text stringByReplacingOccurrencesOfString:@"Когда:" withString:@"<span style=\"color:#FF9600\">Когда:</span>"];
     //self.textView.text = [self.announce.text stringByStrippingHTML];
-    [self.textWebView loadHTMLString:self.announce.text baseURL:nil];
+    [self.textWebView loadHTMLString:text baseURL:nil];
 }
 
 @end

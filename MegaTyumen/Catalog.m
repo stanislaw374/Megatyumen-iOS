@@ -356,10 +356,10 @@
         else if ([catalogCategory.name isEqualToString:@"Кондитерские"]) {
             catalogCategory.image = [UIImage imageNamed:@"conditer.png"];
         }
-        else if ([catalogCategory.name isEqualToString:@"Кулинарии"]) {
+        else if ([catalogCategory.name isEqualToString:@"Кулинария"]) {
             catalogCategory.image = [UIImage imageNamed:@"kulinaria.png"];
         }
-        else if ([catalogCategory.name isEqualToString:@"Пекарни"]) {
+        else if ([catalogCategory.name isEqualToString:@"Пекарня"]) {
             catalogCategory.image = [UIImage imageNamed:@"pekar.png"];
         }
         else if ([catalogCategory.name isEqualToString:@"Пиццерии"]) {
@@ -459,6 +459,9 @@
         }
         else if ([catalogType.name isEqualToString:@"китайская"]) {
             catalogType.image = [UIImage imageNamed:@"china.png"];
+        }
+        else if ([catalogType.name isEqualToString:@"татарская"]) {
+            catalogType.image = [UIImage imageNamed:@"tatar.png"];
         }
         
         [[self.categories objectAtIndex:1] insertObject:catalogType atIndex:i];

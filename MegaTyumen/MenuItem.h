@@ -11,10 +11,9 @@
 
 @interface MenuItem : NSObject <SDWebImageDownloaderDelegate>
 
-//@property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic) float price;
-@property (nonatomic, strong) NSURL *imageUrl;
+@property (nonatomic, strong) NSURL *image;
 
 @end
 
