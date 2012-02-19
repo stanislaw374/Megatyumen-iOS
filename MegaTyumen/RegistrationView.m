@@ -11,6 +11,7 @@
 #import "Alerts.h"
 #import "Authorization.h"
 #import "MainMenu.h"
+#import "Constants.h"
 
 @interface RegistrationView()
 @property (nonatomic, strong) MainMenu *mainMenu;
@@ -18,7 +19,7 @@
 @property (strong, nonatomic) UserAgreementView *userAgreementView;
 @property (strong, nonatomic) MBProgressHUD *hud;
 - (void)register_;
-- (void)didRegister:(NSNotification *)notification;
+//- (void)didRegister:(NSNotification *)notification;
 //- (void)didPassRegistration
 @end
 
@@ -67,7 +68,7 @@
 //    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Назад" style:UIBarButtonItemStylePlain target:self action:nil];
     self.tableView.backgroundColor = [UIColor clearColor];
     self.keyboardListener = [[KeyboardListener alloc] init];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRegister:) name:kNOTIFICATION_DID_REGISTER object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRegister:) name:kNOTIFICATION_DID_REGISTER object:nil];
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addBackButton];
@@ -86,7 +87,7 @@
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_REGISTER object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_REGISTER object:nil];
     [self setTableView:nil];
     [self setScrollView:nil];
     [super viewDidUnload];
@@ -121,31 +122,48 @@
         return;
     }
     
-    [[Authorization sharedAuthorization] registerWithLogin:login Password:password andName:name];
-    
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSDictionary *dict = [[Authorization sharedAuthorization] registerWithLogin:login Password:password andName:name];
+        BOOL response = [[dict objectForKey:KEY_RESPONSE] boolValue];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.hud hide:YES];
+            if (response) {
+                [[NSUserDefaults standardUserDefaults] setObject:login forKey:KEY_LOGIN];
+                [[NSUserDefaults standardUserDefaults] setObject:password forKey:KEY_PASSWORD];
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:KEY_IS_AUTHORIZED];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [Alerts showAlertViewWithTitle:@"" message:@"Вы успешно зарегистрировались. Теперь вы можете добавлять комментарии, отмечаться, добавлять отзывы."];
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            }
+            else {
+                NSString *error = [dict objectForKey:KEY_ERROR];
+                [Alerts showAlertViewWithTitle:@"Ошибка" message:error];
+            }
+        });
+    });
 }
 
-- (void)didRegister:(NSNotification *)notification {
-    Authorization *authorization = notification.object;
-    if (authorization.result) {
-        [Alerts showAlertViewWithTitle:@"" message:@"Вы успешно зарегистрировались"];
-        //[self.navigationController popViewControllerAnimated:YES];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAuthorized"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        [self.navigationController popToRootViewControllerAnimated:YES];
-    }
-    else {
-        //NSString *error = [notification.userInfo objectForKey:@"error"];
-        [Alerts showAlertViewWithTitle:@"Ошибка" message:authorization.error];
-    }
-    
-    [self.hud hide:YES];
-}
+//- (void)didRegister:(NSNotification *)notification {
+//    Authorization *authorization = notification.object;
+////    if (authorization.result) {
+////        [Alerts showAlertViewWithTitle:@"" message:@"Вы успешно зарегистрировались"];
+////        //[self.navigationController popViewControllerAnimated:YES];
+////        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAuthorized"];
+////        [[NSUserDefaults standardUserDefaults] synchronize];
+////        [self.navigationController popToRootViewControllerAnimated:YES];
+////    }
+////    else {
+////        //NSString *error = [notification.userInfo objectForKey:@"error"];
+////        //[Alerts showAlertViewWithTitle:@"Ошибка" message:authorization.error];
+////    }
+//    
+//    [self.hud hide:YES];
+//}
 
-- (IBAction)dismissKeyboard:(id)sender {
-    [sender resignFirstResponder];
-}
+//- (IBAction)dismissKeyboard:(id)sender {
+//    [sender resignFirstResponder];
+//}
 
 - (IBAction)onRegisterButtonClick {
     [self register_];
@@ -236,7 +254,6 @@
         }
     }
     return cell;
-
 }
 
 @end

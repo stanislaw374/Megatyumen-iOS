@@ -53,7 +53,7 @@
 }
 
 - (void)initUI {
-    [self.imageView setImageWithURL:[self.currentItem.photosUrls objectAtIndex:0] placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:CGSizeMake(80, 80)];
+    //[self.imageView setImageWithURL:[self.currentItem.photosUrls objectAtIndex:0] placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:CGSizeMake(80, 80)];
     self.nameLabel.text = self.currentItem.name;
     self.addressLabel.text = self.currentItem.address;
     int distance = self.currentItem.distance;

@@ -22,8 +22,6 @@
 - (IBAction)onEnterButtonClick;
 - (IBAction)onForgotPasswordButtonClick;
 - (IBAction)onRegisterButtonClick;
-- (IBAction)dismissKeyboard:(id)sender;
-
--(void)authorize;
+//- (IBAction)dismissKeyboard:(id)sender;
 
 @end

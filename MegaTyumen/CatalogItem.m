@@ -7,7 +7,6 @@
 //
 
 #import "CatalogItem.h"
-#import "PhotoDownloader.h"
 #import "SBJson.h"
 #import "Constants.h"
 #import "UIImage+Thumbnail.h"

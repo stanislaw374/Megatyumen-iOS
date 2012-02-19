@@ -17,12 +17,8 @@
 @end
 
 @implementation Items
-@synthesize newsCount = _newsCount;
-@synthesize eventsCount = _eventsCount;
-@synthesize announcesCount = _announcesCount;
-@synthesize feedbackCount = _feedbackCount;
 
-- (void)getCount {
++ (NSDictionary *)getCount {
     NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:@"items_count", @"request", nil];
     SBJsonWriter *writer = [[SBJsonWriter alloc] init];
     NSString *query = [writer stringWithObject:dict];
@@ -32,10 +28,7 @@
     
     SBJsonParser *parser = [[SBJsonParser alloc] init];
     NSDictionary *dict2 = [parser objectWithString:request.responseString];
-    self.newsCount = [[dict2 objectForKey:@"news_count"] intValue];
-    self.feedbackCount = [[dict2 objectForKey:@"comments_count"] intValue];
-    self.eventsCount = [[dict2 objectForKey:@"events_count"] intValue];
-    self.announcesCount = [[dict2 objectForKey:@"announces_count"] intValue];
+    return dict2;
 }
 
 @end

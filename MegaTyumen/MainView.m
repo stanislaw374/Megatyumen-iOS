@@ -16,7 +16,6 @@
 #import "AuthorizationView.h"
 #import "Authorization.h"
 #import "NewsView.h"
-#import "CustomBadge.h"
 #import "News.h"
 #import "SBJson.h"
 #import "CheckinCatalogView.h"
@@ -35,6 +34,7 @@
 #import "ASIFormDataRequest.h"
 #import "Constants.h"
 #import "Items.h"
+#import "Network.h"
 
 #define KEY_REQUEST @"request"
 #define VALUE_ITEMS_COUNT @"items_count"
@@ -44,7 +44,6 @@
 #define KEY_JSON_DATA @"jsonData"
 
 @interface MainView()
-
 @property (nonatomic, strong) News *news;
 @property (nonatomic, strong) Announces *announces;
 @property (nonatomic, strong) Events *events;
@@ -60,16 +59,14 @@
 @property (nonatomic, strong) MBProgressHUD *hud;
 @property (nonatomic, strong) MainMenu *mainMenu;
 @property (nonatomic) int timer;
-
 - (void)refreshBadges;
 - (void)refreshNewsBadge:(int)value;
 - (void)refreshFeedbacksBadge:(int)value;
 - (void)refreshAnnouncesBadge:(int)value;
 - (void)refreshEventsBadge:(int)value;
-- (BOOL)checkNetworkAvailability;
 - (void)didCheckin:(NSNotification *)notification;
 - (void)onTimerFired:(NSTimer *)timer;
-- (void)didPassAuthorization:(NSNotification *)notification;
+//- (void)didPassAuthorization:(NSNotification *)notification;
 @end
 
 @implementation MainView
@@ -182,30 +179,18 @@
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addAuthorizeButton];
-    //[self.mainMenu addBackButton];
-    //[self.mainMenu addMainButton];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_AUTHORIZE object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didCheckin:) name:kNOTIFICATION_DID_CHECKIN object:nil];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetNewsCount:) name:@"didGetNewsCount" object:nil];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetFeedbackCount:) name:@"didGetFeedback" object:nil];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetAnnouncesCount:) name:@"didGetAnnounces" object:nil];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetEventsCount:) name:@"didGetEvents" object:nil];
-
-    //[self performSelectorInBackground:@selector(initBadges) withObject:nil];
     
     [self refreshBadges];
 }
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_AUTHORIZE object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_CHECKIN object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didGetNewsCount" object:nil];
-    
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didGetFeedback" object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didGetAnnounces" object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didGetEvents" object:nil];
+
     [self setNewsButton:nil];
     [self setCheckinButton:nil];
     [self setCheckinLabel:nil];
@@ -217,6 +202,11 @@
     // e.g. self.myOutlet = nil;
 }
 
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//    
+//}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -225,28 +215,18 @@
 
 #pragma mark - Helpers
 
-- (BOOL)checkNetworkAvailability {
-    AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    if (!appDelegate.networkListener.isNetworkAvailable) {
-        [Alerts showAlertViewWithTitle:@"Нет подключения к интернету" message:@"Нет подключения к интернету. Для работы данного приложения необходим доступ в Интернет"];
-        return NO;
-    }
-    return YES;
-}
-
 - (void)refreshBadges {        
-    dispatch_queue_t queue = dispatch_queue_create("Items count queue", NULL);
-    dispatch_async(queue, ^{
-        Items *items = [[Items alloc] init];
-        [items getCount];        
+    //dispatch_queue_t queue = dispatch_queue_create("Items count queue", NULL);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSDictionary *dict = [Items getCount];  
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self refreshNewsBadge:items.newsCount];
-            [self refreshFeedbacksBadge:items.feedbackCount];
-            [self refreshAnnouncesBadge:items.announcesCount];
-            [self refreshEventsBadge:items.eventsCount];
+            [self refreshNewsBadge:[[dict objectForKey:KEY_NEWS_COUNT] intValue]];
+            [self refreshFeedbacksBadge:[[dict objectForKey:KEY_COMMENTS_COUNT] intValue]];
+            [self refreshAnnouncesBadge:[[dict objectForKey:KEY_ANNOUNCES_COUNT] intValue]];
+            [self refreshEventsBadge:[[dict objectForKey:KEY_EVENTS_COUNT] intValue]];
         });
     });
-    dispatch_release(queue);
+    //dispatch_release(queue);
 }
 
 - (void)refreshFeedbacksBadge:(int)value {
@@ -285,56 +265,15 @@
     [self.view addSubview:newsBadge];
 }
 
--(void)didPassAuthorization:(NSNotification *)notification {
-    self.navigationItem.rightBarButtonItem = nil;
-}
-
-//- (void)didGetNewsCount:(NSNotification *)notification {
-//    CustomBadge *newsBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", self.news.todayCount]];
-//    CGRect frame = newsBadge.frame;
-//    frame.origin.x = self.newsButton.frame.origin.x + self.newsButton.frame.size.width - frame.size.width / 2;
-//    frame.origin.y = self.newsButton.frame.origin.y - newsBadge.frame.size.height / 2;
-//    newsBadge.frame = frame;
-//    [self.view addSubview:newsBadge];
-//    
-//    //if (++self.loadedBadges == 4) [self.hud hide:YES];
-//}
-
-//- (void)didGetFeedbackCount:(NSNotification *)notification {
-//    CustomBadge *feedbackBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", self.feedback.items.count]];
-//    CGRect frame = feedbackBadge.frame;
-//    frame.origin.x = self.feedbackButton.frame.origin.x + self.feedbackButton.frame.size.width - frame.size.width / 2;
-//    frame.origin.y = self.feedbackButton.frame.origin.y - feedbackBadge.frame.size.height / 2;
-//    feedbackBadge.frame = frame;
-//    [self.view addSubview:feedbackBadge];
-//    
-//    //if (++self.loadedBadges == 4) [self.hud hide:YES];
-//}
-//
-//- (void)didGetAnnouncesCount:(NSNotification *)notification {
-//    CustomBadge *announcesBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", self.announces.items.count]];
-//    CGRect frame = announcesBadge.frame;
-//    frame.origin.x = self.announcesButton.frame.origin.x + self.announcesButton.frame.size.width - frame.size.width / 2;
-//    frame.origin.y = self.announcesButton.frame.origin.y - announcesBadge.frame.size.height / 2;
-//    announcesBadge.frame = frame;
-//    [self.view addSubview:announcesBadge];
-//    
-//    //if (++self.loadedBadges == 4) [self.hud hide:YES];
-//}
-//
-//- (void)didGetEventsCount:(NSNotification *)notification {
-//    CustomBadge *eventsBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", self.events.items.count ]];
-//    CGRect frame = eventsBadge.frame;
-//    frame.origin.x = self.eventsButton.frame.origin.x + self.eventsButton.frame.size.width - frame.size.width / 2;
-//    frame.origin.y = self.eventsButton.frame.origin.y - eventsBadge.frame.size.height / 2;
-//    eventsBadge.frame = frame;
-//    [self.view addSubview:eventsBadge];
-//    
-//    //if (++self.loadedBadges == 4) [self.hud hide:YES];
+//-(void)didPassAuthorization:(NSNotification *)notification {
+//    self.navigationItem.rightBarButtonItem = nil;
 //}
 
 - (IBAction)onNewsButtonClick {
-    if (![self checkNetworkAvailability]) return;
+    if (![Network sharedNetwork].isAvailable) {
+        [Alerts showAlertViewWithTitle:@"Нет доступа в Интернет" message:@"Для работы данного приложения необходим доступ в Интернет"];
+        return;
+    }
     [self.navigationController pushViewController:self.newsView animated:YES];
 }
 
@@ -348,7 +287,10 @@
 }
 
 - (IBAction)onCatalogButtonClick {
-    if (![self checkNetworkAvailability]) return;
+    if (![Network sharedNetwork].isAvailable) {
+        [Alerts showAlertViewWithTitle:@"Нет доступа в Интернет" message:@"Для работы данного приложения необходим доступ в Интернет"];
+        return;
+    }
     [self.navigationController pushViewController:self.catalogView animated:YES];
 }
 
@@ -371,7 +313,10 @@
 }
 
 - (IBAction)onMapButtonClick {
-    if (![self checkNetworkAvailability]) return;
+    if (![Network sharedNetwork].isAvailable) {
+        [Alerts showAlertViewWithTitle:@"Нет доступа в Интернет" message:@"Для работы данного приложения необходим доступ в Интернет"];
+        return;
+    }
     [self.navigationController pushViewController:self.yMapView animated:YES];
     
 //    for (CatalogItem *item in self.catalog.items.allValues) {
@@ -380,17 +325,26 @@
 }
 
 - (IBAction)onFeedbackButtonClick {
-    if (![self checkNetworkAvailability]) return;
+    if (![Network sharedNetwork].isAvailable) {
+        [Alerts showAlertViewWithTitle:@"Нет доступа в Интернет" message:@"Для работы данного приложения необходим доступ в Интернет"];
+        return;
+    }
     [self.navigationController pushViewController:self.feedbackView animated:YES];
 }
 
 - (IBAction)onAnnouncesButtonClick {
-    if (![self checkNetworkAvailability]) return;
+    if (![Network sharedNetwork].isAvailable) {
+        [Alerts showAlertViewWithTitle:@"Нет доступа в Интернет" message:@"Для работы данного приложения необходим доступ в Интернет"];
+        return;
+    }
     [self.navigationController pushViewController:self.announcesView animated:YES];
 }
 
 - (IBAction)onEventsButtonClick {
-    if (![self checkNetworkAvailability]) return;
+    if (![Network sharedNetwork].isAvailable) {
+        [Alerts showAlertViewWithTitle:@"Нет доступа в Интернет" message:@"Для работы данного приложения необходим доступ в Интернет"];
+        return;
+    }
     [self.navigationController pushViewController:self.eventsView animated:YES];
 }
 

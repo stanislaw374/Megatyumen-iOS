@@ -146,7 +146,7 @@
     
     //[self.locationManager startUpdatingLocation];
     
-    [self.thumbnailImageView setImageWithURL:[self.currentItem.photosUrls objectAtIndex:0] placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:self.thumbnailImageView.frame.size]; 
+    //[self.thumbnailImageView setImageWithURL:[self.currentItem.photosUrls objectAtIndex:0] placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:self.thumbnailImageView.frame.size]; 
     self.nameLabel.text = self.currentItem.name;
     self.addressLabel.text = self.currentItem.address;
     int distance = self.currentItem.distance;
@@ -345,7 +345,7 @@
     
     [self.hud hide:YES];
     
-    self.lblPhotosCount.text = [NSString stringWithFormat:@"%d фотографий", self.currentItem.photosUrls.count];
+    //self.lblPhotosCount.text = [NSString stringWithFormat:@"%d фотографий", self.currentItem.photosUrls.count];
     
     if (self.photosView) {
         for (UIView *view in self.photosView.subviews) {
@@ -358,19 +358,19 @@
     }
     
     int row = 0, column = 0;
-    for (int i = 0; i < self.currentItem.photosUrls.count; i++) {
-        UIButton *btn = [[UIButton alloc] init];
-        [btn setImageWithURL:[self.currentItem.photosUrls objectAtIndex:i] placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:CGSizeMake(64, 64)];
-        [btn addTarget:self action:@selector(onPhotoButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        btn.frame = CGRectMake(column * 72 + 20, row * 72, 64, 64);
-        btn.tag = i;
-        [self.photosView addSubview:btn];
-        
-        if (++column == 4) {
-            row++;
-            column = 0;
-        }
-    }
+//    for (int i = 0; i < self.currentItem.photosUrls.count; i++) {
+//        UIButton *btn = [[UIButton alloc] init];
+//        [btn setImageWithURL:[self.currentItem.photosUrls objectAtIndex:i] placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:CGSizeMake(64, 64)];
+//        [btn addTarget:self action:@selector(onPhotoButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+//        btn.frame = CGRectMake(column * 72 + 20, row * 72, 64, 64);
+//        btn.tag = i;
+//        [self.photosView addSubview:btn];
+//        
+//        if (++column == 4) {
+//            row++;
+//            column = 0;
+//        }
+//    }
     self.photosView.frame = CGRectMake(0, self.lblPhotosCount.frame.origin.y + lblPhotosCount.frame.size.height + 8, 320, (row + 1) * 72);
     self.scrollView1.contentSize = CGSizeMake(320, self.photosView.frame.origin.y + self.photosView.frame.size.height + 20);
     self.borderButton1.frame = CGRectMake(10, -10, 300, self.scrollView1.contentSize.height);
@@ -378,7 +378,7 @@
 
 - (void)onPhotoButtonClick:(id)sender {
     if (1) {
-        self.photosViewController = [[PhotosView alloc] initWithPhotosUrls:self.currentItem.photosUrls];
+        //self.photosViewController = [[PhotosView alloc] initWithPhotosUrls:self.currentItem.photosUrls];
     }
     [self.navigationController pushViewController:self.photosViewController animated:YES];
     //self.photosViewController.page = ((UIButton *)sender).tag;
@@ -611,7 +611,7 @@
             UILabel *view2 = (UILabel *)[cell viewWithTag:2];
             UILabel *view3 = (UILabel *)[cell viewWithTag:3];
             
-            [view1 setImageWithURL:menuItem.imageUrl placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:view1.frame.size];
+            //[view1 setImageWithURL:menuItem.imageUrl placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:view1.frame.size];
             view2.text = menuItem.title;
             view3.text = [NSString stringWithFormat:@"%.0f руб.", menuItem.price]; 
         }

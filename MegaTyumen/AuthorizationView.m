@@ -21,7 +21,8 @@
 @property (strong, nonatomic) RegistrationView *registrationView;
 @property (strong, nonatomic) RemindPasswordView *remindPasswordView;
 @property (strong, nonatomic) MBProgressHUD *hud;
-- (void)didAuthorize:(NSNotification *)notification;
+- (void)authorize;
+//- (void)didAuthorize:(NSNotification *)notification;
 @end
 
 @implementation AuthorizationView
@@ -78,7 +79,7 @@
     //self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Назад" style:UIBarButtonItemStylePlain target:self action:nil];
     self.tableView.backgroundColor = [UIColor clearColor];
     self.keyboardListener = [[KeyboardListener alloc] init];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAuthorize:) name:kNOTIFICATION_DID_AUTHORIZE object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAuthorize:) name:kNOTIFICATION_DID_AUTHORIZE object:nil];
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAuthorize:) name:kNOTIFICATION_DID_PASS_REGISTRATION object:nil];
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
@@ -99,7 +100,7 @@
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_AUTHORIZE object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_AUTHORIZE object:nil];
     //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_REGISTRATION object:nil];
     [self setTableView:nil];
     [self setForgotPasswordButton:nil];
@@ -120,36 +121,54 @@
     [self authorize];
 }
 
--(void)authorize {
+- (void)authorize {
     // Получение логина и пароля 
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     NSString *login = ((UITextField *)[[self.tableView cellForRowAtIndexPath:indexPath] viewWithTag:1]).text;
     indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
     NSString *password = ((UITextField *)[[self.tableView cellForRowAtIndexPath:indexPath] viewWithTag:1]).text;
     
-    [[Authorization sharedAuthorization] authorizeWithLogin:login andPassword:password];
-    [[NSUserDefaults standardUserDefaults] setObject:login forKey:@"login"];
-    [[NSUserDefaults standardUserDefaults] setObject:password forKey:@"password"];
-    
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSDictionary *dict = [[Authorization sharedAuthorization] authorizeWithLogin:login andPassword:password];
+        BOOL result = [[dict objectForKey:KEY_RESPONSE] boolValue];
+        if (result) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.hud hide:YES];
+                [[NSUserDefaults standardUserDefaults] setObject:login forKey:KEY_LOGIN];
+                [[NSUserDefaults standardUserDefaults] setObject:password forKey:KEY_PASSWORD];
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:KEY_IS_AUTHORIZED];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [Alerts showAlertViewWithTitle:@"" message:@"Вы успешно авторизовались. Теперь вы можете добавлять комментарии, отмечаться, добавлять отзывы."];
+                [self.navigationController popViewControllerAnimated:YES];
+            });
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.hud hide:YES];
+                [Alerts showAlertViewWithTitle:@"Ошибка" message:[dict objectForKey:KEY_ERROR]];
+            });
+        }
+    });
 }
 
--(void)didAuthorize:(NSNotification *)notification {
-    Authorization *authorization = notification.object;
-    //int result = [[notification.userInfo objectForKey:@"result"] intValue];
-    //if (result) 
-    if (authorization.isAuthorized) {
-        [Alerts showAlertViewWithTitle:@"" message:@"Вы успешно авторизовались. Теперь вы можете добавлять комментарии, отмечаться, добавлять отзывы."];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAuthorized"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-    else {
-        [Alerts showAlertViewWithTitle:@"Ошибка" message:authorization.error];
-    }
-    
-    [self.hud hide:YES];
-}
+//-(void)didAuthorize:(NSNotification *)notification {
+//    Authorization *authorization = notification.object;
+//    //int result = [[notification.userInfo objectForKey:@"result"] intValue];
+//    //if (result) 
+//    if (authorization.isAuthorized) {
+//        [Alerts showAlertViewWithTitle:@"" message:@"Вы успешно авторизовались. Теперь вы можете добавлять комментарии, отмечаться, добавлять отзывы."];
+//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isAuthorized"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }
+//    else {
+//        [Alerts showAlertViewWithTitle:@"Ошибка" message:authorization.error];
+//    }
+//    
+//    [self.hud hide:YES];
+//}
 
 - (IBAction)onForgotPasswordButtonClick {
     [self.navigationController pushViewController:self.remindPasswordView animated:YES];

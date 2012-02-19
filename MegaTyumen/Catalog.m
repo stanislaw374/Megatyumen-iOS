@@ -254,7 +254,7 @@
         catalogItem.name = name;
         catalogItem.address = address;
         //[catalogItem.photos addObject:[UIImage imageNamed:@"placeholder.png"]];
-        [catalogItem.photosUrls addObject:imageUrl];
+        //[catalogItem.photosUrls addObject:imageUrl];
         catalogItem.distance = distance;
         [self.allItems setObject:catalogItem forKey:indexPath];
 

@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+#define KEY_NEWS_COUNT @"news_count"
+#define KEY_COMMENTS_COUNT @"comments_count"
+#define KEY_EVENTS_COUNT @"events_count"
+#define KEY_ANNOUNCES_COUNT @"announces_count"
+
 @interface Items : NSObject
 
-@property (nonatomic) int newsCount;
-@property (nonatomic) int feedbackCount;
-@property (nonatomic) int eventsCount;
-@property (nonatomic) int announcesCount;
-
-- (void)getCount;
++ (NSDictionary *)getCount;
 
 @end

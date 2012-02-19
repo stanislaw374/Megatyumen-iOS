@@ -20,13 +20,13 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *borderButton;
 @property (unsafe_unretained, nonatomic) IBOutlet UIScrollView *scrollView;
 
-- (void)didPassAuthorization:(NSNotification *)notification;
+//- (void)didPassAuthorization:(NSNotification *)notification;
 - (IBAction)onPhotosButtonClick;
 - (IBAction)onFacebookButtonClick;
 - (void)onVKButtonClick;
 - (IBAction)onScrollToCommentsButtonClick;
 
-- (void)didGetNewDetails:(NSNotification *)notification;
+//- (void)didGetNewDetails:(NSNotification *)notification;
 - (IBAction)onAddCommentButtonClick;
 
 @end

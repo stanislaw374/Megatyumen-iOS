@@ -73,7 +73,7 @@ static int kNumberOfPages = 0;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAuthorize:) name:kNOTIFICATION_DID_AUTHORIZE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAuthorize:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetAnnounces:) name:kNOTIFICATION_DID_GET_ANNOUNCES object:nil];
     
     //[MainMenu addMainButtonForViewController:self];
@@ -89,7 +89,7 @@ static int kNumberOfPages = 0;
 - (void)viewDidUnload
 {
     //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_ANNOUNCES object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_AUTHORIZE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     [self setPageControl:nil];
     [self setBtnCheckin:nil];
     [self setScrollView:nil];

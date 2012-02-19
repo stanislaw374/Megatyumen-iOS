@@ -24,8 +24,4 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *borderButton;
 @property (nonatomic) BOOL isLoaded;
 
-- (void)didPassAuthorization:(NSNotification *)notification;
-- (void)didGetPhotos:(NSNotification *)notification;
-- (void)onPhotoClick:(id)sender;
-
 @end

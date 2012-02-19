@@ -9,6 +9,8 @@
 #import "MainMenu.h"
 #import "Authorization.h"
 #import "AuthorizationView.h"
+#import "Network.h"
+#import "Alerts.h"
 
 @interface MainMenu()
 @property (nonatomic, unsafe_unretained) UIViewController *viewController;
@@ -31,6 +33,7 @@
 - (id)initWithViewController:(UIViewController *)viewController {
     if (self = [super init]) {
         _viewController = viewController;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     }
     return self;
 }
@@ -111,17 +114,30 @@
     [self.viewController.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)addAuthorizeButton {
+- (void)addAuthorizeButton {    
     UIBarButtonItem *authorizeButton = [[UIBarButtonItem alloc] initWithTitle:@"Войти" style:UIBarButtonItemStyleBordered target:self action:@selector(onAuthorizeButtonClick)];
     self.viewController.navigationItem.rightBarButtonItem = ([Authorization sharedAuthorization].isAuthorized) ? nil : authorizeButton;
 }
 
 - (void)onAuthorizeButtonClick {
+    if (![Network sharedNetwork].isAvailable) {
+        [Alerts showAlertViewWithTitle:@"Нет доступа в Интернет" message:@"Для работы данного приложения необходим доступ в интернет"];
+        return;
+    }
+    
     [self.viewController.navigationController pushViewController:self.authorizationView animated:YES];
 }
 
 - (void)addHiddenBackButton {
     self.viewController.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Назад" style:UIBarButtonItemStyleBordered target:self action:nil];
+}
+
+- (void)didPassAuthorization:(NSNotification *)notification {
+    self.viewController.navigationItem.rightBarButtonItem = nil;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
 }
 
 //--------------------------------------------------------------------------------------------

@@ -26,11 +26,11 @@
 @property (strong, nonatomic) UISwipeGestureRecognizer *leftSwipeGestureRecognizer;
 @property (strong, nonatomic) UISwipeGestureRecognizer *rightSwipeGestureRecognizer;
 
--(void)didPassAuthorization:(NSNotification *)notification;
+//-(void)didPassAuthorization:(NSNotification *)notification;
 
 - (IBAction)onSwipeLeft:(UISwipeGestureRecognizer *)sender;
 - (IBAction)onSwipeRight:(UISwipeGestureRecognizer *)sender;
 
--(void)performTransition:(NSString *)subtype;
+- (void)performTransition:(NSString *)subtype;
 
 @end

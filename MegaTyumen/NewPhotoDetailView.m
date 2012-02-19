@@ -27,9 +27,9 @@
 @synthesize rightSwipeGestureRecognizer;
 @synthesize mainMenu = _mainMenu;
 
--(void)didPassAuthorization:(NSNotification *)notification {
-    self.navigationItem.rightBarButtonItem = nil;
-}
+//-(void)didPassAuthorization:(NSNotification *)notification {
+//    self.navigationItem.rightBarButtonItem = nil;
+//}
 
 -(void)performTransition:(NSString *)subtype
 {
@@ -73,10 +73,10 @@
 - (IBAction)onSwipeLeft:(id)sender {
     if (transitioning) return;
     NSLog(@"Swipe left");
-    if (self.currentPhoto < self.currentNew.photosCount - 1) {
+    if (self.currentPhoto < self.currentNew.images.count - 1) {
         self.currentPhoto++;
-        [self.imageView2 setImageWithURL:[self.currentNew.photoURLs objectAtIndex:self.currentPhoto]];
-        self.textLabel.text = [NSString stringWithFormat:@"%d / %d", self.currentPhoto +1, self.currentNew.photosCount];
+        [self.imageView2 setImageWithURL:[self.currentNew.images objectAtIndex:self.currentPhoto]];
+        self.textLabel.text = [NSString stringWithFormat:@"%d / %d", self.currentPhoto +1, self.currentNew.images.count];
         [self performTransition:kCATransitionFromRight];
     }
 }
@@ -85,8 +85,8 @@
     if (transitioning) return;
     if (self.currentPhoto > 0) {
         self.currentPhoto--;
-        [self.imageView2 setImageWithURL:[self.currentNew.photoURLs objectAtIndex:self.currentPhoto]];
-        self.textLabel.text = [NSString stringWithFormat:@"%d / %d", self.currentPhoto +1, self.currentNew.photosCount];
+        [self.imageView2 setImageWithURL:[self.currentNew.images objectAtIndex:self.currentPhoto]];
+        self.textLabel.text = [NSString stringWithFormat:@"%d / %d", self.currentPhoto +1, self.currentNew.images.count];
         [self performTransition:kCATransitionFromLeft];
     }
 }
@@ -97,7 +97,7 @@
     if (self) {
         // Custom initialization
         self.title = @"Просмотр фото";
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:@"didPassAuthorization" object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:@"didPassAuthorization" object:nil];
     }
     return self;
 }
@@ -132,8 +132,8 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-    [self.imageView1 setImageWithURL:[self.currentNew.photoURLs objectAtIndex:self.currentPhoto]];
-    self.textLabel.text = [NSString stringWithFormat:@"%d / %d", self.currentPhoto +1, self.currentNew.photosCount];
+    [self.imageView1 setImageWithURL:[self.currentNew.images objectAtIndex:self.currentPhoto]];
+    self.textLabel.text = [NSString stringWithFormat:@"%d / %d", self.currentPhoto +1, self.currentNew.images.count];
     transitioning = NO;
     //self.containerView.contentSize = self.imageView1.bounds.size;
     self.containerView.maximumZoomScale = 10;

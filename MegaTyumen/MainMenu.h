@@ -21,19 +21,6 @@
 - (void)onBackButtonClick;
 - (void)onAuthorizeButtonClick;
 
-//+ (void)addMainButtonForViewController:(UIViewController<MainMenuDelegate> *)viewController;
-//+ (void)addBackButtonForViewController:(UIViewController<MainMenuDelegate> *)viewController;
-//+ (void)addAuthorizeButtonForViewController:(UIViewController<MainMenuDelegate> *)viewController;
-//+ (void)addHiddenBackButtonForViewController:(UIViewController<MainMenuDelegate> *)viewController;
+- (void)didPassAuthorization:(NSNotification *)notification;
 
 @end
-
-//
-//@protocol MainMenuDelegate <NSObject>
-//
-//@optional
-//- (void)onMainButtonClick;
-//- (void)onBackButtonClick;
-//- (void)onAuthorizeButtonClick;
-//
-//@end

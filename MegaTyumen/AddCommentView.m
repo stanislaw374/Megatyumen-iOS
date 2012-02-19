@@ -12,32 +12,33 @@
 
 @interface AddCommentView()
 @property (nonatomic, strong) MainMenu *mainMenu;
+@property (nonatomic, strong) KeyboardListener *keyboardListener;
+@property (nonatomic, strong) MBProgressHUD *hud;
 @end
 
 @implementation AddCommentView
 @synthesize tableView;
 @synthesize currentNew = _currentNew;
-@synthesize authorizationView = _authorizationView;
 @synthesize scrollView;
 @synthesize keyboardListener = _keyboardListener;
 @synthesize hud = _hud;
 @synthesize mainMenu = _mainMenu;
 
--(void)didPassAuthorization:(NSNotification *)notification {
-    self.navigationItem.rightBarButtonItem = nil;
-}
+//-(void)didPassAuthorization:(NSNotification *)notification {
+//    self.navigationItem.rightBarButtonItem = nil;
+//}
 
-- (void)didAddComment:(NSNotification *)notification {
-    int result = [[notification.userInfo objectForKey:@"result"] intValue];
-    if (result) {
-        [Alerts showAlertViewWithTitle:@"" message:@"Комментарий добавлен"];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-    else {
-        [Alerts showAlertViewWithTitle:@"Ошибка" message:@""]; 
-    }
-    [self.hud hide:YES];
-}
+//- (void)didAddComment:(NSNotification *)notification {
+//    int result = [[notification.userInfo objectForKey:@"result"] intValue];
+//    if (result) {
+//        [Alerts showAlertViewWithTitle:@"" message:@"Комментарий добавлен"];
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }
+//    else {
+//        [Alerts showAlertViewWithTitle:@"Ошибка" message:@""]; 
+//    }
+//    [self.hud hide:YES];
+//}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -64,8 +65,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAddComment:) name:kNOTIFICATION_DID_ADD_COMMENT object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAddComment:) name:kNOTIFICATION_DID_ADD_COMMENT object:nil];
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addBackButton];
@@ -88,8 +89,8 @@
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_ADD_COMMENT object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_ADD_COMMENT object:nil];
     [self setTableView:nil];
     [self setScrollView:nil];
     [super viewDidUnload];
@@ -112,7 +113,19 @@
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     // Добавление комментария к новости
-    [self.currentNew addCommentWithName:name andText:text];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        BOOL result = [self.currentNew addCommentWithName:name andText:text];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.hud hide:YES]; 
+            if (result) {
+                [Alerts showAlertViewWithTitle:@"" message:@"Комментарий добавлен"];
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+            else {
+                [Alerts showAlertViewWithTitle:@"Ошибка" message:@""];
+            }
+        });
+    });
 }
 
 #pragma mark - UITextFieldDelegate

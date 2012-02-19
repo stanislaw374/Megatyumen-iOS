@@ -18,7 +18,7 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UITableView *tableView;
 @property (unsafe_unretained, nonatomic) IBOutlet UIScrollView *scrollView;
 
-- (IBAction)dismissKeyboard:(id)sender;
+//- (IBAction)dismissKeyboard:(id)sender;
 - (IBAction)onRegisterButtonClick;
 - (IBAction)onReadUserAgreementButtonClick;
 

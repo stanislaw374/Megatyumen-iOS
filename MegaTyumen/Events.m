@@ -48,7 +48,7 @@
 - (void)getItems:(int)offset {
     self.isLoaded = NO;
     
-    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:VALUE_EVENTS, KEY_REQUEST, [NSNumber numberWithInt:4], KEY_LIMIT, [NSNumber numberWithInt:offset], KEY_OFFSET, nil];
+    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:VALUE_EVENTS, KEY_REQUEST, [NSNumber numberWithInt:10], KEY_LIMIT, [NSNumber numberWithInt:offset], KEY_OFFSET, nil];
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
     

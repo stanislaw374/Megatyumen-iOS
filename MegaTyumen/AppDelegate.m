@@ -16,6 +16,7 @@
 @property (strong, nonatomic) UIViewController *viewController;
 @property (strong, nonatomic) UINavigationController *navController;
 - (BOOL)isFirstTimeLaunch;
+- (void)reachabilityChanged:(NSNotification *)notification;
 @end
 
 @implementation AppDelegate
@@ -24,11 +25,11 @@
 @synthesize viewController = _viewController;
 @synthesize navController = _navController;
 @synthesize facebook = _facebook;
-@synthesize networkListener = _networkListener;
+@synthesize reachability = _reachability;
 
 // Проверка на первый запуск приложения
 - (BOOL)isFirstTimeLaunch {
-    NSString *wasLaunched = @"wasLaunched";
+    NSString *wasLaunched = KEY_WAS_LAUNCHED;
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if (![userDefaults objectForKey:wasLaunched]) { 
         [userDefaults setBool:YES forKey:wasLaunched];
@@ -38,10 +39,21 @@
     else return NO;
 }
 
+- (void)reachabilityChanged:(NSNotification *)notification {
+//    Reachability *curReach = notification.object;
+//    NSParameterAssert([curReach isKindOfClass:[Reachability class]]);    
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.  
+    
+    // Observe the kNetworkReachabilityChangedNotification. When that notification is posted, the
+    // method "reachabilityChanged" will be called. 
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(reachabilityChanged:) name: kReachabilityChangedNotification object: nil];
+    self.reachability = [Reachability reachabilityForInternetConnection];
+    [self.reachability startNotifier];    
     
     if ([self isFirstTimeLaunch]) {
         DemoScreenView *demoScreenView = [[DemoScreenView alloc] init];
@@ -52,8 +64,6 @@
     self.navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     
     [SCAppUtils customizeNavigationController:self.navController];
-    
-    self.networkListener = [[NetworkListener alloc] init];
     
     self.window.rootViewController = self.navController;
     [self.window makeKeyAndVisible];

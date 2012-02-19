@@ -254,7 +254,7 @@
     CatalogItem *item = [self.catalog.items objectForKey:indexPath];
     
     if (item) {
-        [view1 setImageWithURL:[item.photosUrls objectAtIndex:0] placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:view1.frame.size];
+        //[view1 setImageWithURL:[item.photosUrls objectAtIndex:0] placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:view1.frame.size];
         view2.text = item.name;
         view3.text = item.address;
         int distance = item.distance;

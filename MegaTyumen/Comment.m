@@ -10,7 +10,7 @@
 
 @implementation Comment
 
-@synthesize author = _author;
+@synthesize user = _user;
 @synthesize date = _date;
 @synthesize text = _text;
 

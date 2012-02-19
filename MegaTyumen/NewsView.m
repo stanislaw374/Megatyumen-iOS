@@ -19,32 +19,41 @@
 #import "Constants.h"
 
 @interface NewsView()
-@property (nonatomic, strong) News *news;                           // Новости
-@property (nonatomic, strong) NewDetailView *newsDetailView;        // Экран просмотра новости
+@property (nonatomic, strong) News *news;                          // Новости
+@property (nonatomic, strong) NewDetailView *newDetailView;        // Экран просмотра новости
 @property (nonatomic, strong) MainMenu *mainMenu;
-
-- (void)didPassAuthorization:(NSNotification *)notification;         // Уведомление об успешной авторизации
-- (void)didGetNewsCount:(NSNotification *)notification;              // Уведомление о загрузке количества новостей
-- (void)didGetNews:(NSNotification *)notification;                   // Уведомление о загрузке новостей, которые должны быть отображены в данный момент
+@property (nonatomic, strong) MBProgressHUD *hud;
+//@property (strong, nonatomic) UITableViewCell *loadingCell;
+//- (void)didPassAuthorization:(NSNotification *)notification;         // Уведомление об успешной авторизации
+//- (void)didGetNewsCount:(NSNotification *)notification;              // Уведомление о загрузке количества новостей
+//- (void)didGetNews:(NSNotification *)notification;                   // Уведомление о загрузке новостей, которые должны быть отображены в данный момент
 @end
 
 @implementation NewsView
-@synthesize loadingCell = _loadingCell;
+//@synthesize loadingCell = _loadingCell;
 @synthesize news = _news;
-@synthesize newsDetailView = _newsDetailView;
+@synthesize newDetailView = _newDetailView;
 @synthesize mainMenu = _mainMenu;
+@synthesize hud = _hud;
 
--(void)didPassAuthorization:(NSNotification *)notification {
-    self.navigationItem.rightBarButtonItem = nil;
+- (NewDetailView *)newDetailView {
+    if (!_newDetailView) {
+        _newDetailView = [[NewDetailView alloc] init];
+    }
+    return _newDetailView;
 }
 
--(void)didGetNewsCount:(NSNotification *)notification {
-    [self.tableView reloadData];
-}
-
-- (void)didGetNews:(NSNotification *)notification {
-    [self.tableView reloadData];
-}
+//- (void)didPassAuthorization:(NSNotification *)notification {
+//    self.navigationItem.rightBarButtonItem = nil;
+//}
+//
+//-(void)didGetNewsCount:(NSNotification *)notification {
+//    [self.tableView reloadData];
+//}
+//
+//- (void)didGetNews:(NSNotification *)notification {
+//    [self.tableView reloadData];
+//}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -76,9 +85,9 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetNewsCount:) name:kNOTIFICATION_DID_GET_NEWS_COUNT object:nil];    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetNews:) name:kNOTIFICATION_DID_GET_NEWS object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];    
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetNewsCount:) name:kNOTIFICATION_DID_GET_NEWS_COUNT object:nil];    
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetNews:) name:kNOTIFICATION_DID_GET_NEWS object:nil];
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addMainButton];
@@ -87,39 +96,31 @@
     self.tableView.rowHeight = 104;
     
     self.news = [[News alloc] init];
-    [self.news getCount];
 }
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_NEWS_COUNT object:nil];    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_NEWS object:nil];
-    [self setLoadingCell:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];    
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_NEWS_COUNT object:nil];    
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_NEWS object:nil];
+    //[self setLoadingCell:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
-//- (void)viewWillAppear:(BOOL)animated
-//{
-//    [super viewWillAppear:animated];
-//}
-//
-//- (void)viewDidAppear:(BOOL)animated
-//{
-//    [super viewDidAppear:animated];
-//}
-//
-//- (void)viewWillDisappear:(BOOL)animated
-//{
-//    [super viewWillDisappear:animated];
-//}
-//
-//- (void)viewDidDisappear:(BOOL)animated
-//{
-//    [super viewDidDisappear:animated];
-//}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    self.hud = [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.news getCount];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            [self.hud hide:YES];
+        });
+    });
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -131,10 +132,10 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return self.news.count ? 5 : 1;
+    return 5;
 }
 
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 23)];
     view.backgroundColor = [UIColor yellowColor];
     
@@ -148,7 +149,7 @@
     label.font = [UIFont boldSystemFontOfSize:18];
     [view addSubview:label];
     
-    if (self.news.count) {
+    if (YES) {
         NSString *headerText;
         switch (section) {
             case 0: headerText = [NSString stringWithFormat:@"Сегодня (%d)", self.news.todayCount]; break;
@@ -164,7 +165,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (!self.news.count) return 1;
+    //if (!self.news.count) return 1;
     switch (section) {
         case 0: return self.news.todayLoaded == self.news.todayCount ? self.news.todayCount : self.news.todayLoaded + 1;
         case 1: return self.news.yesterdayLoaded == self.news.yesterdayCount ? self.news.yesterdayCount : self.news.yesterdayLoaded + 1;
@@ -172,6 +173,7 @@
         case 3: return self.news.weekAgoLoaded == self.news.weekAgoCount ? self.news.weekAgoCount : self.news.weekAgoLoaded + 1;
         case 4: return self.news.othersLoaded == self.news.othersCount ? self.news.othersCount : self.news.othersLoaded + 1;
     }
+    //[self.hud setNeedsDisplay];
     return 0;
 }
 
@@ -184,17 +186,18 @@
     UITableViewCell *cell;
     
     // Если не известно количество новостей
-    if (!self.news.count) {
-        cell = [tableView dequeueReusableCellWithIdentifier:kLoadingCell];
-        if (!cell) {
-            [[NSBundle mainBundle] loadNibNamed:kLoadingCell owner:self options:nil];
-            cell = self.loadingCell;
-            self.loadingCell = nil;
-            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:cell animated:YES];
-            hud.xOffset = -60;
-        }   
-    }
-    else {
+//    if (!self.news.count) {
+//        cell = [tableView dequeueReusableCellWithIdentifier:kLoadingCell];
+//        if (!cell) {
+//            [[NSBundle mainBundle] loadNibNamed:kLoadingCell owner:self options:nil];
+//            cell = self.loadingCell;
+//            self.loadingCell = nil;
+//            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:cell animated:YES];
+//            hud.xOffset = -60;
+//        }   
+//    }
+//    else 
+    {
         int loaded = 0;
         int count = 0;
         switch (indexPath.section) {
@@ -208,15 +211,22 @@
         if (indexPath.row == loaded) {
             cell = [tableView dequeueReusableCellWithIdentifier:kLoadingCell];
             if (!cell) {
-                [[NSBundle mainBundle] loadNibNamed:kLoadingCell owner:self options:nil];
-                cell = self.loadingCell;
-                self.loadingCell = nil;
-                UILabel *view1 = (UILabel *)[cell viewWithTag:1];
+                NSArray *nibs = [[NSBundle mainBundle] loadNibNamed:kLoadingCell owner:self options:nil];
+                //cell = self.loadingCell;
+                //self.loadingCell = nil;
+                //UILabel *view1 = (UILabel *)[cell viewWithTag:1];
+                cell = [nibs objectAtIndex:0];
                 MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:cell animated:YES];
                 //hud.frame = CGRectInset(hud.frame, view1.frame.origin.x + view1.frame.size.width + 8, 0);
                 hud.xOffset = -60;
             } 
-            [self.news getNextNews];
+            //[self.news getNextNews];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [self.news getNewsForSection:indexPath.section withLimit:10]; 
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData]; 
+                });
+            });
         }
         // Если новость загружена
         else {
@@ -232,7 +242,9 @@
                 cell.textLabel.numberOfLines = 0;
             }    
             cell.textLabel.text = new.title;
-            cell.imageView.image = new.thumbnail;            
+            //cell.imageView.image = new.thumbnail;            
+            [cell.imageView setImageWithURL:new.image placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:CGSizeMake(81, 81)];
+            NSLog(@"Image url: %@", new.image.description);
             if (!new) {
                 cell.textLabel.text = @"";
                 cell.imageView.image = nil;
@@ -290,13 +302,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!self.newsDetailView) {
-        self.newsDetailView = [[NewDetailView alloc] init];
-    }
-    self.newsDetailView.currentNew = [self.news.items objectForKey:indexPath];
-    [self.navigationController pushViewController:self.newsDetailView animated:YES];
-    
-    [News setReadCount:[News readCount] + 1];
+    self.newDetailView.currentNew = [self.news.items objectForKey:indexPath];
+    [self.navigationController pushViewController:self.newDetailView animated:YES];
+    //[News setReadCount:[News readCount] + 1];
 }
 
 @end

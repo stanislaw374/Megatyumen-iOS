@@ -7,13 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MainMenu.h"
 
-@class News, AuthorizationView, NewDetailView;
-
-@interface NewsView : UITableViewController 
-
-@property (strong, nonatomic) IBOutlet UITableViewCell *loadingCell;
-
+@interface NewsView : UITableViewController
 
 @end

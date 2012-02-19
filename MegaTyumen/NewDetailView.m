@@ -40,7 +40,6 @@
 - (void)createUI;
 - (void)initUI;
 - (void)postToFacebook;
-
 @end
 
 @implementation NewDetailView
@@ -93,8 +92,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetNewDetails:) name:kNOTIFICATION_DID_GET_NEW_DETAILS object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetNewDetails:) name:kNOTIFICATION_DID_GET_NEW_DETAILS object:nil];
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addBackButton];
@@ -112,14 +111,19 @@
     [self initUI];
     
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    [self.currentNew getDetails];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.currentNew getContent]; 
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self initUI];
+            [self.hud hide:YES];
+        });
+    });
 }
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_NEW_DETAILS object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_NEW_DETAILS object:nil];
     [self setScrollView:nil];
     [self setPhotosCountLabel:nil];
     [self setHeaderLabel:nil];
@@ -248,19 +252,19 @@
     int dd = 8;
     int height = 0;
     
-    self.headerLabel.frame = CGRectMake(dx, dy, 280, 0);
+    self.headerLabel.frame = CGRectMake(dx + 8, dy + 8, 280 - 8, 0);
     self.headerLabel.text = self.currentNew.title;
     [self.headerLabel sizeToFit];
     height += dy + self.headerLabel.frame.size.height;
     
     self.photoImageView.frame = CGRectMake(dx, self.headerLabel.frame.origin.y + self.headerLabel.frame.size.height + dd, 183, 104);
-    //[self.photoImageView setImageWithURL:self.currentNew.imageURL placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+    [self.photoImageView setImageWithURL:self.currentNew.image placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:CGSizeMake(183, 104)];
     //[self.currentNew.photo thumbnailOfSize:CGSizeMake(183, 104)];
     height += dd + self.photoImageView.frame.size.height;
     
     self.photosButton.frame = CGRectMake(self.photoImageView.frame.origin.x + self.photoImageView.frame.size.width + 17, self.photoImageView.frame.origin.y + 15, 75, 75);
     
-    self.photosCountLabel.text = [NSString stringWithFormat:@"%d фото", self.currentNew.photosCount];
+    self.photosCountLabel.text = [NSString stringWithFormat:@"%d фото", self.currentNew.images.count];
     self.photosCountLabel.frame = CGRectMake(self.photosButton.frame.origin.x + 17, self.photosButton.frame.origin.y + 38, 42, 21);
     
     self.dateLabel.frame = CGRectMake(dx, self.photoImageView.frame.origin.y + self.photoImageView.frame.size.height + dd, 0, 0);
@@ -271,13 +275,13 @@
     height += dd + self.dateLabel.frame.size.height;
     
     self.authorLabel.frame = CGRectMake(self.dateLabel.frame.origin.x + self.dateLabel.frame.size.width + dd, self.photoImageView.frame.origin.y + self.photoImageView.frame.size.height + dd, 280 - self.dateLabel.frame.size.width - dd, 0);
-    self.authorLabel.text = self.currentNew.author;
+    self.authorLabel.text = self.currentNew.user;
     [self.authorLabel sizeToFit];
     
     self.commentsHeaderButton.frame = CGRectMake(dx / 2, self.dateLabel.frame.origin.y + self.dateLabel.frame.size.height + dd, 300, 38);
     height += dd + self.commentsHeaderButton.frame.size.height + 6;
     
-    self.commentsCountLabel.text = [NSString stringWithFormat:@"%d комментариев", self.currentNew.commentsCount];
+    self.commentsCountLabel.text = [NSString stringWithFormat:@"%d комментариев", self.currentNew.comments.count];
     self.commentsCountLabel.frame = CGRectMake(dx / 2 + 44, self.commentsHeaderButton.frame.origin.y + self.commentsHeaderButton.frame.size.height / 6, 0, 0);
     [self.commentsCountLabel sizeToFit];
     
@@ -328,7 +332,7 @@
     height += 2 * dd + self.commentMark.frame.size.height;
     
     self.commentsCountLabel2.frame = CGRectMake(self.commentMark.frame.origin.x + self.commentMark.frame.size.width + dd, self.commentMark.frame.origin.y - 1, 250, 18);
-    self.commentsCountLabel2.text = [NSString stringWithFormat:@"КОММЕНТАРИИ (%d)", self.currentNew.commentsCount];
+    self.commentsCountLabel2.text = [NSString stringWithFormat:@"КОММЕНТАРИИ (%d)", self.currentNew.comments.count];
     
     // Добавление комментариев %(
     if (self.commentsView) { 
@@ -337,15 +341,15 @@
     }
     self.commentsView = [[UIView alloc] initWithFrame:CGRectMake(dx, self.commentMark.frame.origin.y + self.commentMark.frame.size.height + dd, 280, 0)];
     int lastCommentHeight = 0;
-    for (int i = 0; i < self.currentNew.commentsCount; i++) {
+    for (int i = 0; i < self.currentNew.comments.count; i++) {
         Comment *comment = [self.currentNew.comments objectAtIndex:i];
-        UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(0, lastCommentHeight + dd, 0, 0)];
+        UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(0, lastCommentHeight, 0, 0)];
         lbl.backgroundColor = [UIColor clearColor];
         lbl.textColor = [UIColor colorWithRed:0/255 green:144.0/255 blue:219.0/255 alpha:1];
         lbl.font = [UIFont systemFontOfSize:14];
         lbl.lineBreakMode = UILineBreakModeWordWrap;
         lbl.numberOfLines = 1;
-        lbl.text = [NSString stringWithFormat:@"%@,", comment.author];
+        lbl.text = [NSString stringWithFormat:@"%@,", comment.user];
         [lbl sizeToFit];
         [self.commentsView addSubview:lbl];
         
@@ -378,21 +382,21 @@
     [self.scrollView addSubview:self.commentsView];
     //----------------------
     
-    self.borderButton.frame = CGRectMake(self.borderButton.frame.origin.x, self.borderButton.frame.origin.y, self.borderButton.frame.size.width, self.borderButton.frame.size.height + height);
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.contentSize.height + height);
+    self.borderButton.frame = CGRectMake(self.borderButton.frame.origin.x, self.borderButton.frame.origin.y, self.borderButton.frame.size.width, self.borderButton.frame.size.height + height + 8);
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.contentSize.height + height + 8);
 }
 
--(void)didGetNewDetails:(NSNotification *)notification {
-    [self initUI];
-    [self.hud hide:YES];
-}
+//-(void)didGetNewDetails:(NSNotification *)notification {
+//    [self initUI];
+//    [self.hud hide:YES];
+//}
 
--(void)didPassAuthorization:(NSNotification *)notification {
-    self.navigationItem.rightBarButtonItem = nil;
-}
+//-(void)didPassAuthorization:(NSNotification *)notification {
+//    self.navigationItem.rightBarButtonItem = nil;
+//}
 
 - (IBAction)onPhotosButtonClick {
-    if (!self.currentNew.photosCount) return;
+    if (!self.currentNew.images.count) return;
     if (!self.newsPhotosView) {
         self.newsPhotosView = [[NewsPhotosView alloc] init];
     }
@@ -438,8 +442,8 @@
     
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    //[Constants fb_APP_ID], @"app_id",
-                                   self.currentNew.url, @"link",
-                                   self.currentNew.photoUrl, @"picture",
+                                   self.currentNew.link, @"link",
+                                   self.currentNew.image, @"picture",
                                    self.currentNew.title, @"name",
                                    @"megatyumen.ru", @"caption",
                                    self.currentNew.title, @"description",

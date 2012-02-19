@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "FBConnect.h"
-#import "NetworkListener.h"
+#import "Reachability.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) Facebook *facebook;
-@property (strong, nonatomic) NetworkListener *networkListener;
+@property (strong, nonatomic) Reachability *reachability;
 
 @end

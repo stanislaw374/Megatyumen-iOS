@@ -10,7 +10,7 @@
 
 @interface Comment : NSObject
 
-@property (nonatomic, strong) NSString *author;
+@property (nonatomic, strong) NSString *user;
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *text;
 

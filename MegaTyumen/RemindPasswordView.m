@@ -11,14 +11,15 @@
 #import "Authorization.h"
 #import "KeyboardListener.h"
 #import "MainMenu.h"
+#import "Constants.h"
 
 @interface RemindPasswordView()
 @property (nonatomic, strong) MainMenu *mainMenu;
 @property (strong, nonatomic) KeyboardListener *keyboardListener;
 @property (strong, nonatomic) MBProgressHUD *hud;
-- (void)dismissKeyboard:(id)sender;
+//- (void)dismissKeyboard:(id)sender;
 - (void)restorePassword;
-- (void)didRestorePassword:(NSNotification *)notification;
+//- (void)didRestorePassword:(NSNotification *)notification;
 @end
 
 @implementation RemindPasswordView
@@ -62,34 +63,46 @@
     return YES;
 }
 
--(void)dismissKeyboard:(id)sender {
-    [sender resignFirstResponder];
-}
+//-(void)dismissKeyboard:(id)sender {
+//    [sender resignFirstResponder];
+//}
 
--(void)restorePassword {
+- (void)restorePassword {
     // Получение e-mail
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     NSString *email = ((UITextField *)[[self.tableView cellForRowAtIndexPath:indexPath] viewWithTag:1]).text;
     
-    [[Authorization sharedAuthorization] restorePasswordWithEmail:email];
-    
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSDictionary *dict = [[Authorization sharedAuthorization] restorePasswordWithEmail:email];
+        BOOL response = [[dict objectForKey:KEY_RESPONSE] boolValue];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.hud hide:YES];
+            if (response) {
+                [Alerts showAlertViewWithTitle:@"" message:@"Новый пароль был выслан на ваш e-mail"];
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+            else {
+                [Alerts showAlertViewWithTitle:@"Ошибка" message:[dict objectForKey:KEY_ERROR]];
+            }
+        });
+    });
 }
 
-- (void)didRestorePassword:(NSNotification *)notification {
-    Authorization *authorization = notification.object;
-    //int result = [[notification.userInfo objectForKey:@"result"] intValue];
-    if (authorization.result) {        
-        [Alerts showAlertViewWithTitle:@"" message:@"Новый пароль был выслан на ваш e-mail"];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-    else {
-        //NSString *error = [notification.userInfo objectForKey:@"error"];
-        [Alerts showAlertViewWithTitle:@"Ошибка" message:authorization.error];
-    }
-    
-    [self.hud hide:YES];
-}
+//- (void)didRestorePassword:(NSNotification *)notification {
+//    Authorization *authorization = notification.object;
+//    //int result = [[notification.userInfo objectForKey:@"result"] intValue];
+////    if (authorization.result) {        
+////        [Alerts showAlertViewWithTitle:@"" message:@"Новый пароль был выслан на ваш e-mail"];
+////        [self.navigationController popViewControllerAnimated:YES];
+////    }
+////    else {
+////        //NSString *error = [notification.userInfo objectForKey:@"error"];
+////        [Alerts showAlertViewWithTitle:@"Ошибка" message:authorization.error];
+////    }
+//    
+//    [self.hud hide:YES];
+//}
 
 #pragma mark - View lifecycle
 
@@ -99,7 +112,7 @@
     // Do any additional setup after loading the view from its nib.
     self.tableView.backgroundColor = [UIColor clearColor];
     self.keyboardListener = [[KeyboardListener alloc] init];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRestorePassword:) name:kNOTIFICATION_DID_RESTORE_PASSWORD object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRestorePassword:) name:kNOTIFICATION_DID_RESTORE_PASSWORD object:nil];
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addBackButton];
@@ -118,7 +131,7 @@
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_RESTORE_PASSWORD object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_RESTORE_PASSWORD object:nil];
     [self setTableView:nil];
     [self setScrollView:nil];
     [super viewDidUnload];
