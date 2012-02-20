@@ -18,6 +18,7 @@
 #import "CatalogCategoryView.h"
 #import "CatalogItemView.h"
 #import "UIImageView+WebCache.h"
+#import "Constants.h"
 
 @interface CatalogView()
 @property (nonatomic, strong) AuthorizationView *authorizationView;
@@ -28,7 +29,20 @@
 @property (nonatomic, strong) CatalogCategoryView *catalogCategoryView;
 @property (nonatomic, strong) CatalogItemView *catalogItemView;
 @property (nonatomic, strong) MainMenu *mainMenu;
-- (void)loadCatalog;
+@property (nonatomic, strong) MBProgressHUD *hud;
+@property (nonatomic, strong) NSArray *categories;
+//- (void)loadCatalog;
+- (void)initUI;
+- (void)getCatalogTypes; 
+//- (void)didGetCatalogTypes:(NSNotification *)notification;
+- (void)getCatalogByCuisine;
+//- (void)didGetCatalogCuisines:(NSNotification *)notification;
+- (void)getCatalogByBill;
+//- (void)didGetCatalogBills:(NSNotification *)notification;
+- (void)getCatalogByDistance;
+//- (void)didGetCatalogByDistance:(NSNotification *)notification;
+//- (void)didGetCatalogByName:(NSNotification *)notification;
+
 @end
 
 @implementation CatalogView
@@ -52,6 +66,21 @@
 @synthesize catalogItemView = _catalogItemView;
 @synthesize hud = _hud;
 @synthesize mainMenu = _mainMenu;
+@synthesize categories = _categories;
+
+- (Catalog *)catalog {
+    if (!_catalog) {
+        _catalog = [[Catalog alloc] init];
+    }
+    return _catalog;
+}
+
+- (CatalogCategoryView *)catalogCategoryView {
+    if (!_catalogCategoryView) {
+        _catalogCategoryView = [[CatalogCategoryView alloc] init];
+    }
+    return _catalogCategoryView;
+}
 
 - (CLLocationManager *)locationManager {
     if (!_locationManager) {
@@ -70,21 +99,15 @@
         }
     }
     
-    NSArray *categories = [self.catalog.categories objectAtIndex:self.currentCategory];
-//    switch (self.currentSection) {
-//        case 0: categories = self.catalog.establishmentTypes; break;        
-//        case 1: categories = self.catalog.cuisineTypes; break;
-//        case 2: categories = self.catalog.billTypes; break;
-//    }
-    
     int row = 0, column = 0;
-    for (int i = 0; i < categories.count; i++) {
-        CatalogCategory *type = [categories objectAtIndex:i];
+    for (int i = 0; i < self.categories.count; i++) {
+        NSDictionary *category = [self.categories objectAtIndex:i];
         
         CGRect buttonFrame = CGRectMake(28 + column * (64 + 36), 28 + row * (64 + 36 + 21), 64, 64);
         UIButton *button = [[UIButton alloc] initWithFrame:buttonFrame];
-        if (type.image) {
-            [button setImage:type.image forState:UIControlStateNormal];
+        UIImage *image = [category objectForKey:@"image"];
+        if (image) {
+            [button setImage:image forState:UIControlStateNormal];
         }
         else { [button setImage:[UIImage imageNamed:@"catalog_button.png"] forState:UIControlStateNormal]; }
         button.tag = i;
@@ -93,7 +116,7 @@
         
         CGRect labelFrame = CGRectMake(buttonFrame.origin.x - 14, buttonFrame.origin.y + buttonFrame.size.height + 8, 28 + buttonFrame.size.width, 21);
         UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
-        label.text = type.name;
+        label.text = [category objectForKey:@"name"];
         label.font = [UIFont boldSystemFontOfSize:14];
         label.textAlignment = UITextAlignmentCenter;
         label.adjustsFontSizeToFitWidth = YES;
@@ -112,14 +135,12 @@
 }
 
 - (void)onCatalogCategoryButtonClick:(id)sender {
-    if (!self.catalogCategoryView) {
-        self.catalogCategoryView = [[CatalogCategoryView alloc] init];
-    }
     UIButton *btn = (UIButton *)sender;
     self.catalogCategoryView.catalog = self.catalog;
-    self.catalogCategoryView.currentCategory = [[self.catalog.categories objectAtIndex:self.currentCategory] objectAtIndex:btn.tag];
-    self.catalogCategoryView.parentCatalogView = self;
+    //self.catalogCategoryView.currentCategory = [[self.catalog.categories objectAtIndex:self.currentCategory] objectAtIndex:btn.tag];
+    //self.catalogCategoryView.parentCatalogView = self;
     [self.navigationController pushViewController:self.catalogCategoryView animated:YES];
+    self.catalogCategoryView.category = [self.categories objectAtIndex:btn.tag];
 }
 
 - (IBAction)onCheckinButtonClick {
@@ -160,10 +181,10 @@
     }
     [self.navigationController pushViewController:self.authorizationView animated:YES];
 }
-
-- (void)didPassAuthorization:(NSNotification *)notification {
-    self.navigationItem.rightBarButtonItem = nil;
-}
+//
+//- (void)didPassAuthorization:(NSNotification *)notification {
+//    self.navigationItem.rightBarButtonItem = nil;
+//}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -191,28 +212,28 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogTypes:) name:kNOTIFICATION_DID_GET_CATALOG_TYPES object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogCuisines:) name:kNOTIFICATION_DID_GET_CATALOG_CUISINES object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogBills:) name:kNOTIFICATION_DID_GET_CATALOG_BILLS object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogByDistance:) name:kNOTIFICATION_DID_GET_CATALOG_BY_DISTANCE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogByName:) name:kNOTIFICATION_DID_GET_CATALOG_BY_NAME object:nil];
-    
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogTypes:) name:kNOTIFICATION_DID_GET_CATALOG_TYPES object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogCuisines:) name:kNOTIFICATION_DID_GET_CATALOG_CUISINES object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogBills:) name:kNOTIFICATION_DID_GET_CATALOG_BILLS object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogByDistance:) name:kNOTIFICATION_DID_GET_CATALOG_BY_DISTANCE object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogByName:) name:kNOTIFICATION_DID_GET_CATALOG_BY_NAME object:nil];
+//    
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addMainButton];
     [self.mainMenu addAuthorizeButton];
     
     self.tableView.rowHeight = 104;
     
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    if ([CLLocationManager locationServicesEnabled]) {
-        
-        [self.locationManager startUpdatingLocation];
-    }
-    else {
-        [self loadCatalog]; 
-    }    
+//    if ([CLLocationManager locationServicesEnabled]) {
+//        
+//        [self.locationManager startUpdatingLocation];
+//    }
+//    else {
+//        [self loadCatalog]; 
+//    }    
     
     //NSLog(@"user location: %@", self.locationManager.location);
     
@@ -225,18 +246,43 @@
     [self.btnBill setImage:[UIImage imageNamed:@"catalog_byBillButtonPressed.png"] forState:UIControlStateSelected];
     [self.btnNearby setImage:[UIImage imageNamed:@"catalog_NearbyButtonPressed.png"] forState:UIControlStateSelected];
     self.btnType.selected = YES;
+    
+    [self onTypeButtonClick];
 }
+
+#pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     [self.locationManager stopUpdatingLocation];
-    [self loadCatalog];
+    self.catalog.userLocation = self.locationManager.location;
+
+    if (self.currentCategory == -1) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self.catalog getCatalogByName:self.searchBar.text];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.scrollView.hidden = YES;
+                self.tableView.hidden = NO;            
+                [self.tableView reloadData];
+                [self.hud hide:YES];
+            });
+        });
+    }
+    else {        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self.catalog getCatalogByDistance];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+                [self.hud hide:YES];
+            });
+        });
+    }
 }
 
-- (void)loadCatalog {
-    self.catalog = [[Catalog alloc] initWithUserLocation:self.locationManager.location];
-    self.catalog.searchString = @"";
-    [self getCatalogTypes];  
-}
+//- (void)loadCatalog {
+//    self.catalog = [[Catalog alloc] initWithUserLocation:self.locationManager.location];
+//    self.catalog.searchString = @"";
+//    [self getCatalogTypes];  
+//}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -245,15 +291,15 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    //[self.locationManager stopUpdatingLocation];
+    [self.locationManager stopUpdatingLocation];
 }
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_CATALOG_TYPES object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-    
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_CATALOG_TYPES object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+//    
     [self setSearchBar:nil];
     [self setTableView:nil];
     [self setCell:nil];
@@ -277,61 +323,86 @@
 }
 
 - (void)getCatalogTypes {    
-    [self.catalog getTypes];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        self.categories = [self.catalog getTypes];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self initUI];
+            [self.hud hide:YES];
+        });
+    });
 }
 
-- (void)didGetCatalogTypes:(NSNotification *)notification {
-    NSLog(@"Получил уведомление о получении типов");
-    
-    [self.hud hide:YES];
-    
-    [self initUI];
-}
+//- (void)didGetCatalogTypes:(NSNotification *)notification {
+//    NSLog(@"Получил уведомление о получении типов");
+//    
+//    [self.hud hide:YES];
+//    
+//    [self initUI];
+//}
 
 - (void)getCatalogByCuisine {
-    [self.catalog getCuisines];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        self.categories = [self.catalog getCuisines];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self initUI];
+            [self.hud hide:YES];
+        });
+    });
 }
 
-- (void)didGetCatalogCuisines:(NSNotification *)notification {
-    NSLog(@"Получил уведомление о получении кухонь");
-    
-    [self.hud hide:YES];
-    
-    [self initUI];
-}
+//- (void)didGetCatalogCuisines:(NSNotification *)notification {
+//    NSLog(@"Получил уведомление о получении кухонь");
+//    
+//    [self.hud hide:YES];
+//    
+//    [self initUI];
+//}
 
 - (void)getCatalogByBill {
-    [self.catalog getBills];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        self.categories = [self.catalog getBills];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self initUI];
+            [self.hud hide:YES];
+        });
+    });
 }
 
-- (void)didGetCatalogBills:(NSNotification *)notification {
-    NSLog(@"Получил уведомление о получении чеков");
-    
-    [self.hud hide:YES];
-    
-    [self initUI];
-}
+//- (void)didGetCatalogBills:(NSNotification *)notification {
+//    NSLog(@"Получил уведомление о получении чеков");
+//    
+//    [self.hud hide:YES];
+//    
+//    [self initUI];
+//}
 
--(void)getCatalogByDistance {    
-    double lat = self.locationManager.location.coordinate.latitude;
-    double lng = self.locationManager.location.coordinate.longitude;
-    [self.catalog getCatalogByDistanceWithLat:lat andLng:lng];
-}
-
-- (void)didGetCatalogByDistance:(NSNotification *)notification {
-    [self.tableView reloadData];
+- (void)getCatalogByDistance {    
+    //double lat = self.locationManager.location.coordinate.latitude;
+    //double lng = self.locationManager.location.coordinate.longitude;
+    //[self.catalog getCatalogByDistanceWithLat:lat andLng:lng];
     
-    [self.hud hide:YES];
+    if ([CLLocationManager locationServicesEnabled]) {        
+        [self.locationManager startUpdatingLocation];
+    }
+//    else {
+//        [self.catalog getCatalogByDistance];
+//    }
 }
+//
+//- (void)didGetCatalogByDistance:(NSNotification *)notification {
+//    [self.tableView reloadData];
+//    
+//    [self.hud hide:YES];
+//}
 
-- (void)didGetCatalogByName:(NSNotification *)notification {
-    self.scrollView.hidden = YES;
-    self.tableView.hidden = NO;
-   
-    [self.hud hide:YES];
-    
-    [self.tableView reloadData];
-}
+//- (void)didGetCatalogByName:(NSNotification *)notification {
+//    self.scrollView.hidden = YES;
+//    self.tableView.hidden = NO;
+//   
+//    [self.hud hide:YES];
+//    
+//    [self.tableView reloadData];
+//}
 
 - (IBAction)onButtonClick:(id)sender {
     UIButton *button = (UIButton *)sender;
@@ -405,6 +476,7 @@
             break;
         case 1: headerText = [NSString stringWithFormat:@"В радиусе 100 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
         case 2: headerText = [NSString stringWithFormat:@"В радиусе 150 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
+        case 3: headerText = [NSString stringWithFormat:@"В радиусе более 300 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
     }
     
     label.text = headerText;
@@ -436,20 +508,20 @@
     CatalogItem *item = [self.catalog.items objectForKey:indexPath];
     
     if (item) {
-        //[view1 setImageWithURL:[item.photosUrls objectAtIndex:0] placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:view1.frame.size];
+        [view1 setImageWithURL:item.image placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
         view2.text = item.name;
         view3.text = item.address;
-        int distance = item.distance;
+        double distance = item.distance;
         NSString *distanceStr;
         if (distance < 1000) {
             distanceStr = @"м";
         }
         else {
-            distance /= 1000;
+            //distance /= 1000;
             distanceStr = @"км";
         }
-        [view4 setTitle:[NSString stringWithFormat:@"%d %@", distance, distanceStr] forState:UIControlStateNormal];
-        //[view4 sizeToFit];
+        [view4 setTitle:[NSString stringWithFormat:@"%.0lf %@", distance, distanceStr] forState:UIControlStateNormal];
+        [view4 sizeToFit];
     }
     else {
         view1.image = nil;
@@ -486,11 +558,12 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar_ {
     [searchBar_ resignFirstResponder];
     
-    double lat = self.locationManager.location.coordinate.latitude;
-    double lng = self.locationManager.location.coordinate.longitude;
-    [self.catalog getCatalogByName:searchBar_.text andLat:lat andLng:lng];
-    
+    //double lat = self.locationManager.location.coordinate.latitude;
+    //double lng = self.locationManager.location.coordinate.longitude;
+    //[self.catalog getCatalogByName:searchBar_.text andLat:lat andLng:lng];
+    self.currentCategory = -1;
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.locationManager startUpdatingLocation];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar_ {

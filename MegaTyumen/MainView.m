@@ -278,6 +278,10 @@
 }
 
 - (IBAction)onCheckinButtonClick {
+    if (![Network sharedNetwork].isAvailable) {
+        [Alerts showAlertViewWithTitle:@"Нет доступа в Интернет" message:@"Для работы данного приложения необходим доступ в Интернет"];
+        return;
+    }
     if (![Authorization sharedAuthorization].isAuthorized) {
         [Alerts showAuthorizationAlertViewWithTitle:@"Ошибка" message:@"Для того, чтобы отметиться, нужно авторизоваться" delegate:self];
         return;

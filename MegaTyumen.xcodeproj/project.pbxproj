@@ -331,7 +331,7 @@
 		8623761D149EF36200AD084B /* EventCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EventCell.xib; path = ../MegaTyumen/EventCell.xib; sourceTree = "<group>"; };
 		862989E71496A94400108CD3 /* CheckinView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckinView.h; path = MegaTyumen/CheckinView.h; sourceTree = "<group>"; };
 		862989E81496A94400108CD3 /* CheckinView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckinView.m; path = MegaTyumen/CheckinView.m; sourceTree = "<group>"; };
-		862989E91496A94400108CD3 /* CheckinView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CheckinView.xib; path = MegaTyumen/CheckinView.xib; sourceTree = "<group>"; };
+		862989E91496A94400108CD3 /* CheckinView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CheckinView.xib; path = ../MegaTyumen/CheckinView.xib; sourceTree = "<group>"; };
 		862989F01496AE8900108CD3 /* checkin_distance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkin_distance.png; sourceTree = "<group>"; };
 		862989F11496AE8900108CD3 /* checkin_distance@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkin_distance@2x.png"; sourceTree = "<group>"; };
 		862989F21496AE8900108CD3 /* checkin_negativeButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkin_negativeButton.png; sourceTree = "<group>"; };
@@ -342,7 +342,7 @@
 		862989F71496AE8900108CD3 /* checkin_positiveButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkin_positiveButton@2x.png"; sourceTree = "<group>"; };
 		86298A051496BA6900108CD3 /* CatalogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CatalogView.h; path = MegaTyumen/CatalogView.h; sourceTree = "<group>"; };
 		86298A061496BA6900108CD3 /* CatalogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CatalogView.m; path = MegaTyumen/CatalogView.m; sourceTree = "<group>"; };
-		86298A071496BA6900108CD3 /* CatalogView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CatalogView.xib; path = MegaTyumen/CatalogView.xib; sourceTree = "<group>"; };
+		86298A071496BA6900108CD3 /* CatalogView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CatalogView.xib; path = ../MegaTyumen/CatalogView.xib; sourceTree = "<group>"; };
 		86298A0C1496C8AB00108CD3 /* catalog_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = catalog_button.png; sourceTree = "<group>"; };
 		86298A0D1496C8AB00108CD3 /* catalog_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "catalog_button@2x.png"; sourceTree = "<group>"; };
 		86298A0E1496C8AB00108CD3 /* catalog_checkins.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = catalog_checkins.png; sourceTree = "<group>"; };
@@ -453,10 +453,10 @@
 		8650979E14E92BE700974418 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8653BB7414986E9800494E85 /* CatalogCategoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CatalogCategoryView.h; path = MegaTyumen/CatalogCategoryView.h; sourceTree = "<group>"; };
 		8653BB7514986E9800494E85 /* CatalogCategoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CatalogCategoryView.m; path = MegaTyumen/CatalogCategoryView.m; sourceTree = "<group>"; };
-		8653BB7614986E9800494E85 /* CatalogCategoryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CatalogCategoryView.xib; path = MegaTyumen/CatalogCategoryView.xib; sourceTree = "<group>"; };
+		8653BB7614986E9800494E85 /* CatalogCategoryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CatalogCategoryView.xib; path = ../MegaTyumen/CatalogCategoryView.xib; sourceTree = "<group>"; };
 		8653BB7A1498712200494E85 /* catalog_subcategoryHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = catalog_subcategoryHeader.png; sourceTree = "<group>"; };
 		8653BB7B1498712200494E85 /* catalog_subcategoryHeader@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "catalog_subcategoryHeader@2x.png"; sourceTree = "<group>"; };
-		8653BB811498767500494E85 /* CatalogCategoryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CatalogCategoryCell.xib; path = MegaTyumen/CatalogCategoryCell.xib; sourceTree = "<group>"; };
+		8653BB811498767500494E85 /* CatalogCategoryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CatalogCategoryCell.xib; path = ../MegaTyumen/CatalogCategoryCell.xib; sourceTree = "<group>"; };
 		865BF8AD147C26B20001002F /* Authorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Authorization.h; sourceTree = "<group>"; };
 		865BF8AE147C26B20001002F /* Authorization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Authorization.m; sourceTree = "<group>"; };
 		865BF8B0147C27CD0001002F /* Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alerts.h; sourceTree = "<group>"; };
@@ -610,7 +610,7 @@
 		86988CC714801F070024ADD7 /* cell@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cell@2x.png"; sourceTree = "<group>"; };
 		869A5C3E14841E5D00C004F3 /* UIImage+Thumbnail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Thumbnail.h"; sourceTree = "<group>"; };
 		869A5C3F14841E5D00C004F3 /* UIImage+Thumbnail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Thumbnail.m"; sourceTree = "<group>"; };
-		869B69F31496D04F00F41E06 /* CatalogCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CatalogCell.xib; path = MegaTyumen/CatalogCell.xib; sourceTree = "<group>"; };
+		869B69F31496D04F00F41E06 /* CatalogCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CatalogCell.xib; path = ../MegaTyumen/CatalogCell.xib; sourceTree = "<group>"; };
 		869B69F71496D25500F41E06 /* checkin_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkin_button.png; sourceTree = "<group>"; };
 		869B69F81496D25500F41E06 /* checkin_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkin_button@2x.png"; sourceTree = "<group>"; };
 		869B69FA1496D25500F41E06 /* checkin_buttonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkin_buttonPressed@2x.png"; sourceTree = "<group>"; };
@@ -638,10 +638,10 @@
 		86C4B53B1484ECAA0041D63F /* vkButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vkButton@2x.png"; sourceTree = "<group>"; };
 		86C4B53E1484ED7A0041D63F /* AddCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddCommentView.h; sourceTree = "<group>"; };
 		86C4B53F1484ED7A0041D63F /* AddCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddCommentView.m; sourceTree = "<group>"; };
-		86C4B5401484ED7A0041D63F /* AddCommentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddCommentView.xib; sourceTree = "<group>"; };
+		86C4B5401484ED7A0041D63F /* AddCommentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddCommentView.xib; path = ../MegaTyumen/AddCommentView.xib; sourceTree = "<group>"; };
 		86C91EBB148BB9D30078164D /* CheckinCatalogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckinCatalogView.h; path = MegaTyumen/CheckinCatalogView.h; sourceTree = "<group>"; };
 		86C91EBC148BB9D30078164D /* CheckinCatalogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckinCatalogView.m; path = MegaTyumen/CheckinCatalogView.m; sourceTree = "<group>"; };
-		86C91EBD148BB9D30078164D /* CheckinCatalogView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CheckinCatalogView.xib; path = MegaTyumen/CheckinCatalogView.xib; sourceTree = "<group>"; };
+		86C91EBD148BB9D30078164D /* CheckinCatalogView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CheckinCatalogView.xib; path = ../MegaTyumen/CheckinCatalogView.xib; sourceTree = "<group>"; };
 		86C91EC0148BC8F30078164D /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		86C91EC3148BD72C0078164D /* Catalog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Catalog.h; sourceTree = "<group>"; };
 		86C91EC4148BD72C0078164D /* Catalog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Catalog.m; sourceTree = "<group>"; };
@@ -651,8 +651,8 @@
 		86C91ECF148C11460078164D /* distanceMark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "distanceMark@2x.png"; sourceTree = "<group>"; };
 		86C91ED4148C3DB40078164D /* CheckinItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckinItemView.h; path = MegaTyumen/CheckinItemView.h; sourceTree = "<group>"; };
 		86C91ED5148C3DB40078164D /* CheckinItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckinItemView.m; path = MegaTyumen/CheckinItemView.m; sourceTree = "<group>"; };
-		86C91ED6148C3DB40078164D /* CheckinItemView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CheckinItemView.xib; path = MegaTyumen/CheckinItemView.xib; sourceTree = "<group>"; };
-		86C91ED9148C3DE80078164D /* CheckinCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CheckinCell.xib; path = MegaTyumen/CheckinCell.xib; sourceTree = "<group>"; };
+		86C91ED6148C3DB40078164D /* CheckinItemView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CheckinItemView.xib; path = ../MegaTyumen/CheckinItemView.xib; sourceTree = "<group>"; };
+		86C91ED9148C3DE80078164D /* CheckinCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CheckinCell.xib; path = ../MegaTyumen/CheckinCell.xib; sourceTree = "<group>"; };
 		86CE10F11480142400E9CF57 /* NewsPhotosView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsPhotosView.h; sourceTree = "<group>"; };
 		86CE10F21480142400E9CF57 /* NewsPhotosView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsPhotosView.m; sourceTree = "<group>"; };
 		86CE10F31480142400E9CF57 /* NewsPhotosView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NewsPhotosView.xib; path = ../MegaTyumen/NewsPhotosView.xib; sourceTree = "<group>"; };
@@ -856,8 +856,6 @@
 			children = (
 				8653BB7414986E9800494E85 /* CatalogCategoryView.h */,
 				8653BB7514986E9800494E85 /* CatalogCategoryView.m */,
-				8653BB7614986E9800494E85 /* CatalogCategoryView.xib */,
-				8653BB811498767500494E85 /* CatalogCategoryCell.xib */,
 			);
 			name = "Подкатегория";
 			sourceTree = "<group>";
@@ -867,8 +865,6 @@
 			children = (
 				86298A051496BA6900108CD3 /* CatalogView.h */,
 				86298A061496BA6900108CD3 /* CatalogView.m */,
-				86298A071496BA6900108CD3 /* CatalogView.xib */,
-				869B69F31496D04F00F41E06 /* CatalogCell.xib */,
 			);
 			name = "Категории";
 			sourceTree = "<group>";
@@ -878,7 +874,6 @@
 			children = (
 				862989E71496A94400108CD3 /* CheckinView.h */,
 				862989E81496A94400108CD3 /* CheckinView.m */,
-				862989E91496A94400108CD3 /* CheckinView.xib */,
 			);
 			name = "Отметиться";
 			sourceTree = "<group>";
@@ -980,6 +975,15 @@
 				86C06639148299C1007544E8 /* NewDetailView.xib */,
 				86CE10F31480142400E9CF57 /* NewsPhotosView.xib */,
 				8639C50F1484CDBB00CA9D1F /* NewPhotoDetailView.xib */,
+				86C4B5401484ED7A0041D63F /* AddCommentView.xib */,
+				86C91EBD148BB9D30078164D /* CheckinCatalogView.xib */,
+				86C91ED6148C3DB40078164D /* CheckinItemView.xib */,
+				862989E91496A94400108CD3 /* CheckinView.xib */,
+				86C91ED9148C3DE80078164D /* CheckinCell.xib */,
+				86298A071496BA6900108CD3 /* CatalogView.xib */,
+				869B69F31496D04F00F41E06 /* CatalogCell.xib */,
+				8653BB7614986E9800494E85 /* CatalogCategoryView.xib */,
+				8653BB811498767500494E85 /* CatalogCategoryCell.xib */,
 				86D01FC9148FE3B70094B8AC /* LoadingCell.xib */,
 				8623761D149EF36200AD084B /* EventCell.xib */,
 			);
@@ -1213,7 +1217,6 @@
 			children = (
 				86C4B53E1484ED7A0041D63F /* AddCommentView.h */,
 				86C4B53F1484ED7A0041D63F /* AddCommentView.m */,
-				86C4B5401484ED7A0041D63F /* AddCommentView.xib */,
 			);
 			name = "Добавление комментария";
 			sourceTree = "<group>";
@@ -1289,8 +1292,6 @@
 			children = (
 				86C91EBB148BB9D30078164D /* CheckinCatalogView.h */,
 				86C91EBC148BB9D30078164D /* CheckinCatalogView.m */,
-				86C91EBD148BB9D30078164D /* CheckinCatalogView.xib */,
-				86C91ED9148C3DE80078164D /* CheckinCell.xib */,
 			);
 			name = "Список заведений";
 			sourceTree = "<group>";
@@ -1300,7 +1301,6 @@
 			children = (
 				86C91ED4148C3DB40078164D /* CheckinItemView.h */,
 				86C91ED5148C3DB40078164D /* CheckinItemView.m */,
-				86C91ED6148C3DB40078164D /* CheckinItemView.xib */,
 			);
 			name = "Просмотр заведения";
 			sourceTree = "<group>";

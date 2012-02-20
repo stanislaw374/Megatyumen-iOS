@@ -18,6 +18,4 @@
 @property (strong, nonatomic) IBOutlet UITableViewCell *cell;
 @property (nonatomic) BOOL isFeedbackMode;
 
-- (void)getCatalog;
-
 @end

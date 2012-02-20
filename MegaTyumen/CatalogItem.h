@@ -10,13 +10,14 @@
 #import "ASIHTTPRequest.h"
 #import <CoreLocation/CoreLocation.h>
 
-#define kNOTIFI @"didGetDetails"
+//#define kNOTIFI @"didGetDetails"
 #define kNOTIFICATION_DID_CHECKIN @"megatyumen.didCheckin"
 
 @interface CatalogItem : NSObject
 
 @property (nonatomic) int ID;                           // ID заведения
 @property (nonatomic, strong) NSString *name;           // Название заведения
+@property (nonatomic, strong) NSURL *image;
 @property (nonatomic, strong) NSString *type;           // Тип заведения
 @property (nonatomic, strong) NSString *cuisine;        // Кухня заведения
 @property (nonatomic, strong) NSString *address;        // Адрес заведения
@@ -34,11 +35,11 @@
 @property (nonatomic, strong) NSMutableArray *photos;   // Урлы фоток
 @property (nonatomic, strong) CLLocation *location;     // Географические координаты
 @property (nonatomic) int bill;                         // Средний чек
-@property (nonatomic) int distance;                     // Расстояние до заведения в метрах
+@property (nonatomic) double distance;                     // Расстояние до заведения в метрах
 
 - (void)getDetails;
 
-- (void)checkinWithFeedBack:(NSString *)feedback andAttitude:(int)attitude;
+- (NSDictionary *)checkinWithFeedBack:(NSString *)feedback andAttitude:(int)attitude;
 
 - (void)getPhotos;
 

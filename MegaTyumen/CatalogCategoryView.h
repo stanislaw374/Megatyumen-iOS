@@ -23,19 +23,15 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnCuisine;
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnBill;
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnNearby;
-@property (unsafe_unretained, nonatomic) CatalogCategory *currentCategory;
-@property (strong, nonatomic) Catalog *catalog;
-@property (strong, nonatomic) MBProgressHUD *hud;
+@property (nonatomic, unsafe_unretained) Catalog *catalog;
+@property (unsafe_unretained, nonatomic) NSDictionary *category;
 @property (nonatomic, unsafe_unretained) CatalogView *parentCatalogView;
 
-- (void)didPassAuthorization:(NSNotification *)notification;
+//- (void)didPassAuthorization:(NSNotification *)notification;
 
 - (IBAction)onRefreshButtonClick;
 - (IBAction)onButtonClick:(id)sender;
 
-- (void)getCatalogByCategory;
-- (void)didGetCatalogByCategory:(NSNotification *)notification;
-
-- (void)setType:(NSString *)type;
+//- (void)setType:(NSString *)type;
 
 @end

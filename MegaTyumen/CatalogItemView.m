@@ -257,7 +257,7 @@
 - (IBAction)onTypeButtonClick {
     for (CatalogCategory *category in [self.catalog.categories objectAtIndex:0]) {
         if ([category.name rangeOfString:self.currentItem.type].location != NSNotFound && self.parentCatalogCategoryView) {
-            self.parentCatalogCategoryView.currentCategory = category;
+            //self.parentCatalogCategoryView.currentCategory = category;
             [self.navigationController popViewControllerAnimated:YES];
             break;
         }

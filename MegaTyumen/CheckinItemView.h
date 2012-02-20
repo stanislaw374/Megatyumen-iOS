@@ -29,16 +29,9 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *addFeedbackButton;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *checkinLabel;
 @property (unsafe_unretained, nonatomic) IBOutlet UITextView *descriptionTextView;
-@property (nonatomic, strong) MBProgressHUD *hud;
 @property (nonatomic) BOOL isFeedbackMode;
 
-- (void)initUI;
 - (IBAction)onCheckinButtonClick;
 - (IBAction)onAddFeedbackButtonClick;
-
-- (void)getDetails;
-- (void)didGetDetails:(NSNotification *)notification;
-- (void)didCheckin:(NSNotification *)notification;
-- (void)onTimerFired:(NSTimer *)timer;
 
 @end

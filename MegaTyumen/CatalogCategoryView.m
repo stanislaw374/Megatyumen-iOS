@@ -17,9 +17,13 @@
 
 @interface CatalogCategoryView()
 @property (nonatomic, strong) AuthorizationView *authorizationView;
-@property (nonatomic, strong) CLLocationManager *locationManager;
+//@property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) CatalogItemView *catalogItemView;
 @property (nonatomic, strong) MainMenu *mainMenu;
+//@property (strong, nonatomic) Catalog *catalog;
+@property (strong, nonatomic) MBProgressHUD *hud;
+- (void)getCatalogByCategory;
+//- (void)didGetCatalogByCategory:(NSNotification *)notification;
 @end
 
 @implementation CatalogCategoryView
@@ -32,9 +36,9 @@
 @synthesize btnBill;
 @synthesize btnNearby;
 @synthesize authorizationView = _authorizationView;
-@synthesize currentCategory = _currentCategory;
+@synthesize category = _category;
 @synthesize catalog = _catalog;
-@synthesize locationManager = _locationManager;
+//@synthesize locationManager = _locationManager;
 @synthesize catalogItemView = _catalogItemView;
 @synthesize hud = _hud;
 @synthesize parentCatalogView = _parentCatalogView;
@@ -70,8 +74,8 @@
     
     self.tableView.rowHeight = 104;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil]; 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogByCategory:) name:@"didGetCatalogByCategory" object:nil]; 
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil]; 
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogByCategory:) name:@"didGetCatalogByCategory" object:nil]; 
     
     [self.btnType setImage:[UIImage imageNamed:@"catalog_byTypeButtonPressed.png"] forState:UIControlStateSelected];
     [self.btnCuisine setImage:[UIImage imageNamed:@"catalog_byCuisineButtonPressed.png"] forState:UIControlStateSelected];
@@ -89,7 +93,7 @@
     self.title = @"";
     self.headerLabel.text = @"";
     
-    self.currentCategory = self.currentCategory;
+    //self.currentCategory = self.currentCategory;
     
     //[self.locationManager startUpdatingLocation];
     [self getCatalogByCategory];
@@ -141,40 +145,44 @@
     self.navigationItem.rightBarButtonItem = nil;
 }
 
-- (void)setCurrentCategory:(CatalogCategory *)currentCategory {
-    _currentCategory = currentCategory;
-    switch (self.currentCategory.index) {
+- (void)setCategory:(NSDictionary *)category {
+    _category = category;
+    switch ([[self.category objectForKey:@"index"] intValue]) {
         case 0: btnType.selected = YES; break;
         case 1: btnCuisine.selected = YES; break;
         case 2: btnBill.selected = YES; break;
     }
-    self.title = self.currentCategory.name;
-    self.headerLabel.text = self.currentCategory.name;
-    self.redImageView.image = [self.currentCategory.image thumbnailByScalingProportionallyAndCroppingToSize:CGSizeMake(64, 64)];
+    NSString *name = [self.category objectForKey:@"name"];
+    self.title = name;
+    self.headerLabel.text = name;
+    UIImage *image = [self.category objectForKey:@"image"];
+    self.redImageView.image = [image thumbnailByScalingProportionallyAndCroppingToSize:CGSizeMake(64, 64)];
 }
 
 - (void)getCatalogByCategory {
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    double lat = self.locationManager.location.coordinate.latitude;
-    double lng = self.locationManager.location.coordinate.longitude;
-    [self.catalog getCatalogByCategory:self.currentCategory andLat:lat andLng:lng];
-}
-
-- (void)didGetCatalogByCategory:(NSNotification *)notification {
-    [self.hud hide:YES];
     
-    [self.tableView reloadData];
+    
+    //double lat = self.locationManager.location.coordinate.latitude;
+    //double lng = self.locationManager.location.coordinate.longitude;
+    //[self.catalog getCatalogByCategory:self.currentCategory andLat:lat andLng:lng];
 }
 
-- (void)setType:(NSString *)type {
-    for (CatalogCategory *category in self.catalog.categories) {
-        if ([category.name rangeOfString:type].location != NSNotFound) {
-            self.currentCategory = category;
-            break;
-        }
-    }
-}
+//- (void)didGetCatalogByCategory:(NSNotification *)notification {
+//    [self.hud hide:YES];
+//    
+//    [self.tableView reloadData];
+//}
+
+//- (void)setType:(NSString *)type {
+//    for (CatalogCategory *category in self.catalog.categories) {
+//        if ([category.name rangeOfString:type].location != NSNotFound) {
+//            self.currentCategory = category;
+//            break;
+//        }
+//    }
+//}
 
 #pragma mark - UITableViewDataSource
 

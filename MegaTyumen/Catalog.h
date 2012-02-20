@@ -26,25 +26,26 @@
 @property (nonatomic, strong) NSMutableDictionary *items;   // Массив заведений
 @property (nonatomic, strong) NSString *searchString;       // Строка поиска по заведениям
 @property (nonatomic, strong) NSMutableArray *categories;   // Категории
+@property (nonatomic, strong) CLLocation *userLocation;
 
 - (id)initWithUserLocation:(CLLocation *)location;
 
 // Запрос заведений по расстоянию
-- (void)getCatalogByDistanceWithLat:(double)lat andLng:(double)lng;  
+- (void)getCatalogByDistance;  
 
 // Запрос типов заведений
-- (void)getTypes; 
+- (NSArray *)getTypes; 
 
 // Запрос типов кухонь
-- (void)getCuisines; 
+- (NSArray *)getCuisines; 
 
 // Запрос чеков
-- (void)getBills; 
+- (NSArray *)getBills; 
 
 // Запрос каталога по категории
-- (void)getCatalogByCategory:(CatalogCategory *)category andLat:(double)lat andLng:(double)lng;
+- (void)getCatalogByCategory:(NSDictionary *)category;
 
 // Запрос каталога по названию заведения
-- (void)getCatalogByName:(NSString *)name andLat:(double)lat andLng:(double)lng;
+- (void)getCatalogByName:(NSString *)name;
 
 @end

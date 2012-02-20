@@ -10,11 +10,17 @@
 #import "UIImage+Thumbnail.h"
 #import <CoreLocation/CoreLocation.h>
 #import "UIImageView+WebCache.h"
+#import "Constants.h"
 
 @interface CheckinItemView()
 @property (nonatomic, strong) CheckinView *checkinView;
-@property (nonatomic, strong) CLLocationManager *locationManager;
+//@property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) MainMenu *mainMenu;
+@property (nonatomic, strong) MBProgressHUD *hud;
+- (void)initUI;
+- (void)getDetails;
+- (void)didCheckin:(NSNotification *)notification;
+- (void)onTimerFired:(NSTimer *)timer;
 @end
 
 @implementation CheckinItemView
@@ -34,7 +40,7 @@
 @synthesize checkinView = _checkinView;
 @synthesize hud = _hud;
 @synthesize isFeedbackMode = _isFeedbackMode;
-@synthesize locationManager = _locationManager;
+//@synthesize locationManager = _locationManager;
 @synthesize mainMenu = _mainMenu;
 
 - (void)setIsFeedbackMode:(BOOL)isFeedbackMode {
@@ -53,11 +59,19 @@
 }
 
 - (void)initUI {
-    //[self.imageView setImageWithURL:[self.currentItem.photosUrls objectAtIndex:0] placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:CGSizeMake(80, 80)];
+    [self.imageView setImageWithURL:self.currentItem.image placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:CGSizeMake(80, 80)];
     self.nameLabel.text = self.currentItem.name;
     self.addressLabel.text = self.currentItem.address;
-    int distance = self.currentItem.distance;
-    [self.distanceButton setTitle:[NSString stringWithFormat:@"%d м", distance] forState:UIControlStateNormal];
+    double distance = self.currentItem.distance;
+    NSString *distanceStr;
+    if (distance < 1000) {
+        distanceStr = @"м";
+    }
+    else {
+        distanceStr = @"км";
+        distance /= 1000;
+    }
+    [self.distanceButton setTitle:[NSString stringWithFormat:@"%.0lf %@", distance, distanceStr] forState:UIControlStateNormal];
     [self.distanceButton sizeToFit];
     
     self.descriptionTextView.text = self.currentItem.description;
@@ -81,16 +95,21 @@
 - (void)getDetails {
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [self.currentItem getDetails];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.currentItem getDetails];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self initUI];
+            [self.hud hide:YES];
+        });
+    });
 }
 
-- (void)didGetDetails:(NSNotification *)notification { 
-    [self initUI];
-    
-    [self.hud hide:YES];
-    
-    //NSLog(@"Получил уведомление ");
-}
+//- (void)didGetDetails:(NSNotification *)notification { 
+//    [self initUI];
+//    [self.hud hide:YES];
+//    
+//    //NSLog(@"Получил уведомление ");
+//}
 
 - (void)didCheckin:(NSNotification *)notification {
     NSLog(@"Получил уведомление didCheckin O_O");
@@ -143,15 +162,15 @@
     [self.mainMenu addBackButton];
     [self.mainMenu addMainButton];
     
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    self.locationManager.distanceFilter = kCLDistanceFilterNone;
+//    self.locationManager = [[CLLocationManager alloc] init];
+//    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+//    self.locationManager.distanceFilter = kCLDistanceFilterNone;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self.locationManager startUpdatingLocation];
+    //[self.locationManager startUpdatingLocation];
     [self initUI];
     [self getDetails];
 }
@@ -159,7 +178,7 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    [self.locationManager stopUpdatingLocation];
+    //[self.locationManager stopUpdatingLocation];
 }
 
 - (void)viewDidUnload

@@ -13,6 +13,7 @@
 #import "CheckinItemView.h"
 #import "UIImage+Thumbnail.h"
 #import "UIImageView+WebCache.h"
+#import "Constants.h"
 
 @interface CheckinCatalogView()
 @property (nonatomic, strong) CheckinItemView *chechinItemView;
@@ -20,7 +21,7 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) Catalog *catalog;
 @property (strong, nonatomic) MBProgressHUD *hud;
-- (void)didGetCatalog:(NSNotification *)notification;
+//- (void)didGetCatalog:(NSNotification *)notification;
 @end
 
 @implementation CheckinCatalogView
@@ -39,13 +40,6 @@
         _chechinItemView = [[CheckinItemView alloc] init];
     }
     return _chechinItemView;
-}
-
-- (Catalog *)catalog {
-    if (!_catalog) {
-        _catalog = [[Catalog alloc] initWithUserLocation:self.locationManager.location];
-    }
-    return _catalog;
 }
 
 - (CLLocationManager *)locationManager {
@@ -70,18 +64,26 @@
     }
 }
 
-- (void)getCatalog {    
+- (void)getCatalog { 
+    self.catalog = [[Catalog alloc] initWithUserLocation:self.locationManager.location];
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [self.catalog getCatalogByDistanceWithLat:self.locationManager.location.coordinate.latitude andLng:self.locationManager.location.coordinate.longitude];
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.catalog getCatalogByDistance];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            [self.hud hide:YES];
+        });
+    });
 }
 
-- (void)didGetCatalog:(NSNotification *)notification {
-    NSLog(@"View каталог получил!");
-    
-    [self.tableView reloadData];
-    
-    [self.hud hide:YES];
-}
+//- (void)didGetCatalog:(NSNotification *)notification {
+//    NSLog(@"View каталог получил!");
+//    
+//    [self.tableView reloadData];
+//    
+//    [self.hud hide:YES];
+//}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -106,8 +108,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalog:) name:kNOTIFICATION_DID_GET_CATALOG_BY_DISTANCE object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogByName:) name:kNOTIFICATION_DID_GET_CATALOG_BY_NAME object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalog:) name:kNOTIFICATION_DID_GET_CATALOG_BY_DISTANCE object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogByName:) name:kNOTIFICATION_DID_GET_CATALOG_BY_NAME object:nil];
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addMainButton];
@@ -129,8 +131,8 @@
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_CATALOG_BY_NAME object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_CATALOG_BY_DISTANCE object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_CATALOG_BY_NAME object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_CATALOG_BY_DISTANCE object:nil];
     [self setTableView:nil];
     [self setCell:nil];
     [super viewDidUnload];
@@ -221,6 +223,7 @@
             break;
         case 1: headerText = [NSString stringWithFormat:@"В радиусе 100 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
         case 2: headerText = [NSString stringWithFormat:@"В радиусе 150 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
+        case 3: headerText = [NSString stringWithFormat:@"В радиусе более 300 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
         }
     
     label.text = headerText;
@@ -254,19 +257,19 @@
     CatalogItem *item = [self.catalog.items objectForKey:indexPath];
     
     if (item) {
-        //[view1 setImageWithURL:[item.photosUrls objectAtIndex:0] placeholderImage:[UIImage imageNamed:@"placeholder.png"] andScaleTo:view1.frame.size];
+        [view1 setImageWithURL:item.image placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
         view2.text = item.name;
         view3.text = item.address;
-        int distance = item.distance;
+        double distance = item.distance;
         NSString *distanceStr;
         if (distance < 1000) {
             distanceStr = @"м";
         }
         else {
-            distance /= 1000;
+            //distance /= 1000;
             distanceStr = @"км";
         }
-        [view4 setTitle:[NSString stringWithFormat:@"%d %@", distance, distanceStr] forState:UIControlStateNormal];
+        [view4 setTitle:[NSString stringWithFormat:@"%.0lf %@", distance, distanceStr] forState:UIControlStateNormal];
         [view4 sizeToFit];
     }
     else {

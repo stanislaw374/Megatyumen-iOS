@@ -26,22 +26,6 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnBill;
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnNearby;
 
-@property (nonatomic, strong) MBProgressHUD *hud;
-
-- (void)didPassAuthorization:(NSNotification *)notification;
-
-- (void)initUI;
-
-- (void)getCatalogTypes;
-- (void)didGetCatalogTypes:(NSNotification *)notification;
-- (void)getCatalogByCuisine;
-- (void)didGetCatalogCuisines:(NSNotification *)notification;
-- (void)getCatalogByBill;
-- (void)didGetCatalogBills:(NSNotification *)notification;
-- (void)getCatalogByDistance;
-- (void)didGetCatalogByDistance:(NSNotification *)notification;
-- (void)didGetCatalogByName:(NSNotification *)notification;
-
 - (IBAction)onButtonClick:(id)sender;
 - (void)onCatalogCategoryButtonClick:(id)sender;
 - (IBAction)onCheckinButtonClick;

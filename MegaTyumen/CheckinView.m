@@ -9,12 +9,16 @@
 #import "CheckinView.h"
 #import "Alerts.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Constants.h"
 
 static int kBorderWidth = 4;
 
 @interface CheckinView()
 @property (nonatomic) int attitude;
 @property (nonatomic, strong) MainMenu *mainMenu;
+@property (strong, nonatomic) MBProgressHUD *hud;
+- (void)initUI;
+- (void)didCheckin:(NSNotification *)notification;
 @end
 
 @implementation CheckinView
@@ -68,6 +72,7 @@ static int kBorderWidth = 4;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.title = @"Отметиться";
     }
     return self;
 }
@@ -167,7 +172,22 @@ static int kBorderWidth = 4;
     
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [self.currentItem checkinWithFeedBack:feedbackText andAttitude:self.attitude];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSDictionary *dict = [self.currentItem checkinWithFeedBack:feedbackText andAttitude:self.attitude];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.hud hide:YES];
+            BOOL result = [[dict objectForKey:KEY_RESPONSE] boolValue];
+            if (result) {
+                NSString *text = !self.isFeedbackMode ? @"Вы успешно отметились" : @"Ваш отзыв добавлен";
+                [Alerts showAlertViewWithTitle:@"" message:text]; 
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+            else {
+                NSString *error = [dict objectForKey:KEY_ERROR];
+                [Alerts showAlertViewWithTitle:@"Ошибка" message:error];
+            }
+        });
+    });
 }
 
 - (IBAction)onAddFeedbackButtonClick {
