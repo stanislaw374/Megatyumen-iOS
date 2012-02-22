@@ -425,7 +425,7 @@
 		8640E16D149CA8FE00AC1139 /* catalog_nearbyButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "catalog_nearbyButtonPressed@2x.png"; sourceTree = "<group>"; };
 		8641088414A7054E00ED2AFD /* AnnouncesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnouncesView.h; path = MegaTyumen/AnnouncesView.h; sourceTree = "<group>"; };
 		8641088514A7054E00ED2AFD /* AnnouncesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnouncesView.m; path = MegaTyumen/AnnouncesView.m; sourceTree = "<group>"; };
-		8641088614A7054E00ED2AFD /* AnnouncesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AnnouncesView.xib; path = MegaTyumen/AnnouncesView.xib; sourceTree = "<group>"; };
+		8641088614A7054E00ED2AFD /* AnnouncesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AnnouncesView.xib; path = ../MegaTyumen/AnnouncesView.xib; sourceTree = "<group>"; };
 		864A08F9147F73580080B53D /* authorize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = authorize.png; sourceTree = "<group>"; };
 		864A08FA147F73590080B53D /* authorize@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "authorize@2x.png"; sourceTree = "<group>"; };
 		864A0905147F738E0080B53D /* announce.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = announce.png; sourceTree = "<group>"; };
@@ -492,7 +492,7 @@
 		86632B3B14AC4FFA0083B1B8 /* italian.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = italian.png; sourceTree = "<group>"; };
 		86632B3C14AC4FFA0083B1B8 /* japan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = japan.png; sourceTree = "<group>"; };
 		86632B3D14AC4FFA0083B1B8 /* mexican.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mexican.png; sourceTree = "<group>"; };
-		8663D4FB14A227DA00EA164D /* FeedbackCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FeedbackCell.xib; path = MegaTyumen/FeedbackCell.xib; sourceTree = "<group>"; };
+		8663D4FB14A227DA00EA164D /* FeedbackCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FeedbackCell.xib; path = ../MegaTyumen/FeedbackCell.xib; sourceTree = "<group>"; };
 		866BAFC9149E3C9C004E35ED /* CatalogItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CatalogItemView.h; path = MegaTyumen/CatalogItemView.h; sourceTree = "<group>"; };
 		866BAFCA149E3C9C004E35ED /* CatalogItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CatalogItemView.m; path = MegaTyumen/CatalogItemView.m; sourceTree = "<group>"; };
 		866BAFCB149E3C9C004E35ED /* CatalogItemView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CatalogItemView.xib; path = MegaTyumen/CatalogItemView.xib; sourceTree = "<group>"; };
@@ -541,7 +541,7 @@
 		866ED9F7149F09E500EE77C6 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		866ED9FA149F11BF00EE77C6 /* EventsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventsView.h; path = MegaTyumen/EventsView.h; sourceTree = "<group>"; };
 		866ED9FB149F11BF00EE77C6 /* EventsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EventsView.m; path = MegaTyumen/EventsView.m; sourceTree = "<group>"; };
-		866ED9FC149F11BF00EE77C6 /* EventsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EventsView.xib; path = MegaTyumen/EventsView.xib; sourceTree = "<group>"; };
+		866ED9FC149F11BF00EE77C6 /* EventsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EventsView.xib; path = ../MegaTyumen/EventsView.xib; sourceTree = "<group>"; };
 		866EDA00149F166800EE77C6 /* Events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Events.h; sourceTree = "<group>"; };
 		866EDA01149F166800EE77C6 /* Events.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Events.m; sourceTree = "<group>"; };
 		866EDA05149F17D900EE77C6 /* Feedbacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Feedbacks.h; sourceTree = "<group>"; };
@@ -552,7 +552,7 @@
 		866EDA0C149F19C800EE77C6 /* Announce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Announce.m; sourceTree = "<group>"; };
 		866EDA10149F20FE00EE77C6 /* FeedbackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeedbackView.h; path = MegaTyumen/FeedbackView.h; sourceTree = "<group>"; };
 		866EDA11149F20FE00EE77C6 /* FeedbackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FeedbackView.m; path = MegaTyumen/FeedbackView.m; sourceTree = "<group>"; };
-		866EDA12149F20FE00EE77C6 /* FeedbackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FeedbackView.xib; path = MegaTyumen/FeedbackView.xib; sourceTree = "<group>"; };
+		866EDA12149F20FE00EE77C6 /* FeedbackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FeedbackView.xib; path = ../MegaTyumen/FeedbackView.xib; sourceTree = "<group>"; };
 		86715DC014A4FFD60062EE85 /* catalog.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = catalog.txt; sourceTree = "<group>"; };
 		8679D32214D04C8D00555A19 /* CustomBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBadge.h; sourceTree = "<group>"; };
 		8679D32314D04C8D00555A19 /* CustomBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomBadge.m; sourceTree = "<group>"; };
@@ -725,7 +725,7 @@
 		86F7F8C214A6BE93004E5FB3 /* announces_curlImage2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "announces_curlImage2@2x.png"; sourceTree = "<group>"; };
 		86F8F277149F314300D83C9F /* AnnounceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnounceView.h; path = MegaTyumen/AnnounceView.h; sourceTree = "<group>"; };
 		86F8F278149F314300D83C9F /* AnnounceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnounceView.m; path = MegaTyumen/AnnounceView.m; sourceTree = "<group>"; };
-		86F8F279149F314300D83C9F /* AnnounceView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AnnounceView.xib; path = MegaTyumen/AnnounceView.xib; sourceTree = "<group>"; };
+		86F8F279149F314300D83C9F /* AnnounceView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AnnounceView.xib; path = ../MegaTyumen/AnnounceView.xib; sourceTree = "<group>"; };
 		86FB684A14745980009EA788 /* MegaTyumen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MegaTyumen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		86FB684E14745981009EA788 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		86FB685014745981009EA788 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -984,6 +984,11 @@
 				869B69F31496D04F00F41E06 /* CatalogCell.xib */,
 				8653BB7614986E9800494E85 /* CatalogCategoryView.xib */,
 				8653BB811498767500494E85 /* CatalogCategoryCell.xib */,
+				866EDA12149F20FE00EE77C6 /* FeedbackView.xib */,
+				866ED9FC149F11BF00EE77C6 /* EventsView.xib */,
+				86F8F279149F314300D83C9F /* AnnounceView.xib */,
+				8641088614A7054E00ED2AFD /* AnnouncesView.xib */,
+				8663D4FB14A227DA00EA164D /* FeedbackCell.xib */,
 				86D01FC9148FE3B70094B8AC /* LoadingCell.xib */,
 				8623761D149EF36200AD084B /* EventCell.xib */,
 			);
@@ -1075,7 +1080,6 @@
 			children = (
 				866ED9FA149F11BF00EE77C6 /* EventsView.h */,
 				866ED9FB149F11BF00EE77C6 /* EventsView.m */,
-				866ED9FC149F11BF00EE77C6 /* EventsView.xib */,
 			);
 			name = "Новости компаний";
 			sourceTree = "<group>";
@@ -1118,10 +1122,8 @@
 			children = (
 				86F8F277149F314300D83C9F /* AnnounceView.h */,
 				86F8F278149F314300D83C9F /* AnnounceView.m */,
-				86F8F279149F314300D83C9F /* AnnounceView.xib */,
 				8641088414A7054E00ED2AFD /* AnnouncesView.h */,
 				8641088514A7054E00ED2AFD /* AnnouncesView.m */,
-				8641088614A7054E00ED2AFD /* AnnouncesView.xib */,
 			);
 			name = "Анонсы вечеринок";
 			sourceTree = "<group>";
@@ -1131,8 +1133,6 @@
 			children = (
 				866EDA10149F20FE00EE77C6 /* FeedbackView.h */,
 				866EDA11149F20FE00EE77C6 /* FeedbackView.m */,
-				866EDA12149F20FE00EE77C6 /* FeedbackView.xib */,
-				8663D4FB14A227DA00EA164D /* FeedbackCell.xib */,
 			);
 			name = "Отзывы";
 			sourceTree = "<group>";
@@ -2115,6 +2115,66 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		863BAE7E14F2502A00594C45 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stanislav Yazhenskikh (Q8995BS68E)";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C75436CF-D1DD-464B-8CDC-A182E1D23C99";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Distribution;
+		};
+		863BAE7F14F2502A00594C45 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stanislav Yazhenskikh (Q8995BS68E)";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MegaTyumen/MegaTyumen-Prefix.pch";
+				INFOPLIST_FILE = "MegaTyumen/MegaTyumen-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/MegaTyumen/YandexMapKit\"",
+				);
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2EF9DE1C-6F39-4625-862C-1D00DBCEA6F5";
+				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Distribution;
+		};
+		863BAE8014F2502A00594C45 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MegaTyumen.app/MegaTyumen";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MegaTyumen/MegaTyumen-Prefix.pch";
+				INFOPLIST_FILE = "MegaTyumenTests/MegaTyumenTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Distribution;
+		};
 		86FB687B14745981009EA788 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2247,6 +2307,7 @@
 			buildConfigurations = (
 				86FB687B14745981009EA788 /* Debug */,
 				86FB687C14745981009EA788 /* Release */,
+				863BAE7E14F2502A00594C45 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2256,6 +2317,7 @@
 			buildConfigurations = (
 				86FB687E14745981009EA788 /* Debug */,
 				86FB687F14745981009EA788 /* Release */,
+				863BAE7F14F2502A00594C45 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2265,6 +2327,7 @@
 			buildConfigurations = (
 				86FB688114745981009EA788 /* Debug */,
 				86FB688214745981009EA788 /* Release */,
+				863BAE8014F2502A00594C45 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

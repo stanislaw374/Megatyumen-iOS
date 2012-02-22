@@ -629,7 +629,7 @@
         UITextView *view3 = (UITextView *)[cell viewWithTag:3];
         UILabel *view4 = (UILabel *)[cell viewWithTag:4];
         
-        [view1 setImageWithURL:item.imageUrl placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
+        [view1 setImageWithURL:item.image placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
         //view2.text = item.user;
         //view3.text = item.text;
         NSDateFormatter *df = [[NSDateFormatter alloc] init];

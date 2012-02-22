@@ -18,7 +18,8 @@
 #define KEY_LIMIT @"limit"
 
 @interface Events()
-- (void)didGetItems:(ASIHTTPRequest *)request;
+@property (nonatomic) int offset;
+//- (void)didGetItems:(ASIHTTPRequest *)request;
 @end
 
 @implementation Events
@@ -26,6 +27,7 @@
 @synthesize isLoaded = _isLoaded;
 //@synthesize error = _error;
 //@synthesize result = _RESULT;
+@synthesize offset = _offset;
 
 - (NSMutableArray *)items {
     if (!_items) {
@@ -45,10 +47,10 @@
 //    return read;
 //}
 
-- (void)getItems:(int)offset {
+- (void)getItems {
     self.isLoaded = NO;
-    
-    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:VALUE_EVENTS, KEY_REQUEST, [NSNumber numberWithInt:10], KEY_LIMIT, [NSNumber numberWithInt:offset], KEY_OFFSET, nil];
+    int limit = 10;
+    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:VALUE_EVENTS, KEY_REQUEST, [NSNumber numberWithInt:limit], KEY_LIMIT, [NSNumber numberWithInt:self.offset], KEY_OFFSET, nil];
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
     
@@ -58,23 +60,21 @@
     [request setPostValue:query forKey:KEY_JSON_DATA];
     request.delegate = self;
     [request setDidFinishSelector:@selector(didGetItems:)];
-    [request startAsynchronous];    
-}
-
-- (void)didGetItems:(ASIHTTPRequest *)request {    
+    [request startSynchronous];    
+    
     self.isLoaded = YES;
     
     SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSDictionary *dict = [parser objectWithString:[request responseString]];
+    NSDictionary *dict2 = [parser objectWithString:[request responseString]];
     
-    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict2.description);
     
-    BOOL result = [[dict objectForKey:@"response"] boolValue];
+    BOOL result = [[dict2 objectForKey:@"response"] boolValue];
     if (result) {        
-        NSArray *events = [dict objectForKey:@"events"];
+        NSArray *events = [dict2 objectForKey:@"events"];
         for (NSDictionary *event in events) {
             Event *e = [[Event alloc] init];
-            e.imageUrl = [NSURL URLWithString:[event objectForKey:@"image"] relativeToURL:kWEBSITE_URL];
+            e.image = [NSURL URLWithString:[event objectForKey:@"image"] relativeToURL:kWEBSITE_URL];
             e.announce = [event objectForKey:@"announce"];
             e.title = [event objectForKey:@"title"];
             e.companyName = [event objectForKey:@"company_name"];
@@ -83,9 +83,37 @@
             [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
             e.date = [df dateFromString:[event objectForKey:@"date"]];
             [self.items addObject:e];
+            
+            self.offset += limit;
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_EVENTS object:self];
     }
 }
+
+//- (void)didGetItems:(ASIHTTPRequest *)request {    
+//    self.isLoaded = YES;
+//    
+//    SBJsonParser *parser = [[SBJsonParser alloc] init];
+//    NSDictionary *dict = [parser objectWithString:[request responseString]];
+//    
+//    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
+//    
+//    BOOL result = [[dict objectForKey:@"response"] boolValue];
+//    if (result) {        
+//        NSArray *events = [dict objectForKey:@"events"];
+//        for (NSDictionary *event in events) {
+//            Event *e = [[Event alloc] init];
+//            e.imageUrl = [NSURL URLWithString:[event objectForKey:@"image"] relativeToURL:kWEBSITE_URL];
+//            e.announce = [event objectForKey:@"announce"];
+//            e.title = [event objectForKey:@"title"];
+//            e.companyName = [event objectForKey:@"company_name"];
+//            e.companyID = [[event objectForKey:@"company_id"] intValue];
+//            NSDateFormatter *df = [[NSDateFormatter alloc] init];
+//            [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+//            e.date = [df dateFromString:[event objectForKey:@"date"]];
+//            [self.items addObject:e];
+//        }
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_EVENTS object:self];
+//    }
+//}
 
 @end

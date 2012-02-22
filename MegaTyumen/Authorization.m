@@ -108,7 +108,7 @@ static Authorization *authorization;
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
     NSDictionary *dict2 = [jsonParser objectWithString:[request responseString]];
     
-    NSLog(@"Регистрация (ответ): %@", dict.description);
+    NSLog(@"Регистрация (ответ): %@", dict2.description);
 
     BOOL result = [[dict2 objectForKey:KEY_RESPONSE] boolValue];
     if (result) {

@@ -162,8 +162,6 @@
 - (void)getCatalogByCategory {
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    
-    
     //double lat = self.locationManager.location.coordinate.latitude;
     //double lng = self.locationManager.location.coordinate.longitude;
     //[self.catalog getCatalogByCategory:self.currentCategory andLat:lat andLng:lng];

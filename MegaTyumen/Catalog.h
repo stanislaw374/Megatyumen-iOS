@@ -12,12 +12,12 @@
 #import "CatalogCategory.h"
 #import <CoreLocation/CoreLocation.h>
 
-#define kNOTIFICATION_DID_GET_CATALOG_BY_DISTANCE @"megatyumen.didGetCatalogByDistance"
-#define kNOTIFICATION_DID_GET_CATALOG_TYPES @"megatyumen.didGetCatalogTypes"
-#define kNOTIFICATION_DID_GET_CATALOG_CUISINES @"megatyumen.didGetCatalogCuisines"
-#define kNOTIFICATION_DID_GET_CATALOG_BILLS @"megatyumen.didGetCatalogBills"
-#define kNOTIFICATION_DID_GET_CATALOG_BY_CATEGORY @"megatyumen.didGetCatalogByCategory"
-#define kNOTIFICATION_DID_GET_CATALOG_BY_NAME @"megatyumen.didGetCatalogByName"
+//#define kNOTIFICATION_DID_GET_CATALOG_BY_DISTANCE @"megatyumen.didGetCatalogByDistance"
+//#define kNOTIFICATION_DID_GET_CATALOG_TYPES @"megatyumen.didGetCatalogTypes"
+//#define kNOTIFICATION_DID_GET_CATALOG_CUISINES @"megatyumen.didGetCatalogCuisines"
+//#define kNOTIFICATION_DID_GET_CATALOG_BILLS @"megatyumen.didGetCatalogBills"
+//#define kNOTIFICATION_DID_GET_CATALOG_BY_CATEGORY @"megatyumen.didGetCatalogByCategory"
+//#define kNOTIFICATION_DID_GET_CATALOG_BY_NAME @"megatyumen.didGetCatalogByName"
 
 @interface Catalog : NSObject <ASIHTTPRequestDelegate>
 

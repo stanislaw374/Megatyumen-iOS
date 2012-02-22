@@ -35,7 +35,7 @@
 @synthesize btnCheckin;
 @synthesize checkinView = _checkinView;
 @synthesize eventCell = _eventCell;
-@synthesize loadingCell = _loadingCell;
+//@synthesize loadingCell = _loadingCell;
 @synthesize events = _events;
 @synthesize mainMenu = _mainMenu;
 @synthesize hud = _hud;
@@ -74,8 +74,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetEvents:) name:kNOTIFICATION_DID_GET_EVENTS object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetEvents:) name:kNOTIFICATION_DID_GET_EVENTS object:nil];
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addMainButton];
     [self.mainMenu addAuthorizeButton];
@@ -94,11 +94,11 @@
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_EVENTS object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_EVENTS object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     [self setTableView:nil];
     [self setBtnCheckin:nil];
-    [self setLoadingCell:nil];
+    //[self setLoadingCell:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -126,15 +126,15 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
-- (void)didPassAuthorization:(NSNotification *)notification {
-    self.navigationItem.rightBarButtonItem = nil;
-}
+//- (void)didPassAuthorization:(NSNotification *)notification {
+//    self.navigationItem.rightBarButtonItem = nil;
+//}
 
-- (void)didGetEvents:(NSNotification *)notification {
-    self.isLoading = NO;
-    [self.tableView reloadData];
-    [self.hud hide:YES];
-}
+//- (void)didGetEvents:(NSNotification *)notification {
+//    self.isLoading = NO;
+//    [self.tableView reloadData];
+//    [self.hud hide:YES];
+//}
 
 #pragma mark - UITableViewDelegate
 
@@ -189,16 +189,25 @@
     UITableViewCell *cell;
     if ((!self.events.isLoaded && !self.isLoading) || indexPath.row == self.events.items.count) {
         cell = [tableView_ dequeueReusableCellWithIdentifier:kLoadingCell];
-        [[NSBundle mainBundle] loadNibNamed:kLoadingCell owner:self options:nil];
-        cell = self.loadingCell;
-        self.loadingCell = nil;
+        NSArray *nibs = [[NSBundle mainBundle] loadNibNamed:kLoadingCell owner:self options:nil];
+        //cell = self.loadingCell;
+        //self.loadingCell = nil;
+        cell = [nibs objectAtIndex:0];
         
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:cell animated:YES];
         UILabel *lbl = (UILabel *)[cell viewWithTag:1];
         //CGSize winSize = [UIScreen mainScreen].bounds.size;
         hud.xOffset = -lbl.frame.size.width / 2;
         self.isLoading = YES;
-        [self.events getItems:++self.offset];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self.events getItems];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.isLoading = NO;
+                [self.tableView reloadData];
+                [self.hud hide:YES]; 
+            });
+        });
     }
     else {
         cell = [tableView_ dequeueReusableCellWithIdentifier:kEventCell];
@@ -213,10 +222,10 @@
         UITextView *view3 = (UITextView *)[cell viewWithTag:3];
         UILabel *view4 = (UILabel *)[cell viewWithTag:4];
         
-        [view1 setImageWithURL:item.imageUrl placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
+        [view1 setImageWithURL:item.image placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
         view2.text = item.companyName;
-        //view3.text = item.title;
-        view3.text = item.announce;
+        view3.text = item.title;
+        //view3.text = item.announce;
 
         NSDateFormatter *df = [[NSDateFormatter alloc] init];
         df.dateFormat = @"dd MMMM hh:mm";

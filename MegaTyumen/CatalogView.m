@@ -82,6 +82,13 @@
     return _catalogCategoryView;
 }
 
+- (CheckinCatalogView *)checkinView {
+    if (_checkinView) {
+        _checkinView = [[CheckinCatalogView alloc] init];
+    }
+    return _checkinView;
+}
+
 - (CLLocationManager *)locationManager {
     if (!_locationManager) {
         _locationManager = [[CLLocationManager alloc] init];
@@ -149,9 +156,6 @@
         return;
     }
     
-    if (!self.checkinView) {
-        self.checkinView = [[CheckinCatalogView alloc] init];
-    }
     [self.navigationController pushViewController:self.checkinView animated:YES];
 }
 
@@ -244,7 +248,7 @@
     [self.btnType setImage:[UIImage imageNamed:@"catalog_byTypeButtonPressed.png"] forState:UIControlStateSelected];
     [self.btnCuisine setImage:[UIImage imageNamed:@"catalog_byCuisineButtonPressed.png"] forState:UIControlStateSelected];
     [self.btnBill setImage:[UIImage imageNamed:@"catalog_byBillButtonPressed.png"] forState:UIControlStateSelected];
-    [self.btnNearby setImage:[UIImage imageNamed:@"catalog_NearbyButtonPressed.png"] forState:UIControlStateSelected];
+    [self.btnNearby setImage:[UIImage imageNamed:@"catalog_nearbyButtonPressed.png"] forState:UIControlStateSelected];
     self.btnType.selected = YES;
     
     [self onTypeButtonClick];
@@ -254,7 +258,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     [self.locationManager stopUpdatingLocation];
-    self.catalog.userLocation = self.locationManager.location;
+    self.catalog.userLocation = newLocation;
 
     if (self.currentCategory == -1) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -508,7 +512,7 @@
     CatalogItem *item = [self.catalog.items objectForKey:indexPath];
     
     if (item) {
-        [view1 setImageWithURL:item.image placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
+        [view1 setImageWithURL:item.logo placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
         view2.text = item.name;
         view3.text = item.address;
         double distance = item.distance;

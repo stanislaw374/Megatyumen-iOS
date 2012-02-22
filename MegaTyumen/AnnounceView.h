@@ -29,6 +29,7 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UITextView *txtTitle;
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *borderButton;
 @property (unsafe_unretained, nonatomic) IBOutlet UIWebView *textWebView;
+@property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnImage2;
 
 - (id)initWithAnnounce:(Announce *)announce;
 - (IBAction)onImageClick;

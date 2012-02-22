@@ -7,12 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SDWebImageDownloader.h"
 
-@interface MenuItem : NSObject <SDWebImageDownloaderDelegate>
+@interface MenuItem : NSObject
 
 @property (nonatomic, strong) NSString *title;
-@property (nonatomic) float price;
+@property (nonatomic) double price;
 @property (nonatomic, strong) NSURL *image;
 
 @end

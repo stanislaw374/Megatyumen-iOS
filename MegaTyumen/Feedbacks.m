@@ -14,17 +14,16 @@
 #import "SBJsonWriter.h"
 #import "SBJsonParser.h"
 
-#define VALUE_FEEDBACK @"companies_feedback"
-#define KEY_OFFSET @"offset"
-
 @interface Feedbacks() 
+@property (nonatomic) int offset;
 @property (nonatomic) int loaded;
-- (void)didGetItems:(ASIHTTPRequest *)request;
+//- (void)didGetItems:(ASIHTTPRequest *)request;
 @end
 
 @implementation Feedbacks
 @synthesize items = _items;
 @synthesize loaded = _loaded;
+@synthesize offset = _offset;
 
 #pragma mark - Lazy Instantiation
 
@@ -51,27 +50,29 @@
 //    return [Catalog feedbacksCount];
 //}
 
-- (void)getItems:(int)index {
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:VALUE_FEEDBACK, KEY_REQUEST, [NSNumber numberWithInt:index], KEY_OFFSET, nil];
-                          
-    SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
-    [request setPostValue:[jsonWriter stringWithObject:dict] forKey:KEY_JSON_DATA];
-    request.delegate = self;
-    request.didFinishSelector = @selector(didGetItems:);
-    [request startAsynchronous];
-}
-
-- (void)didGetItems:(ASIHTTPRequest *)request {
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSDictionary *dict = [parser objectWithString:request.responseString];
+- (void)getItems {
+    int limit = 70;
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"companies_feedback", KEY_REQUEST, [NSNumber numberWithInt:self.offset], @"offset", [NSNumber numberWithInt:limit], @"limit", nil];
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
     
-    BOOL result = [[dict objectForKey:@"response"] boolValue];
+    //self.offset += limit;
+    SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
+    [request setPostValue:[jsonWriter stringWithObject:dict] forKey:KEY_JSON_DATA];
+    //request.delegate = self;
+    //request.didFinishSelector = @selector(didGetItems:);
+    [request startSynchronous];
+    
+    SBJsonParser *parser = [[SBJsonParser alloc] init];
+    NSDictionary *dict2 = [parser objectWithString:request.responseString];
+    
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict2.description);
+    
+    BOOL result = [[dict2 objectForKey:@"response"] boolValue];
     
     if (result) {
-        NSArray *comments = [dict objectForKey:@"comments"];
+        NSArray *comments = [dict2 objectForKey:@"comments"];
         
         for (NSDictionary *comment in comments) {
             Feedback *f = [[Feedback alloc] init];
@@ -81,14 +82,44 @@
             NSDateFormatter *df = [[NSDateFormatter alloc] init];
             [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
             f.date = [df dateFromString:[comment objectForKey:@"date"]];
-            id nameObj = [comment objectForKey:@"name"];
-            f.name = (!nameObj || [nameObj isKindOfClass:[NSNull class]]) ? @"" : nameObj;
+            id nameObj = [comment objectForKey:@"user_name"];
+            f.userName = (!nameObj || [nameObj isKindOfClass:[NSNull class]]) ? @"" : nameObj;
+            f.companyName = [comment objectForKey:@"company_name"];
             
             [self.items addObject:f];
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
+        self.offset += limit;
     }
-    
 }
+
+//- (void)didGetItems:(ASIHTTPRequest *)request {
+//    SBJsonParser *parser = [[SBJsonParser alloc] init];
+//    NSDictionary *dict = [parser objectWithString:request.responseString];
+//    
+//    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
+//    
+//    BOOL result = [[dict objectForKey:@"response"] boolValue];
+//    
+//    if (result) {
+//        NSArray *comments = [dict objectForKey:@"comments"];
+//        
+//        for (NSDictionary *comment in comments) {
+//            Feedback *f = [[Feedback alloc] init];
+//            f.text = [comment objectForKey:@"text"];
+//            id attitudeObj = [comment objectForKey:@"attitude"];
+//            f.attitude = (!attitudeObj || [attitudeObj isKindOfClass:[NSNull class]]) ? 0 : [attitudeObj intValue];
+//            NSDateFormatter *df = [[NSDateFormatter alloc] init];
+//            [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+//            f.date = [df dateFromString:[comment objectForKey:@"date"]];
+//            id nameObj = [comment objectForKey:@"name"];
+//            f.name = (!nameObj || [nameObj isKindOfClass:[NSNull class]]) ? @"" : nameObj;
+//            
+//            [self.items addObject:f];
+//        }
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
+//    }
+//    
+//}
 
 @end

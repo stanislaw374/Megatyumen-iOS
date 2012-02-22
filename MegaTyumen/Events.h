@@ -9,16 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "ASIHTTPRequest.h"
 
-#define kNOTIFICATION_DID_GET_EVENTS @"megatyumen.didGetCompanyNews"
+//#define kNOTIFICATION_DID_GET_EVENTS @"megatyumen.didGetCompanyNews"
 
 @interface Events : NSObject <ASIHTTPRequestDelegate>
 
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic) BOOL isLoaded;
-//@property (nonatomic, readonly) BOOL result;
-//@property (nonatomic, copy) NSString *error; 
 
-//- (void)getItem:(int)offset;
-- (void)getItems:(int)offset;
+- (void)getItems;
 
 @end

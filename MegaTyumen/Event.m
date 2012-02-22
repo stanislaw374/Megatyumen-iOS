@@ -18,7 +18,7 @@
 @synthesize announce = _announce;
 @synthesize date = _date;
 @synthesize downloader = _downloader;
-@synthesize imageUrl = _imageUrl;
+@synthesize image = _imageUrl;
 @synthesize title = _title;
 
 @end

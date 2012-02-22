@@ -15,9 +15,6 @@
 
 @property (nonatomic, strong) NSMutableArray *items;
 
-//+ (int)count;
-//+ (int)readCount;
-
 - (void)getItems;
 
 @end

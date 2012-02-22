@@ -36,6 +36,7 @@
 @synthesize txtTitle;
 @synthesize borderButton;
 @synthesize textWebView;
+@synthesize btnImage2;
 @synthesize view1;
 @synthesize view2;
 @synthesize lblWhat;
@@ -99,6 +100,7 @@
     [self setTxtTitle:nil];
     [self setBorderButton:nil];
     [self setTextWebView:nil];
+    [self setBtnImage2:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -111,6 +113,8 @@
 }
 
 - (IBAction)onImageClick {
+    NSLog(@"click");
+    
     if (self.isAnimating) return;
     
     self.isAnimating = YES;

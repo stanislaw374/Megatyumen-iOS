@@ -26,9 +26,8 @@
 @property (strong, nonatomic) MBProgressHUD *hud;
 @property (nonatomic) int offset;
 @property (nonatomic) int height;
-
-- (void)didPassAuthorization:(NSNotification *)notification;
-- (void)didGetFeedback:(NSNotification *)notification;
+//- (void)didPassAuthorization:(NSNotification *)notification;
+- (void)didGetFeedback;
 - (void)getFeedback;
 @end
 
@@ -83,30 +82,33 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetFeedback:) name:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetFeedback:) name:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addMainButton];
     [self.mainMenu addAuthorizeButton];
     
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
     self.feedback = [[Feedbacks alloc] init];
-    [self.hud show:YES];
-    self.offset = 0;
     self.height = 0;
-    [self.feedback getItems:self.offset];
 }
 
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//}
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.feedback getItems];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self didGetFeedback];
+        });
+    });
+}
 
 - (void)viewDidUnload
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     [self setBtnAddFeedback:nil];
     [self setScrollView:nil];
     [self setBorderButton:nil];
@@ -131,12 +133,8 @@
     self.checkinView.isFeedbackMode = YES;
 }
 
-- (void)didPassAuthorization:(NSNotification *)notification {
-    self.navigationItem.rightBarButtonItem = nil;
-}
-
-- (void)didGetFeedback:(NSNotification *)notification {
-    NSLog(@"View did get Feedback");
+- (void)didGetFeedback {
+    //NSLog(@"View did get Feedback");
     
     if (!self.feedbackView.window) {
         [self.scrollView addSubview:self.feedbackView];
@@ -170,20 +168,20 @@
         // Автор отзыва
         UILabel *view2 = [[UILabel alloc] initWithFrame:CGRectMake(view1.frame.origin.x + view1.frame.size.width + 8, view1.frame.origin.y, 280 - view1.frame.size.width, 20)];
         view2.font = [UIFont boldSystemFontOfSize:14];
-        view2.text = item.name;
+        view2.text = item.userName;
         //view2.text = @"lol";
         view2.backgroundColor = [UIColor clearColor];
         [self.feedbackView addSubview:view2];
         
-//        // Название заведения
-//        UILabel *view225 = [[UILabel alloc] initWithFrame:CGRectMake(view2.frame.origin.x, view2.frame.origin.y + view2.frame.size.height + ySpace, view2.frame.size.width, 20)];
-//        view225.font = [UIFont italicSystemFontOfSize:14];
-//        view225.text = item.to;
-//        view225.backgroundColor = [UIColor clearColor];
-//        [self.feedbackView addSubview:view225];
+        // Название заведения
+        UILabel *view25 = [[UILabel alloc] initWithFrame:CGRectMake(view2.frame.origin.x, view2.frame.origin.y + view2.frame.size.height + ySpace, view2.frame.size.width, 20)];
+        view25.font = [UIFont italicSystemFontOfSize:14];
+        view25.text = item.companyName;
+        view25.backgroundColor = [UIColor clearColor];
+        [self.feedbackView addSubview:view25];
         
         // Характер отзыва
-        UIImageView *view3 = [[UIImageView alloc] initWithFrame:CGRectMake(view2.frame.origin.x, view2.frame.origin.y + view2.frame.size.height + ySpace, 200, 3)];
+        UIImageView *view3 = [[UIImageView alloc] initWithFrame:CGRectMake(view25.frame.origin.x, view25.frame.origin.y + view25.frame.size.height + ySpace, 200, 3)];
         UIColor *color;
         switch (item.attitude) {
             case -1: color = [UIColor colorWithRed:217/255.0 green:6/255.0 blue:27/255.0 alpha:1]; break;
@@ -221,7 +219,7 @@
             [self.feedbackView addSubview:view6];
         }
         //NSLog(@"1.self.height = %d", self.height);
-        self.height += dy + view2.frame.size.height + ySpace + view3.frame.size.height + ySpace + view4.frame.size.height + ySpace + view5.frame.size.height + ySpace + view6.frame.size.height;
+        self.height += dy + view2.frame.size.height + ySpace + view25.frame.size.height + ySpace + view3.frame.size.height + ySpace + view4.frame.size.height + ySpace + view5.frame.size.height + ySpace + view6.frame.size.height;
         //NSLog(@"2.self.height = %d", self.height);
     }
     
@@ -234,10 +232,10 @@
     
     [self.hud hide:YES];
     
-    self.offset += 1;
-    if (self.offset <= 9) {
-        [self.feedback getItems:self.offset];
-    }
+//    self.offset += 1;
+//    if (self.offset <= 9) {
+//        [self.feedback getItems:self.offset];
+//    }
 }
 
 #pragma mark - UIAlertViewDelegate

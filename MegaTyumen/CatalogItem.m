@@ -19,10 +19,10 @@
 @interface CatalogItem()
 //- (void)didGetDetails:(ASIHTTPRequest *)request;
 //- (void)didCheckin:(ASIHTTPRequest *)request;
-- (void)didGetPhotos:(ASIHTTPRequest *)request;
-- (void)didGetMenu:(ASIHTTPRequest *)request;
-- (void)didGetFeedback:(ASIHTTPRequest *)request;
-- (void)didGetEvents:(ASIHTTPRequest *)request;
+//- (void)didGetPhotos:(ASIHTTPRequest *)request;
+//- (void)didGetMenu:(ASIHTTPRequest *)request;
+//- (void)didGetFeedback:(ASIHTTPRequest *)request;
+//- (void)didGetEvents:(ASIHTTPRequest *)request;
 @end
 
 @implementation CatalogItem
@@ -47,7 +47,7 @@
 @synthesize bill = _bill;
 @synthesize photos = _photos;
 @synthesize distance = _distance;
-@synthesize image = _image;
+@synthesize logo = _image;
 
 #pragma mark - Lazy instantiation
 
@@ -147,15 +147,15 @@
 //    [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_CHECKIN object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:result], @"result", error, @"error", nil]];
 //}
 
-- (void)getPhotos {
-    [self didGetPhotos:nil];
-}
+//- (void)getPhotos {
+//    [self didGetPhotos:nil];
+//}
 
-- (void)didGetPhotos:(ASIHTTPRequest *)request {
-        
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"didGetPhotos" object:nil];
-    NSLog(@"Post didGetPhotos");
-}
+//- (void)didGetPhotos:(ASIHTTPRequest *)request {
+//        
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"didGetPhotos" object:nil];
+//    NSLog(@"Post didGetPhotos");
+//}
 
 - (void)getMenu {
     //[self didGetMenu:nil];
@@ -184,10 +184,10 @@
     }
 }
 
-- (void)didGetMenu:(ASIHTTPRequest *)request {
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"didGetMenu" object:nil];
-}
+//- (void)didGetMenu:(ASIHTTPRequest *)request {
+//    
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"didGetMenu" object:nil];
+//}
 
 - (void)getFeedbacks {
     SBJsonWriter *writer = [[SBJsonWriter alloc] init];
@@ -215,18 +215,18 @@
     }
 }
 
-- (void)didGetFeedback:(ASIHTTPRequest *)request {
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"didGetCatalogItemFeedback" object:nil];
-}
+//- (void)didGetFeedback:(ASIHTTPRequest *)request {
+//    
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"didGetCatalogItemFeedback" object:nil];
+//}
 
 - (void)getEvents {
-    [self didGetEvents:nil];
+    //[self didGetEvents:nil];
 }
-
-- (void)didGetEvents:(ASIHTTPRequest *)request {
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"didGetCatalogItemEvents" object:nil];
-}
+//
+//- (void)didGetEvents:(ASIHTTPRequest *)request {
+//    
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"didGetCatalogItemEvents" object:nil];
+//}
 
 @end

@@ -12,6 +12,7 @@
 @synthesize text = _text;
 @synthesize date = _date;
 @synthesize attitude = _attitude;
-@synthesize name = _name;
+@synthesize userName = _userName;
+@synthesize companyName = _companyName;
 
 @end

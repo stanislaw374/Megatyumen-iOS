@@ -59,7 +59,7 @@
 }
 
 - (void)initUI {
-    [self.imageView setImageWithURL:self.currentItem.image placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:CGSizeMake(80, 80)];
+    [self.imageView setImageWithURL:self.currentItem.logo placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:CGSizeMake(80, 80)];
     self.nameLabel.text = self.currentItem.name;
     self.addressLabel.text = self.currentItem.address;
     double distance = self.currentItem.distance;

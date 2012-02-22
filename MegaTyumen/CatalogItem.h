@@ -17,7 +17,7 @@
 
 @property (nonatomic) int ID;                           // ID заведения
 @property (nonatomic, strong) NSString *name;           // Название заведения
-@property (nonatomic, strong) NSURL *image;
+@property (nonatomic, strong) NSURL *logo;
 @property (nonatomic, strong) NSString *type;           // Тип заведения
 @property (nonatomic, strong) NSString *cuisine;        // Кухня заведения
 @property (nonatomic, strong) NSString *address;        // Адрес заведения
@@ -35,7 +35,7 @@
 @property (nonatomic, strong) NSMutableArray *photos;   // Урлы фоток
 @property (nonatomic, strong) CLLocation *location;     // Географические координаты
 @property (nonatomic) int bill;                         // Средний чек
-@property (nonatomic) double distance;                     // Расстояние до заведения в метрах
+@property (nonatomic) double distance;                  // Расстояние до заведения в метрах
 
 - (void)getDetails;
 
