@@ -10,13 +10,7 @@
 #import "ASIHTTPRequest.h"
 #import "ASIHTTPRequestDelegate.h"
 
-//#define kNOTIFICATION_DID_GET_NEW_DETAILS @"megatyumen.didGetNewDetails"
-//#define kNOTIFICATION_DID_GET_PHOTOS @"megatyumen.didGetPhotos"
-//#define kNOTIFICATION_DID_ADD_COMMENT @"megatyumen.didAddComment"
-
 @interface New : NSObject <ASIHTTPRequestDelegate>
-
-//@property (nonatomic, unsafe_unretained) News *parent;
 
 @property (nonatomic) int ID;                               // Идентификатор новости
 @property (nonatomic, strong) NSString *title;              // Заголовок новости

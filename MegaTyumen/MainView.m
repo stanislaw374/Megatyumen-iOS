@@ -118,7 +118,6 @@
 - (YMapView *)yMapView {
     if (!_yMapView) {
         _yMapView = [[YMapView alloc] init];
-        _yMapView.loadAllMarkers = YES;
         _yMapView.showDisclosureButton = YES;
         _yMapView.title = @"Карта";
     }
@@ -323,9 +322,7 @@
     }
     [self.navigationController pushViewController:self.yMapView animated:YES];
     
-//    for (CatalogItem *item in self.catalog.items.allValues) {
-//        [self.yMapView addAnnotationForCatalogItem:item];
-//    }
+    [self.yMapView loadCatalog];
 }
 
 - (IBAction)onFeedbackButtonClick {

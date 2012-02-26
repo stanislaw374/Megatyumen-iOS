@@ -27,6 +27,7 @@
 
 @implementation AuthorizationView
 @synthesize scrollView = _scrollView;
+@synthesize textField = _textField;
 @synthesize tableView = _tableView;
 @synthesize forgotPasswordButton = _forgotPasswordButton;
 @synthesize registerButton = _registerButton;
@@ -106,6 +107,7 @@
     [self setForgotPasswordButton:nil];
     [self setRegisterButton:nil];
     [self setScrollView:nil];
+    [self setTextField:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -259,6 +261,11 @@
         }
     }
     return cell;
+}
+
+- (IBAction)onBgClick:(id)sender {
+    [self.textField becomeFirstResponder];
+    [self.textField resignFirstResponder];
 }
 
 @end

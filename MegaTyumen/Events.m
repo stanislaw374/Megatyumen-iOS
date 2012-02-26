@@ -12,6 +12,7 @@
 #import "Constants.h"
 #import "Catalog.h"
 #import "SBJSON.h"
+#import "New.h"
 
 #define VALUE_EVENTS @"catalogue_events"
 #define KEY_OFFSET @"offset"
@@ -74,8 +75,12 @@
         NSArray *events = [dict2 objectForKey:@"events"];
         for (NSDictionary *event in events) {
             Event *e = [[Event alloc] init];
+            //Event *e = [[Event alloc] init];
+            e.ID = [[event objectForKey:@"id"] intValue];
             e.image = [NSURL URLWithString:[event objectForKey:@"image"] relativeToURL:kWEBSITE_URL];
-            e.announce = [event objectForKey:@"announce"];
+            //e.image = [NSURL URLWithString:[event objectForKey:@"image"] relativeToURL:kWEBSITE_URL];
+            e.text = [event objectForKey:@"text"];
+            //e.announce = [event objectForKey:@"announce"];
             e.title = [event objectForKey:@"title"];
             e.companyName = [event objectForKey:@"company_name"];
             e.companyID = [[event objectForKey:@"company_id"] intValue];
@@ -83,9 +88,8 @@
             [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
             e.date = [df dateFromString:[event objectForKey:@"date"]];
             [self.items addObject:e];
-            
-            self.offset += limit;
         }
+        self.offset += limit;
     }
 }
 

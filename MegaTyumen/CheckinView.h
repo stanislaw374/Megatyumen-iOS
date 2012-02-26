@@ -27,5 +27,6 @@
 - (IBAction)onNegativeButtonClick;
 - (IBAction)onCheckinButtonClick;
 - (IBAction)onAddFeedbackButtonClick;
+- (IBAction)onBgClick:(id)sender;
 
 @end

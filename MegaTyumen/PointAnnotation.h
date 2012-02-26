@@ -17,9 +17,9 @@
 
 + (id)pointAnnotation;
 
-@property (nonatomic, strong) NSString * title;
-@property (nonatomic, strong) NSString * subtitle;
+@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) NSString *subtitle;
 @property (nonatomic) YMKMapCoordinate coordinate;
-@property (nonatomic, unsafe_unretained) CatalogItem *catalogItem;
+@property (nonatomic, strong) CatalogItem *catalogItem;
 
 @end

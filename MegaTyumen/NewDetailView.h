@@ -13,6 +13,7 @@
 #import "FBConnect.h"
 #import "MBProgressHUD.h"
 #import "MainMenu.h"
+#import "Event.h"
 
 @interface NewDetailView : UIViewController <UIWebViewDelegate, FBSessionDelegate, FBDialogDelegate>
 

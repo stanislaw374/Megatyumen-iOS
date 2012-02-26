@@ -17,7 +17,7 @@
 @interface MapViewController()
 - (void)configureAndInstallMapView;
 @property (nonatomic, strong) MainMenu *mainMenu;
-- (void)didPassAuthorization:(NSNotification *)notification;
+//- (void)didPassAuthorization:(NSNotification *)notification;
 @end
 
 @implementation MapViewController
@@ -37,7 +37,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     
     [self configureAndInstallMapView];
     
@@ -52,7 +52,7 @@
 
 - (void)viewDidUnload {
     self.mapView = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     [super viewDidUnload];
 }
 
@@ -61,10 +61,6 @@
 - (void)configureAndInstallMapView {
     // Replace with your own Yandex Map Kit API key
     self.mapView.apiKey = @"SkJckErzSIu5lPxAMtjpUhKfSWAU7dPt0sNpSAgkp8dzvQp0UnHnXK7xuJh8kTjW83Dg8CdYkm5hm31q59HeDLQxEwCef0gKAwXD2vyDrms=";
-}
-
-- (void)didPassAuthorization:(NSNotification *)notification {
-    self.navigationItem.rightBarButtonItem = nil;
 }
 
 #pragma mark - Properties

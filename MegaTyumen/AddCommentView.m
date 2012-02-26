@@ -20,6 +20,7 @@
 @synthesize tableView;
 @synthesize currentNew = _currentNew;
 @synthesize scrollView;
+@synthesize textField = _textField;
 @synthesize keyboardListener = _keyboardListener;
 @synthesize hud = _hud;
 @synthesize mainMenu = _mainMenu;
@@ -93,6 +94,7 @@
     //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_ADD_COMMENT object:nil];
     [self setTableView:nil];
     [self setScrollView:nil];
+    [self setTextField:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -198,7 +200,7 @@
             if ([tableView_ numberOfRowsInSection:0] == 2) {
                 switch (indexPath.row) {
                     case 0:
-                        nameTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, 10, 240, cellSize.height - 20)];
+                        nameTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, 10, 260, cellSize.height - 20)];
                         nameTextField.adjustsFontSizeToFitWidth = YES;
                         nameTextField.placeholder = @"Имя";
                         nameTextField.returnKeyType = UIReturnKeyNext;
@@ -213,7 +215,7 @@
                         [cell addSubview:nameTextField];
                         break;
                     case 1:
-                        commentTextView = [[UITextView alloc] initWithFrame:CGRectMake(15, 10, 240, 274 - 20)];
+                        commentTextView = [[UITextView alloc] initWithFrame:CGRectMake(15, 10, 260, 274 - 20)];
                         //NSLog(@"Размер текствью = %lf", cellSize.height);
                         commentTextView.textColor = [UIColor lightGrayColor];
                         commentTextView.font = [UIFont systemFontOfSize:14];
@@ -247,6 +249,11 @@
 -(CGFloat)tableView:(UITableView *)tableView_ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0 && ![Authorization sharedAuthorization].isAuthorized) return 44;
     else return 274;
+}
+
+- (IBAction)onBgClick:(id)sender {
+    [self.textField becomeFirstResponder];
+    [self.textField resignFirstResponder];
 }
 
 @end

@@ -17,6 +17,8 @@
 #import "UIImageView+WebCache.h"
 #import "MBProgressHUD.h"
 #import "UIImage+Thumbnail.h"
+#import "New.h"
+#import "NewDetailView.h"
 
 @interface EventsView()
 @property (nonatomic, strong) CheckinCatalogView *checkinView;
@@ -25,6 +27,7 @@
 @property (nonatomic, strong) MBProgressHUD *hud;
 @property (nonatomic) int offset;
 @property (nonatomic) BOOL isLoading;
+@property (nonatomic, strong) NewDetailView *newDetailView;
 - (void)didPassAuthorization:(NSNotification *)notification;
 - (void)didGetEvents:(NSNotification *)notification;
 - (void)getEvents;
@@ -41,12 +44,20 @@
 @synthesize hud = _hud;
 @synthesize offset = _offset;
 @synthesize isLoading = _isLoading;
+@synthesize newDetailView = _newDetailView;
 
 - (CheckinCatalogView *)checkinView {
     if (!_checkinView) {
         _checkinView = [[CheckinCatalogView alloc] init];
     }
     return _checkinView;
+}
+
+- (NewDetailView *)newDetailView {
+    if (!_newDetailView) {
+        _newDetailView = [[NewDetailView alloc] init];
+    }
+    return _newDetailView;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -140,9 +151,22 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     Event *event = [self.events.items objectAtIndex:indexPath.row];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:event.title message:event.announce delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:event.title message:event.text delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
     [alert show];
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    
+    Event *selectedEvent = [self.events.items objectAtIndex:indexPath.row];
+    self.newDetailView.currentNew = selectedEvent;
+    [self.navigationController pushViewController:self.newDetailView animated:YES];
+}
+
+//- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    NSLog(@"%@", NSStringFromSelector(_cmd));
+//    return indexPath;
+//}
 
 #pragma mark - UITableViewDataSource
 

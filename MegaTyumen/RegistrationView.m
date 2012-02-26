@@ -27,6 +27,7 @@
 @synthesize tableView;
 @synthesize keyboardListener = _keyboardListener;
 @synthesize scrollView = _scrollView;
+@synthesize textField = _textField;
 @synthesize userAgreementView = _userAgreementView;
 @synthesize hud = _hud;
 @synthesize mainMenu = _mainMenu;
@@ -90,6 +91,8 @@
     //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_REGISTER object:nil];
     [self setTableView:nil];
     [self setScrollView:nil];
+    [self setTextField:nil];
+    [self setTextField:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -171,6 +174,11 @@
 
 - (IBAction)onReadUserAgreementButtonClick {
     [self.navigationController pushViewController:self.userAgreementView animated:YES];
+}
+
+- (IBAction)onBgClick:(id)sender {
+    [self.textField becomeFirstResponder];
+    [self.textField resignFirstResponder];
 }
 
 #pragma mark UITextFieldDelegate

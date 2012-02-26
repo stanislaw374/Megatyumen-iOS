@@ -7,7 +7,6 @@
 //
 
 #import "YMapView.h"
-#import <CoreLocation/CoreLocation.h>
 #import "CatalogItemView.h"
 #import "MBProgressHUD.h"
 #import "Catalog.h"
@@ -18,17 +17,19 @@
 @property (nonatomic, strong) CatalogItemView *catalogItemView;
 @property (nonatomic, strong) MBProgressHUD *hud;
 @property (nonatomic, strong) Catalog *catalog;
+@property (nonatomic, strong) CLLocationManager *locationManager;
 - (void)configureMapView;
-- (void)loadMarkers;
+//- (void)loadMarkers;
 @end
 
 @implementation YMapView
-@synthesize loadAllMarkers = _loadAllMarkers;
+//@synthesize loadAllMarkers = _loadAllMarkers;
 @synthesize hud = _hud;
 @synthesize catalog = _catalog;
 @synthesize catalogItems = _catalogItems;
 @synthesize showDisclosureButton = _showDisclosureButton;
 @synthesize catalogItemView = _catalogItemView;
+@synthesize locationManager = _locationManager;
 
 - (NSMutableArray *)catalogItems {
     if (!_catalogItems) {
@@ -37,25 +38,41 @@
     return _catalogItems;
 }
 
+- (CLLocationManager *)locationManager {
+    if (!_locationManager) {
+        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        _locationManager.distanceFilter = kCLDistanceFilterNone;
+        _locationManager.delegate = self;
+    }
+    return _locationManager;
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    [self.locationManager stopUpdatingLocation];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        self.catalog = [[Catalog alloc] initWithUserLocation:newLocation];
+        [self.catalog getCatalogByDistance];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            for (CatalogItem *item in self.catalog.items.allValues) {
+                [self addAnnotationForCatalogItem:item]; 
+            }
+            [self.hud hide:YES];
+        });
+    });
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self configureMapView];
-    
-    if (self.loadAllMarkers) {
-        self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        [self loadMarkers];
-        [self.hud hide:YES];
-    }
 }
 
-- (void)loadMarkers {
-    self.catalog = [[Catalog alloc] init];
-    self.catalog.searchString = @"";
-    for (CatalogItem *item in self.catalog.items.allValues) {
-        [self addAnnotationForCatalogItem:item];
-    }        
+- (void)loadCatalog {
+    if (![CLLocationManager locationServicesEnabled]) return;
+    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.locationManager startUpdatingLocation];
 }
 
 - (void)viewDidUnload {    

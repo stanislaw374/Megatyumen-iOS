@@ -18,10 +18,12 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *forgotPasswordButton;
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *registerButton;
 @property (unsafe_unretained, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (unsafe_unretained, nonatomic) IBOutlet UITextField *textField;
 
 - (IBAction)onEnterButtonClick;
 - (IBAction)onForgotPasswordButtonClick;
 - (IBAction)onRegisterButtonClick;
 //- (IBAction)dismissKeyboard:(id)sender;
+- (IBAction)onBgClick:(id)sender;
 
 @end

@@ -495,7 +495,7 @@
 		8663D4FB14A227DA00EA164D /* FeedbackCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FeedbackCell.xib; path = ../MegaTyumen/FeedbackCell.xib; sourceTree = "<group>"; };
 		866BAFC9149E3C9C004E35ED /* CatalogItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CatalogItemView.h; path = MegaTyumen/CatalogItemView.h; sourceTree = "<group>"; };
 		866BAFCA149E3C9C004E35ED /* CatalogItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CatalogItemView.m; path = MegaTyumen/CatalogItemView.m; sourceTree = "<group>"; };
-		866BAFCB149E3C9C004E35ED /* CatalogItemView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CatalogItemView.xib; path = MegaTyumen/CatalogItemView.xib; sourceTree = "<group>"; };
+		866BAFCB149E3C9C004E35ED /* CatalogItemView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CatalogItemView.xib; path = ../MegaTyumen/CatalogItemView.xib; sourceTree = "<group>"; };
 		866BAFCE149E3E3E004E35ED /* catalog_header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = catalog_header.png; sourceTree = "<group>"; };
 		866BAFCF149E3E3E004E35ED /* catalog_header@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "catalog_header@2x.png"; sourceTree = "<group>"; };
 		866BAFD0149E3E3E004E35ED /* catalog_headerPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = catalog_headerPressed.png; sourceTree = "<group>"; };
@@ -690,7 +690,7 @@
 		86DB3542147DBFC400DE13A5 /* New.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = New.m; sourceTree = "<group>"; };
 		86EA845E149E666C00008F5D /* MenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItem.h; sourceTree = "<group>"; };
 		86EA845F149E666D00008F5D /* MenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuItem.m; sourceTree = "<group>"; };
-		86EA8462149E69A000008F5D /* MenuCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MenuCell.xib; path = MegaTyumen/MenuCell.xib; sourceTree = "<group>"; };
+		86EA8462149E69A000008F5D /* MenuCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MenuCell.xib; path = ../MegaTyumen/MenuCell.xib; sourceTree = "<group>"; };
 		86EA8464149E77F600008F5D /* Feedback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Feedback.h; sourceTree = "<group>"; };
 		86EA8465149E77F600008F5D /* Feedback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Feedback.m; sourceTree = "<group>"; };
 		86EA8467149E7ACD00008F5D /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
@@ -956,8 +956,6 @@
 			children = (
 				866BAFC9149E3C9C004E35ED /* CatalogItemView.h */,
 				866BAFCA149E3C9C004E35ED /* CatalogItemView.m */,
-				866BAFCB149E3C9C004E35ED /* CatalogItemView.xib */,
-				86EA8462149E69A000008F5D /* MenuCell.xib */,
 			);
 			name = "Карточка заведения";
 			sourceTree = "<group>";
@@ -984,10 +982,12 @@
 				869B69F31496D04F00F41E06 /* CatalogCell.xib */,
 				8653BB7614986E9800494E85 /* CatalogCategoryView.xib */,
 				8653BB811498767500494E85 /* CatalogCategoryCell.xib */,
+				866BAFCB149E3C9C004E35ED /* CatalogItemView.xib */,
 				866EDA12149F20FE00EE77C6 /* FeedbackView.xib */,
 				866ED9FC149F11BF00EE77C6 /* EventsView.xib */,
 				86F8F279149F314300D83C9F /* AnnounceView.xib */,
 				8641088614A7054E00ED2AFD /* AnnouncesView.xib */,
+				86EA8462149E69A000008F5D /* MenuCell.xib */,
 				8663D4FB14A227DA00EA164D /* FeedbackCell.xib */,
 				86D01FC9148FE3B70094B8AC /* LoadingCell.xib */,
 				8623761D149EF36200AD084B /* EventCell.xib */,

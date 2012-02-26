@@ -198,6 +198,7 @@
 //}
 
 - (void)getCatalogByDistance {
+    //int limit = 10;
     NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_by_distance", @"request", [NSNumber numberWithDouble:self.userLocation.coordinate.latitude], @"lat", [NSNumber numberWithDouble:self.userLocation.coordinate.longitude], @"lng", nil];
     
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
@@ -227,7 +228,7 @@
             int ID = [[company objectForKey:@"id"] intValue];
             NSString *name = [company objectForKey:@"name"];
             NSString *address = [company objectForKey:@"address"];
-            double distance = [[company objectForKey:@"distance"] doubleValue];
+            double distance = [[company objectForKey:@"distance"] doubleValue] * 1000;
             NSString *image = [company objectForKey:@"image"];
             
             int section;
@@ -265,8 +266,8 @@
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
-    request.delegate = self;
-    request.didFinishSelector = @selector(didGetCatalogByDistance:);
+    //request.delegate = self;
+    //request.didFinishSelector = @selector(didGetCatalogByDistance:);
     [request startSynchronous];
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), requestDict.description);
@@ -289,7 +290,7 @@
             int ID = [[company objectForKey:@"id"] intValue];
             NSString *name = [company objectForKey:@"name"];
             NSString *address = [company objectForKey:@"address"];
-            double distance = [[company objectForKey:@"distance"] doubleValue];
+            double distance = [[company objectForKey:@"distance"] doubleValue] * 1000;
             NSString *image = [company objectForKey:@"image"];
             
             int section;
@@ -828,6 +829,8 @@
 //            break;
     }    
     
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), requestDict);
+    
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
@@ -837,60 +840,30 @@
     
     SBJsonParser *parser = [[SBJsonParser alloc] init];
     NSDictionary *dict = [parser objectWithString:request.responseString];
+    
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict);
+    
     BOOL response = [[dict objectForKey:@"response"] boolValue];
     if (response) {
         self.allSections = 1;
         [self.allRows removeAllObjects];
         [self.allItems removeAllObjects];
-        int rows = 0;
+        int row = 0;
         NSArray *catalog = [dict objectForKey:@"catalog"];
         for (NSDictionary *company in catalog) {
             CatalogItem *c = [[CatalogItem alloc] init];
             c.ID = [[company objectForKey:@"id"] intValue];
             c.name = [company objectForKey:@"name"];
+            c.address = [company objectForKey:@"address"];
+            c.checkinCount = [[company objectForKey:@"comments_count"] intValue];
+            c.distance = [[company objectForKey:@"distance"] doubleValue] * 1000;
+            c.type = [category objectForKey:@"name"];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row++ inSection:0];
+            [self.allItems setObject:c forKey:indexPath];
         }
+        [self.allRows addObject:[NSNumber numberWithInt:row]];
+        self.searchString = @"";
     }
-}
-
-- (void)didGetCatalogByCategory:(ASIHTTPRequest *)request {
-    
-//    self.sections = 1;
-//    self.rows = [[NSMutableArray alloc] init];
-//    self.items = [[NSMutableDictionary alloc] init];
-//    
-//    int row = 0;
-//    for (int i = 0; i < self.allItems.count; i++)
-//    {
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-//        CatalogItem *item = [self.allItems objectForKey:indexPath];
-//        switch (self.requeiredCategory.index) {
-//            case 0:
-//                if ([item.type rangeOfString:self.requeiredCategory.name].location != NSNotFound) {
-//                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-//                    [self.items setObject:item forKey:indexPath];
-//                    row++;
-//                }
-//                break;
-//            case 1:
-//                if ([item.cuisine isKindOfClass:[NSNull class]]) break;
-//                if ([item.cuisine rangeOfString:self.requeiredCategory.name].location != NSNotFound) {
-//                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-//                    [self.items setObject:item forKey:indexPath];
-//                    row++;
-//                }
-//                break;
-//            case 2: 
-//                if (item.bill < self.requeiredCategory.to && item.bill >= self.requeiredCategory.from) {
-//                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-//                    [self.items setObject:item forKey:indexPath];
-//                    row++;
-//                }
-//                break;
-//        }
-//    }
-//    [self.rows insertObject:[NSNumber numberWithInt:row] atIndex:0];
-//    
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_CATALOG_BY_CATEGORY object:nil];
 }
 
 @end

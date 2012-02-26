@@ -77,6 +77,9 @@
     
     SBJsonParser *parser = [[SBJsonParser alloc] init];
     NSDictionary *dict2 = [parser objectWithString:request.responseString];
+    
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict2.description);
+    
     BOOL response = [[dict2 objectForKey:@"response"] boolValue];
     if (response) {
         self.text = [dict2 objectForKey:@"text"];

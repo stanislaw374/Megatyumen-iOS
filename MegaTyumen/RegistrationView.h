@@ -17,9 +17,11 @@
 
 @property (unsafe_unretained, nonatomic) IBOutlet UITableView *tableView;
 @property (unsafe_unretained, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (unsafe_unretained, nonatomic) IBOutlet UITextField *textField;
 
 //- (IBAction)dismissKeyboard:(id)sender;
 - (IBAction)onRegisterButtonClick;
 - (IBAction)onReadUserAgreementButtonClick;
+- (IBAction)onBgClick:(id)sender;
 
 @end

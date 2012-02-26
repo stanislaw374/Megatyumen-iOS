@@ -194,6 +194,11 @@ static int kBorderWidth = 4;
     [self onCheckinButtonClick];
 }
 
+- (IBAction)onBgClick:(id)sender {
+    [self.feedBackTextView becomeFirstResponder];
+    [self.feedBackTextView resignFirstResponder];
+}
+
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if ([text isEqualToString:@"\n"]) {
         [textView resignFirstResponder];

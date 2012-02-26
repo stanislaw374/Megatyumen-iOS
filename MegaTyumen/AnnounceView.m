@@ -162,7 +162,7 @@
     frame.size.height = self.view.frame.size.height - 20;
     self.view2.frame = frame;
     
-    //self.textView.frame = frame;
+    //self.textWebView.frame = frame;
     
     //[self maximizeText];    
     
@@ -172,10 +172,6 @@
 
 - (void)maximizeText {
     int offset = 20; 
-    //int spacing = 8;
-    
-    //int height = self.view.frame.size.height - 2 * offset;
-    //height -= self.lblTitleWhat.frame.size.height;
     
     CGRect frame = self.lblWhat.frame;
     frame.origin.x = offset;

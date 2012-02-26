@@ -17,12 +17,6 @@
 #import "Event.h"
 
 @interface CatalogItem()
-//- (void)didGetDetails:(ASIHTTPRequest *)request;
-//- (void)didCheckin:(ASIHTTPRequest *)request;
-//- (void)didGetPhotos:(ASIHTTPRequest *)request;
-//- (void)didGetMenu:(ASIHTTPRequest *)request;
-//- (void)didGetFeedback:(ASIHTTPRequest *)request;
-//- (void)didGetEvents:(ASIHTTPRequest *)request;
 @end
 
 @implementation CatalogItem
@@ -31,7 +25,7 @@
 @synthesize address = _address;
 @synthesize description = _description;
 //@synthesize photos = _photos;
-@synthesize checkins = _checkinCount;
+@synthesize checkinCount = _checkinCount;
 @synthesize phone = _phone;
 @synthesize website = _website;
 @synthesize menu = _menu;
@@ -40,14 +34,15 @@
 @synthesize type = _type;
 @synthesize cuisine = _cuisine;
 @synthesize weekdayHours = _weekdayHours;
-@synthesize breakHours = _breakHours;
-@synthesize saturdayHours = _saturdayHours;
-@synthesize sundayHours = _sundayHours;
+//@synthesize breakHours = _breakHours;
+//@synthesize saturdayHours = _saturdayHours;
+//@synthesize sundayHours = _sundayHours;
 @synthesize location = _location;
 @synthesize bill = _bill;
 @synthesize photos = _photos;
 @synthesize distance = _distance;
-@synthesize logo = _image;
+@synthesize logo = _logo;
+@synthesize distanceString = _distanceString;
 
 #pragma mark - Lazy instantiation
 
@@ -79,13 +74,27 @@
     return _photos;
 }
 
+#pragma mark -
+
+- (void)setDistance:(double)distance {
+    _distance = distance;
+    if (self.distance < 1000) {
+        self.distanceString = [NSString stringWithFormat:@"%.0lf м", self.distance];
+    }
+    else {
+        self.distanceString = [NSString stringWithFormat:@"%.0lf км", self.distance / 1000];
+    }
+}
+
 - (void)getDetails {
+    if (gotDetails) return;
+    
     NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_details", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
-    request.delegate = self;
-    request.didFinishSelector = @selector(didGetDetails:);
+    //request.delegate = self;
+    //request.didFinishSelector = @selector(didGetDetails:);
     [request startSynchronous];
     
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
@@ -94,10 +103,65 @@
     if (response) {
         self.description = [dict objectForKey:@"description"];
         NSArray *photos = [dict objectForKey:@"photos"];
+        [self.photos removeAllObjects];
         for (NSDictionary *photo in photos) {
             NSURL *url = [NSURL URLWithString:[photo objectForKey:@"photo"] relativeToURL:kWEBSITE_URL];
             [self.photos addObject:url];
         }
+        gotDetails = YES;
+    }
+}
+
+- (void)getCommon {
+    if (gotCommon) return;
+    
+    NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_details2", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
+    SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
+    [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
+    //request.delegate = self;
+    //request.didFinishSelector = @selector(didGetDetails:);
+    [request startSynchronous];
+    
+    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+    NSDictionary *dict = [jsonParser objectWithString:[request responseString]];
+    BOOL response = [[dict objectForKey:@"response"] boolValue];
+    if (response) {
+        self.description = [dict objectForKey:@"description"];
+        self.phone = [dict objectForKey:@"phone"];
+        self.website = [dict objectForKey:@"website"];
+        //self.type = [dict objectForKey:@"type"];
+        self.weekdayHours = [dict objectForKey:@"weekdays_hours"];
+        double lat = [[dict objectForKey:@"lat"] doubleValue];
+        double lng = [[dict objectForKey:@"lng"] doubleValue];
+        self.location = [[CLLocation alloc] initWithLatitude:lat longitude:lng];
+        
+        gotCommon = YES;
+    }
+}
+
+- (void)getPhotos {
+    if (gotPhotos) return;
+    
+    NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_photos", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
+    SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
+    [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
+    //request.delegate = self;
+    //request.didFinishSelector = @selector(didGetDetails:);
+    [request startSynchronous];
+    
+    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+    NSDictionary *dict = [jsonParser objectWithString:[request responseString]];
+    BOOL response = [[dict objectForKey:@"response"] boolValue];
+    if (response) {
+        [self.photos removeAllObjects];
+        NSArray *photos = [dict objectForKey:@"photos"];
+        for (NSDictionary *photo in photos) {
+            NSURL *url = [NSURL URLWithString:[photo objectForKey:@"photo"] relativeToURL:kWEBSITE_URL];
+            [self.photos addObject:url];
+        }
+        gotPhotos = YES;
     }
 }
 
@@ -158,7 +222,8 @@
 //}
 
 - (void)getMenu {
-    //[self didGetMenu:nil];
+    if (gotMenu) return;
+    
     SBJsonWriter *writer = [[SBJsonWriter alloc] init];
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"company_menu", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
     NSString *query = [writer stringWithObject:dict];
@@ -170,28 +235,24 @@
     NSDictionary *dict2 = [parser objectWithString:request.responseString];
     BOOL result = [[dict2 objectForKey:@"response"] boolValue];
     if (result) {
-        NSArray *items = [dict2 objectForKey:@"items"];
-        for (NSDictionary *item in items) {
+        NSArray *menu = [dict2 objectForKey:@"menu"];
+        for (NSDictionary *item in menu) {
             MenuItem *m = [[MenuItem alloc] init];
             m.title = [item objectForKey:@"title"];
-            m.price = [[item objectForKey:@"cost"] intValue];
-            id imageId = [item objectForKey:@"image"];
-            NSString *imageStr = (!imageId || [imageId isKindOfClass:[NSNull class]]) ? @"" : imageId;
-            m.image = [NSURL URLWithString:imageStr relativeToURL:kWEBSITE_URL];
+            m.price = [[item objectForKey:@"cost"] doubleValue];
+            m.image = [NSURL URLWithString:[item objectForKey:@"image"] relativeToURL:kWEBSITE_URL];
             
             [self.menu addObject:m];
         }
+        gotMenu = YES;
     }
 }
 
-//- (void)didGetMenu:(ASIHTTPRequest *)request {
-//    
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"didGetMenu" object:nil];
-//}
-
 - (void)getFeedbacks {
+    if (gotFeedbacks) return;
+    
     SBJsonWriter *writer = [[SBJsonWriter alloc] init];
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"feedback", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"company_feedback", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
     NSString *query = [writer stringWithObject:dict];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:query forKey:@"jsonData"];
@@ -201,32 +262,58 @@
     NSDictionary *dict2 = [parser objectWithString:request.responseString];
     BOOL result = [[dict2 objectForKey:@"response"] boolValue];
     if (result) {
-        NSArray *comments = [dict2 objectForKey:@"comments"];
-        for (NSDictionary *comment in comments) {
+        [self.feedbacks removeAllObjects];
+        NSArray *feedbacks = [dict2 objectForKey:@"feedbacks"];
+        for (NSDictionary *feedback in feedbacks) {
             Feedback *f = [[Feedback alloc] init];
-            f.text = [comment objectForKey:@"comment"];
-            f.attitude = [[comment objectForKey:@"attitude"] intValue];
+            f.text = [feedback objectForKey:@"text"];
+            f.attitude = [[feedback objectForKey:@"attitude"] intValue];
             NSDateFormatter *df = [[NSDateFormatter alloc] init];
             [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-            f.date = [df dateFromString:[comment objectForKey:@"date"]];
+            f.date = [df dateFromString:[feedback objectForKey:@"date"]];
+            f.userName = [feedback objectForKey:@"user_name"];
             
-            [self.events addObject:f];
+            [self.feedbacks addObject:f];
         }
+        gotFeedbacks = YES;
     }
 }
 
-//- (void)didGetFeedback:(ASIHTTPRequest *)request {
-//    
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"didGetCatalogItemFeedback" object:nil];
-//}
-
 - (void)getEvents {
-    //[self didGetEvents:nil];
+    if (gotEvents) return;
+    
+    SBJsonWriter *writer = [[SBJsonWriter alloc] init];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"company_events", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
+    
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
+    
+    NSString *query = [writer stringWithObject:dict];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
+    [request setPostValue:query forKey:@"jsonData"];
+    [request startSynchronous];
+    
+    SBJsonParser *parser = [[SBJsonParser alloc] init];
+    NSDictionary *dict2 = [parser objectWithString:request.responseString];
+    
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict2.description);
+    
+    BOOL result = [[dict2 objectForKey:@"response"] boolValue];
+    if (result) {
+        [self.events removeAllObjects];
+        NSArray *events = [dict2 objectForKey:@"events"];
+        for (NSDictionary *event in events) {
+            Event *e = [[Event alloc] init];
+            e.text = [event objectForKey:@"announce"];
+            e.title = [event objectForKey:@"title"];
+            e.image = [event objectForKey:@"image"];
+            NSDateFormatter *df = [[NSDateFormatter alloc] init];
+            [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            e.date = [df dateFromString:[event objectForKey:@"date"]];
+            
+            [self.events addObject:e];
+        }
+        gotEvents = YES;
+    }
 }
-//
-//- (void)didGetEvents:(ASIHTTPRequest *)request {
-//    
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"didGetCatalogItemEvents" object:nil];
-//}
 
 @end

@@ -24,6 +24,7 @@
 
 @implementation RemindPasswordView
 @synthesize scrollView;
+@synthesize textField = _textField;
 @synthesize tableView;
 @synthesize keyboardListener = _keyboardListener;
 @synthesize hud = _hud;
@@ -134,6 +135,7 @@
     //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_RESTORE_PASSWORD object:nil];
     [self setTableView:nil];
     [self setScrollView:nil];
+    [self setTextField:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -147,6 +149,11 @@
 
 - (IBAction)onRestorePasswordButtonClick {
     [self restorePassword];
+}
+
+- (IBAction)onBgClick:(id)sender {
+    [self.textField becomeFirstResponder];
+    [self.textField resignFirstResponder];
 }
 
 #pragma mark UITableViewDataSource

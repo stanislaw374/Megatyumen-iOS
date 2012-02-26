@@ -112,7 +112,7 @@
     
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self.currentNew getContent]; 
+        [self.currentNew getContent];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self initUI];
             [self.hud hide:YES];
@@ -247,6 +247,7 @@
 }
 
 -(void)initUI {
+    
     int dx = 20;
     int dy = 64;
     int dd = 8;
@@ -276,6 +277,7 @@
     
     self.authorLabel.frame = CGRectMake(self.dateLabel.frame.origin.x + self.dateLabel.frame.size.width + dd, self.photoImageView.frame.origin.y + self.photoImageView.frame.size.height + dd, 280 - self.dateLabel.frame.size.width - dd, 0);
     self.authorLabel.text = self.currentNew.user;
+    NSLog(@"user = %@", self.currentNew.user);
     [self.authorLabel sizeToFit];
     
     self.commentsHeaderButton.frame = CGRectMake(dx / 2, self.dateLabel.frame.origin.y + self.dateLabel.frame.size.height + dd, 300, 38);

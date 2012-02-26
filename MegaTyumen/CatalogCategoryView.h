@@ -13,7 +13,7 @@
 #import "MainMenu.h"
 #import "CatalogView.h"
 
-@interface CatalogCategoryView : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
+@interface CatalogCategoryView : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, CLLocationManagerDelegate>
 
 @property (unsafe_unretained, nonatomic) IBOutlet UIImageView *redImageView;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *headerLabel;

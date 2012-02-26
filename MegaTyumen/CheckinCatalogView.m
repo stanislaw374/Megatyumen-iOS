@@ -35,6 +35,13 @@
 @synthesize isFeedbackMode = _isFeedbackMode;
 @synthesize mainMenu = _mainMenu;
 
+- (Catalog *)catalog {
+    if (!_catalog) {
+        _catalog = [[Catalog alloc] init];
+    }
+    return _catalog;
+}
+
 - (CheckinItemView *)chechinItemView {
     if (!_chechinItemView) {
         _chechinItemView = [[CheckinItemView alloc] init];
@@ -65,7 +72,7 @@
 }
 
 - (void)getCatalog { 
-    self.catalog = [[Catalog alloc] initWithUserLocation:self.locationManager.location];
+    //self.catalog = [[Catalog alloc] initWithUserLocation:self.locationManager.location];
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -182,8 +189,9 @@
 #pragma mark - CLLocationManagerDelegate
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    NSLog(@"New location: %.4lf, %.4lf speed = %.4lf", newLocation.coordinate.latitude, newLocation.coordinate.longitude, newLocation.speed);
+    NSLog(@"New location: %.4lf, %.4lf", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
     [self.locationManager stopUpdatingLocation];
+    self.catalog.userLocation = newLocation;
     [self getCatalog];
 }
 
@@ -260,16 +268,7 @@
         [view1 setImageWithURL:item.logo placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
         view2.text = item.name;
         view3.text = item.address;
-        double distance = item.distance;
-        NSString *distanceStr;
-        if (distance < 1000) {
-            distanceStr = @"м";
-        }
-        else {
-            //distance /= 1000;
-            distanceStr = @"км";
-        }
-        [view4 setTitle:[NSString stringWithFormat:@"%.0lf %@", distance, distanceStr] forState:UIControlStateNormal];
+        [view4 setTitle:item.distanceString forState:UIControlStateNormal];
         [view4 sizeToFit];
     }
     else {

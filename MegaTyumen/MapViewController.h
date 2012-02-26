@@ -17,7 +17,7 @@
 
 @interface MapViewController : UIViewController <YMKMapViewDelegate>
 
-@property (nonatomic, unsafe_unretained) IBOutlet YMKMapView * mapView;
+@property (nonatomic, unsafe_unretained) IBOutlet YMKMapView *mapView;
 @property (nonatomic) BOOL showBackButton;
 
 @end

@@ -57,33 +57,13 @@
 @property (strong, nonatomic) UIView *feedbackView;
 @property (strong, nonatomic) IBOutlet UITableViewCell *eventCell;
 
-@property (strong, nonatomic) MBProgressHUD *hud;
-
 @property (unsafe_unretained, nonatomic) CatalogCategoryView *parentCatalogCategoryView;
 @property (unsafe_unretained, nonatomic) Catalog *catalog;
 
-- (void)didPassAuthorization:(NSNotification *)notification;
+//- (void)didPassAuthorization:(NSNotification *)notification;
 
 - (IBAction)onMenuButtonClick:(id)sender;
 - (IBAction)onPhotoButtonClick:(id)sender;
-
-- (void)showCommon;
-
-- (void)showPhotos;
-- (void)didGetPhotos:(NSNotification *)notification;
-
-- (void)showMenu;
-- (void)didGetMenu:(NSNotification *)notification;
-
-- (void)showFeedback;
-- (void)didGetFeedback:(NSNotification *)notification;
-
-- (void)showEvents;
-- (void)didGetEvents:(NSNotification *)notification;
-
-- (void)showMap;
-
-- (void)hideUI;
 
 - (IBAction)onCheckinButtonClick;
 - (IBAction)onAddFeedbackButtonClick:(id)sender;

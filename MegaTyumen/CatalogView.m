@@ -143,10 +143,11 @@
 
 - (void)onCatalogCategoryButtonClick:(id)sender {
     UIButton *btn = (UIButton *)sender;
-    self.catalogCategoryView.catalog = self.catalog;
+    //self.catalogCategoryView.catalog = self.catalog;
     //self.catalogCategoryView.currentCategory = [[self.catalog.categories objectAtIndex:self.currentCategory] objectAtIndex:btn.tag];
     //self.catalogCategoryView.parentCatalogView = self;
     [self.navigationController pushViewController:self.catalogCategoryView animated:YES];
+    self.catalogCategoryView.catalog = self.catalog;
     self.catalogCategoryView.category = [self.categories objectAtIndex:btn.tag];
 }
 
@@ -515,16 +516,16 @@
         [view1 setImageWithURL:item.logo placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
         view2.text = item.name;
         view3.text = item.address;
-        double distance = item.distance;
-        NSString *distanceStr;
-        if (distance < 1000) {
-            distanceStr = @"м";
-        }
-        else {
-            //distance /= 1000;
-            distanceStr = @"км";
-        }
-        [view4 setTitle:[NSString stringWithFormat:@"%.0lf %@", distance, distanceStr] forState:UIControlStateNormal];
+//        double distance = item.distance;
+//        NSString *distanceStr;
+//        if (distance < 1000) {
+//            distanceStr = @"м";
+//        }
+//        else {
+//            distance /= 1000;
+//            distanceStr = @"км";
+//        }
+        [view4 setTitle:item.distanceString forState:UIControlStateNormal];
         [view4 sizeToFit];
     }
     else {

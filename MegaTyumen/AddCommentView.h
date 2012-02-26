@@ -18,9 +18,11 @@
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (unsafe_unretained, nonatomic) New *currentNew;
 @property (unsafe_unretained, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (unsafe_unretained, nonatomic) IBOutlet UITextField *textField;
 
 - (IBAction)onAddCommentButtonClick;
 //- (void)didPassAuthorization:(NSNotification *)notification;
 //- (void)didAddComment:(NSNotification *)notification;
+- (IBAction)onBgClick:(id)sender;
 
 @end

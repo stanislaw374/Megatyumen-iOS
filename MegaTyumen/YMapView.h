@@ -8,12 +8,14 @@
 
 #import "MapViewController.h"
 #import "CatalogItem.h"
+#import <CoreLocation/CoreLocation.h>
 
-@interface YMapView : MapViewController
+@interface YMapView : MapViewController <CLLocationManagerDelegate>
 
 @property (nonatomic) BOOL showDisclosureButton;
-@property (nonatomic) BOOL loadAllMarkers;
+//@property (nonatomic) BOOL loadAllMarkers;
 
+- (void)loadCatalog;
 - (void)addAnnotationForCatalogItem:(CatalogItem *)catalogItem;
 
 
