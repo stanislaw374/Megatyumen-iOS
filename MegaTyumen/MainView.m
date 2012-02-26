@@ -6,12 +6,6 @@
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
-/*
- jsonData={"request":"items_count"}
- [14.02.12 16:42:00] Кунст Кирилл: количество отзывов анонсов новостей
- [14.02.12 16:42:09] Кунст Кирилл: {"comments_count":"1176","events_count":"482","announces_count":"0"} 
- */
-
 #import "MainView.h"
 #import "AuthorizationView.h"
 #import "Authorization.h"
@@ -36,12 +30,10 @@
 #import "Items.h"
 #import "Network.h"
 
-#define KEY_REQUEST @"request"
 #define VALUE_ITEMS_COUNT @"items_count"
 #define KEY_FEEDBACK_COUNT @"comments_count"
 #define KEY_ANNOUNCES_COUNT @"announces_count"
 #define KEY_COMPANY_NEWS_COUNT @"events_count"
-#define KEY_JSON_DATA @"jsonData"
 
 @interface MainView()
 @property (nonatomic, strong) News *news;
@@ -118,7 +110,8 @@
 - (YMapView *)yMapView {
     if (!_yMapView) {
         _yMapView = [[YMapView alloc] init];
-        _yMapView.showDisclosureButton = YES;
+        //_yMapView.showDisclosureButton = YES;
+        //_yMapView.showBackButton = YES;
         _yMapView.title = @"Карта";
     }
     return _yMapView;
@@ -321,8 +314,8 @@
         return;
     }
     [self.navigationController pushViewController:self.yMapView animated:YES];
-    
-    [self.yMapView loadCatalog];
+    self.yMapView.showDisclosureButton = YES;
+    self.yMapView.loadEntireCatalog = YES;
 }
 
 - (IBAction)onFeedbackButtonClick {

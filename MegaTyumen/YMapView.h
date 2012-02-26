@@ -13,9 +13,9 @@
 @interface YMapView : MapViewController <CLLocationManagerDelegate>
 
 @property (nonatomic) BOOL showDisclosureButton;
-//@property (nonatomic) BOOL loadAllMarkers;
+@property (nonatomic) BOOL loadEntireCatalog;
 
-- (void)loadCatalog;
+//- (void)loadCatalog;
 - (void)addAnnotationForCatalogItem:(CatalogItem *)catalogItem;
 
 

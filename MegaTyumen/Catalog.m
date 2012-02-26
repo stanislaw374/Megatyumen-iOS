@@ -80,7 +80,8 @@
 }
 
 - (id)init {
-    return [self initWithUserLocation:nil];
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:57 longitude:65];
+    return [self initWithUserLocation:location];
 }
 
 - (id)initWithUserLocation:(CLLocation *)location {
@@ -206,7 +207,14 @@
     [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
     //request.delegate = self;
     //request.didFinishSelector = @selector(didGetCatalogByDistance:);
+    request.timeOutSeconds = kREQUEST_TIMEOUT;
     [request startSynchronous];
+    
+    if (request.error) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"O_O" message:request.error.description delegate:self cancelButtonTitle:@"Okay" otherButtonTitles: nil];
+        [alert show];
+        return;
+    }
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), requestDict.description);
     
@@ -249,6 +257,10 @@
             c.address = address;
             c.logo = [NSURL URLWithString:image relativeToURL:kWEBSITE_URL];
             c.distance = distance;
+            c.checkinCount = [[company objectForKey:@"comments_count"] intValue];
+            double lat = [[company objectForKey:@"lat"] doubleValue];
+            double lng = [[company objectForKey:@"lng"] doubleValue];
+            c.location = [[CLLocation alloc] initWithLatitude:lat longitude:lng];
             
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:rows[section]++ inSection:section];
             [self.allItems setObject:c forKey:indexPath];
@@ -311,6 +323,11 @@
             c.address = address;
             c.logo = [NSURL URLWithString:image relativeToURL:kWEBSITE_URL];
             c.distance = distance;
+            //--------------------
+            c.checkinCount = [[company objectForKey:@"comments_count"] intValue];
+            //double lat = [[company objectForKey:@"lat"] doubleValue];
+            //double lng = [[company objectForKey:@"lng"] doubleValue];
+            //c.location = [[CLLocation alloc] initWithLatitude:lat longitude:lng];
             
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:rows[section]++ inSection:section];
             [self.allItems setObject:c forKey:indexPath];

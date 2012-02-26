@@ -522,15 +522,15 @@
 		866ED9D6149F022E00EE77C6 /* YMKRuler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YMKRuler.h; sourceTree = "<group>"; };
 		866ED9D7149F022E00EE77C6 /* YMKTrafficInformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YMKTrafficInformer.h; sourceTree = "<group>"; };
 		866ED9D8149F022E00EE77C6 /* YMKUserLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YMKUserLocation.h; sourceTree = "<group>"; };
-		866ED9D9149F022E00EE77C6 /* libYandexMapKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libYandexMapKit.a; sourceTree = "<group>"; };
-		866ED9DA149F022E00EE77C6 /* YandexMapKit.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = YandexMapKit.bundle; sourceTree = "<group>"; };
+		866ED9D9149F022E00EE77C6 /* libYandexMapKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libYandexMapKit.a; path = YandexMapKit/libYandexMapKit.a; sourceTree = "<group>"; };
+		866ED9DA149F022E00EE77C6 /* YandexMapKit.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = YandexMapKit.bundle; path = YandexMapKit/YandexMapKit.bundle; sourceTree = "<group>"; };
 		866ED9DD149F027900EE77C6 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapViewController.h; path = MegaTyumen/MapViewController.h; sourceTree = "<group>"; };
 		866ED9DE149F027900EE77C6 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MapViewController.m; path = MegaTyumen/MapViewController.m; sourceTree = "<group>"; };
 		866ED9DF149F027900EE77C6 /* PointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PointAnnotation.h; path = MegaTyumen/PointAnnotation.h; sourceTree = "<group>"; };
 		866ED9E0149F027900EE77C6 /* PointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PointAnnotation.m; path = MegaTyumen/PointAnnotation.m; sourceTree = "<group>"; };
 		866ED9E4149F03C300EE77C6 /* YMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YMapView.h; path = MegaTyumen/YMapView.h; sourceTree = "<group>"; };
 		866ED9E5149F03C300EE77C6 /* YMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YMapView.m; path = MegaTyumen/YMapView.m; sourceTree = "<group>"; };
-		866ED9E7149F05C100EE77C6 /* MapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MapViewController.xib; path = MegaTyumen/MapViewController.xib; sourceTree = "<group>"; };
+		866ED9E7149F05C100EE77C6 /* MapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MapViewController.xib; path = ../MegaTyumen/MapViewController.xib; sourceTree = "<group>"; };
 		866ED9E9149F098900EE77C6 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		866ED9EB149F099500EE77C6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		866ED9ED149F09A400EE77C6 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -790,20 +790,19 @@
 			name = MBProgressHUD;
 			sourceTree = "<group>";
 		};
-		86298A041496BA4E00108CD3 /* Каталог */ = {
+		86298A041496BA4E00108CD3 /* Catalog */ = {
 			isa = PBXGroup;
 			children = (
 				8653BB7F149875A500494E85 /* Категории */,
 				8653BB7E1498758700494E85 /* Подкатегория */,
 				866BAFC7149E3BF8004E35ED /* Карточка заведения */,
 			);
-			name = "Каталог";
+			name = Catalog;
 			sourceTree = "<group>";
 		};
 		862DC6011495C0D0009F8282 /* Facebook */ = {
 			isa = PBXGroup;
 			children = (
-				866ED9C0149F020100EE77C6 /* FBDialog.bundle */,
 				862DC6271495C14B009F8282 /* Facebook.h */,
 				862DC6281495C14B009F8282 /* Facebook.m */,
 				862DC6291495C14B009F8282 /* FBConnect.h */,
@@ -813,7 +812,7 @@
 				862DC62D1495C14B009F8282 /* FBLoginDialog.m */,
 				862DC62E1495C14B009F8282 /* FBRequest.h */,
 				862DC62F1495C14B009F8282 /* FBRequest.m */,
-				862DC6301495C14B009F8282 /* JSON */,
+				866ED9C0149F020100EE77C6 /* FBDialog.bundle */,
 			);
 			name = Facebook;
 			sourceTree = "<group>";
@@ -838,7 +837,7 @@
 			path = JSON;
 			sourceTree = "<group>";
 		};
-		863FEF7214AB4B9500F9020D /* Navigation Bar */ = {
+		863FEF7214AB4B9500F9020D /* Custom Navigation Bar */ = {
 			isa = PBXGroup;
 			children = (
 				863FEF7314AB4BAE00F9020D /* SCAppUtils.h */,
@@ -848,7 +847,7 @@
 				863FEF7914AB4DDB00F9020D /* SCClassUtils.h */,
 				863FEF7A14AB4DDC00F9020D /* SCClassUtils.m */,
 			);
-			name = "Navigation Bar";
+			name = "Custom Navigation Bar";
 			sourceTree = "<group>";
 		};
 		8653BB7E1498758700494E85 /* Подкатегория */ = {
@@ -881,12 +880,12 @@
 		865BF8AB147C26940001002F /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				86C91EB8148BAF6C0078164D /* Авторизация */,
-				86C91EB9148BAF7D0078164D /* Лента новостей */,
-				86C91EC2148BD7090078164D /* Каталог */,
-				866EDA03149F17A400EE77C6 /* Отзывы */,
-				866EDA04149F17AB00EE77C6 /* Анонсы вечеринок */,
-				866ED9FF149F11C500EE77C6 /* Новости компаний */,
+				86C91EB8148BAF6C0078164D /* Authorization */,
+				86C91EB9148BAF7D0078164D /* News */,
+				86C91EC2148BD7090078164D /* Catalog */,
+				866EDA03149F17A400EE77C6 /* Feedbacks */,
+				866EDA04149F17AB00EE77C6 /* Announcements */,
+				866ED9FF149F11C500EE77C6 /* Events */,
 				868C8D0B14EE049900FA0414 /* Items.h */,
 				868C8D0C14EE049900FA0414 /* Items.m */,
 			);
@@ -991,6 +990,7 @@
 				8663D4FB14A227DA00EA164D /* FeedbackCell.xib */,
 				86D01FC9148FE3B70094B8AC /* LoadingCell.xib */,
 				8623761D149EF36200AD084B /* EventCell.xib */,
+				866ED9E7149F05C100EE77C6 /* MapViewController.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1020,19 +1020,11 @@
 		866ED9C3149F021200EE77C6 /* Yandex Mapkit */ = {
 			isa = PBXGroup;
 			children = (
-				866ED9C4149F022E00EE77C6 /* YandexMapKit */,
-			);
-			name = "Yandex Mapkit";
-			sourceTree = "<group>";
-		};
-		866ED9C4149F022E00EE77C6 /* YandexMapKit */ = {
-			isa = PBXGroup;
-			children = (
 				866ED9C5149F022E00EE77C6 /* Headers */,
 				866ED9D9149F022E00EE77C6 /* libYandexMapKit.a */,
 				866ED9DA149F022E00EE77C6 /* YandexMapKit.bundle */,
 			);
-			path = YandexMapKit;
+			name = "Yandex Mapkit";
 			sourceTree = "<group>";
 		};
 		866ED9C5149F022E00EE77C6 /* Headers */ = {
@@ -1058,33 +1050,33 @@
 				866ED9D7149F022E00EE77C6 /* YMKTrafficInformer.h */,
 				866ED9D8149F022E00EE77C6 /* YMKUserLocation.h */,
 			);
-			path = Headers;
+			name = Headers;
+			path = YandexMapKit/Headers;
 			sourceTree = "<group>";
 		};
-		866ED9E3149F030700EE77C6 /* Карта */ = {
+		866ED9E3149F030700EE77C6 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				866ED9DF149F027900EE77C6 /* PointAnnotation.h */,
+				866ED9E0149F027900EE77C6 /* PointAnnotation.m */,
 				866ED9E4149F03C300EE77C6 /* YMapView.h */,
 				866ED9E5149F03C300EE77C6 /* YMapView.m */,
 				866ED9DD149F027900EE77C6 /* MapViewController.h */,
 				866ED9DE149F027900EE77C6 /* MapViewController.m */,
-				866ED9E7149F05C100EE77C6 /* MapViewController.xib */,
-				866ED9DF149F027900EE77C6 /* PointAnnotation.h */,
-				866ED9E0149F027900EE77C6 /* PointAnnotation.m */,
 			);
-			name = "Карта";
+			name = Map;
 			sourceTree = "<group>";
 		};
-		866ED9F9149F112300EE77C6 /* Новости компаний */ = {
+		866ED9F9149F112300EE77C6 /* Events */ = {
 			isa = PBXGroup;
 			children = (
 				866ED9FA149F11BF00EE77C6 /* EventsView.h */,
 				866ED9FB149F11BF00EE77C6 /* EventsView.m */,
 			);
-			name = "Новости компаний";
+			name = Events;
 			sourceTree = "<group>";
 		};
-		866ED9FF149F11C500EE77C6 /* Новости компаний */ = {
+		866ED9FF149F11C500EE77C6 /* Events */ = {
 			isa = PBXGroup;
 			children = (
 				866EDA00149F166800EE77C6 /* Events.h */,
@@ -1092,10 +1084,10 @@
 				86EA8467149E7ACD00008F5D /* Event.h */,
 				86EA8468149E7ACD00008F5D /* Event.m */,
 			);
-			name = "Новости компаний";
+			name = Events;
 			sourceTree = "<group>";
 		};
-		866EDA03149F17A400EE77C6 /* Отзывы */ = {
+		866EDA03149F17A400EE77C6 /* Feedbacks */ = {
 			isa = PBXGroup;
 			children = (
 				866EDA05149F17D900EE77C6 /* Feedbacks.h */,
@@ -1103,10 +1095,10 @@
 				86EA8464149E77F600008F5D /* Feedback.h */,
 				86EA8465149E77F600008F5D /* Feedback.m */,
 			);
-			name = "Отзывы";
+			name = Feedbacks;
 			sourceTree = "<group>";
 		};
-		866EDA04149F17AB00EE77C6 /* Анонсы вечеринок */ = {
+		866EDA04149F17AB00EE77C6 /* Announcements */ = {
 			isa = PBXGroup;
 			children = (
 				866EDA08149F189900EE77C6 /* Announces.h */,
@@ -1114,10 +1106,10 @@
 				866EDA0B149F19C800EE77C6 /* Announce.h */,
 				866EDA0C149F19C800EE77C6 /* Announce.m */,
 			);
-			name = "Анонсы вечеринок";
+			name = Announcements;
 			sourceTree = "<group>";
 		};
-		866EDA0E149F20B500EE77C6 /* Анонсы вечеринок */ = {
+		866EDA0E149F20B500EE77C6 /* Announcements */ = {
 			isa = PBXGroup;
 			children = (
 				86F8F277149F314300D83C9F /* AnnounceView.h */,
@@ -1125,16 +1117,16 @@
 				8641088414A7054E00ED2AFD /* AnnouncesView.h */,
 				8641088514A7054E00ED2AFD /* AnnouncesView.m */,
 			);
-			name = "Анонсы вечеринок";
+			name = Announcements;
 			sourceTree = "<group>";
 		};
-		866EDA0F149F20B800EE77C6 /* Отзывы */ = {
+		866EDA0F149F20B800EE77C6 /* Feedbacks */ = {
 			isa = PBXGroup;
 			children = (
 				866EDA10149F20FE00EE77C6 /* FeedbackView.h */,
 				866EDA11149F20FE00EE77C6 /* FeedbackView.m */,
 			);
-			name = "Отзывы";
+			name = Feedbacks;
 			sourceTree = "<group>";
 		};
 		8679D33714D04E1F00555A19 /* чек */ = {
@@ -1154,13 +1146,14 @@
 		868E19E01490FDF5005652D9 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				863FEF7214AB4B9500F9020D /* Navigation Bar */,
+				863FEF7214AB4B9500F9020D /* Custom Navigation Bar */,
 				861D4EBE14A3430F005D8ADA /* MBProgressHUD */,
 				866ED9C3149F021200EE77C6 /* Yandex Mapkit */,
 				862DC6011495C0D0009F8282 /* Facebook */,
 				868E19E11490FE1B005652D9 /* SBWebImage */,
 				86D01F7C148FA9310094B8AC /* ASIHTTP */,
-				86DB3539147DB8F700DE13A5 /* Custom Badge */,
+				86DB3539147DB8F700DE13A5 /* Custom Badges */,
+				862DC6301495C14B009F8282 /* JSON */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1182,15 +1175,11 @@
 				868E19ED1490FE5D005652D9 /* SDWebImageManagerDelegate.h */,
 				868E19EE1490FE5D005652D9 /* SDWebImagePrefetcher.h */,
 				868E19EF1490FE5D005652D9 /* SDWebImagePrefetcher.m */,
-				868E19F01490FE5D005652D9 /* UIButton+WebCache.h */,
-				868E19F11490FE5D005652D9 /* UIButton+WebCache.m */,
-				868E19F21490FE5D005652D9 /* UIImageView+WebCache.h */,
-				868E19F31490FE5D005652D9 /* UIImageView+WebCache.m */,
 			);
 			name = SBWebImage;
 			sourceTree = "<group>";
 		};
-		868F803714A7CDDF0007288E /* Просмотр фото */ = {
+		868F803714A7CDDF0007288E /* Photo Gallery */ = {
 			isa = PBXGroup;
 			children = (
 				868F803D14A7D1C40007288E /* PhotoView.h */,
@@ -1200,7 +1189,7 @@
 				868F803914A7CE0F0007288E /* PhotosView.m */,
 				868F803A14A7CE0F0007288E /* PhotosView.xib */,
 			);
-			name = "Просмотр фото";
+			name = "Photo Gallery";
 			sourceTree = "<group>";
 		};
 		86988CCA14802D490024ADD7 /* Просмотр новости */ = {
@@ -1224,32 +1213,32 @@
 		86C91EB7148BAC460078164D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				86F6AF6B1475CAB500B574ED /* Демо-экран */,
-				86F6AF711475D1AD00B574ED /* Главное меню */,
-				86F6AF621475C9C800B574ED /* Блок регистрации и авторизации */,
-				86F6AF7B1475D95100B574ED /* Лента новостей */,
-				86C91EBA148BB8610078164D /* Отмечалка */,
-				86298A041496BA4E00108CD3 /* Каталог */,
-				866EDA0F149F20B800EE77C6 /* Отзывы */,
-				866ED9F9149F112300EE77C6 /* Новости компаний */,
-				866EDA0E149F20B500EE77C6 /* Анонсы вечеринок */,
-				866ED9E3149F030700EE77C6 /* Карта */,
-				868F803714A7CDDF0007288E /* Просмотр фото */,
+				86F6AF6B1475CAB500B574ED /* Demo screen */,
+				86F6AF711475D1AD00B574ED /* Main menu */,
+				86F6AF621475C9C800B574ED /* Authorization & Registration */,
+				86F6AF7B1475D95100B574ED /* News */,
+				86C91EBA148BB8610078164D /* Checkin */,
+				86298A041496BA4E00108CD3 /* Catalog */,
+				866EDA0F149F20B800EE77C6 /* Feedbacks */,
+				866ED9F9149F112300EE77C6 /* Events */,
+				866EDA0E149F20B500EE77C6 /* Announcements */,
+				866ED9E3149F030700EE77C6 /* Map */,
+				868F803714A7CDDF0007288E /* Photo Gallery */,
 			);
 			name = Controllers;
 			path = ..;
 			sourceTree = "<group>";
 		};
-		86C91EB8148BAF6C0078164D /* Авторизация */ = {
+		86C91EB8148BAF6C0078164D /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
 				865BF8AD147C26B20001002F /* Authorization.h */,
 				865BF8AE147C26B20001002F /* Authorization.m */,
 			);
-			name = "Авторизация";
+			name = Authorization;
 			sourceTree = "<group>";
 		};
-		86C91EB9148BAF7D0078164D /* Лента новостей */ = {
+		86C91EB9148BAF7D0078164D /* News */ = {
 			isa = PBXGroup;
 			children = (
 				86DB3532147DACFC00DE13A5 /* News.h */,
@@ -1259,20 +1248,20 @@
 				8604B37D1482F2CB000B5F0B /* Comment.h */,
 				8604B37E1482F2CB000B5F0B /* Comment.m */,
 			);
-			name = "Лента новостей";
+			name = News;
 			sourceTree = "<group>";
 		};
-		86C91EBA148BB8610078164D /* Отмечалка */ = {
+		86C91EBA148BB8610078164D /* Checkin */ = {
 			isa = PBXGroup;
 			children = (
 				86C91ED2148C3D460078164D /* Список заведений */,
 				86C91ED3148C3D570078164D /* Просмотр заведения */,
 				8653BB80149875D800494E85 /* Отметиться */,
 			);
-			name = "Отмечалка";
+			name = Checkin;
 			sourceTree = "<group>";
 		};
-		86C91EC2148BD7090078164D /* Каталог */ = {
+		86C91EC2148BD7090078164D /* Catalog */ = {
 			isa = PBXGroup;
 			children = (
 				86C91EC3148BD72C0078164D /* Catalog.h */,
@@ -1284,7 +1273,7 @@
 				86EA845E149E666C00008F5D /* MenuItem.h */,
 				86EA845F149E666D00008F5D /* MenuItem.m */,
 			);
-			name = "Каталог";
+			name = Catalog;
 			sourceTree = "<group>";
 		};
 		86C91ED2148C3D460078164D /* Список заведений */ = {
@@ -1353,13 +1342,13 @@
 			name = ASIHTTP;
 			sourceTree = "<group>";
 		};
-		86DB3539147DB8F700DE13A5 /* Custom Badge */ = {
+		86DB3539147DB8F700DE13A5 /* Custom Badges */ = {
 			isa = PBXGroup;
 			children = (
 				8679D32214D04C8D00555A19 /* CustomBadge.h */,
 				8679D32314D04C8D00555A19 /* CustomBadge.m */,
 			);
-			name = "Custom Badge";
+			name = "Custom Badges";
 			sourceTree = "<group>";
 		};
 		86F6AF5B1475C2DA00B574ED /* Пользовательское соглашение */ = {
@@ -1380,7 +1369,7 @@
 			name = "Напоминание пароля";
 			sourceTree = "<group>";
 		};
-		86F6AF621475C9C800B574ED /* Блок регистрации и авторизации */ = {
+		86F6AF621475C9C800B574ED /* Authorization & Registration */ = {
 			isa = PBXGroup;
 			children = (
 				86F6F5831475AF6200DDE2E8 /* Авторизация */,
@@ -1388,31 +1377,31 @@
 				86F6AF5B1475C2DA00B574ED /* Пользовательское соглашение */,
 				86F6AF611475C7B400B574ED /* Напоминание пароля */,
 			);
-			name = "Блок регистрации и авторизации";
+			name = "Authorization & Registration";
 			path = MegaTyumen;
 			sourceTree = "<group>";
 		};
-		86F6AF6B1475CAB500B574ED /* Демо-экран */ = {
+		86F6AF6B1475CAB500B574ED /* Demo screen */ = {
 			isa = PBXGroup;
 			children = (
 				86F6AF661475CAB000B574ED /* DemoScreenView.h */,
 				86F6AF671475CAB000B574ED /* DemoScreenView.m */,
 			);
-			name = "Демо-экран";
+			name = "Demo screen";
 			path = MegaTyumen;
 			sourceTree = "<group>";
 		};
-		86F6AF711475D1AD00B574ED /* Главное меню */ = {
+		86F6AF711475D1AD00B574ED /* Main menu */ = {
 			isa = PBXGroup;
 			children = (
 				86F6AF6C1475D1A700B574ED /* MainView.h */,
 				86F6AF6D1475D1A700B574ED /* MainView.m */,
 			);
-			name = "Главное меню";
+			name = "Main menu";
 			path = MegaTyumen;
 			sourceTree = "<group>";
 		};
-		86F6AF7B1475D95100B574ED /* Лента новостей */ = {
+		86F6AF7B1475D95100B574ED /* News */ = {
 			isa = PBXGroup;
 			children = (
 				86CE10EE148013E100E9CF57 /* Список новостей */,
@@ -1420,17 +1409,17 @@
 				86CE10F0148013EC00E9CF57 /* Фотогалерея */,
 				86C4B5391484E8C80041D63F /* Добавление комментария */,
 			);
-			name = "Лента новостей";
+			name = News;
 			path = MegaTyumen;
 			sourceTree = "<group>";
 		};
 		86F6F57E1475AEFF00DDE2E8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				865EC17A14E8C66000349B2B /* InfoPlist.strings */,
-				86FB685614745981009EA788 /* MegaTyumen-Info.plist */,
 				866C6E0714D832B80025DB64 /* Views */,
 				86FB111114D832220031BF32 /* Images */,
+				865EC17A14E8C66000349B2B /* InfoPlist.strings */,
+				86FB685614745981009EA788 /* MegaTyumen-Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1616,6 +1605,7 @@
 				866ED9F7149F09E500EE77C6 /* libxml2.dylib */,
 				866ED9F5149F09DA00EE77C6 /* libstdc++.dylib */,
 				866ED9F3149F09CD00EE77C6 /* libsqlite3.dylib */,
+				86D01FC5148FAAEC0094B8AC /* libz.dylib */,
 				866ED9F1149F09C000EE77C6 /* Security.framework */,
 				866ED9EF149F09AF00EE77C6 /* OpenGLES.framework */,
 				866ED9ED149F09A400EE77C6 /* MessageUI.framework */,
@@ -1625,7 +1615,6 @@
 				86FB685214745981009EA788 /* CoreGraphics.framework */,
 				86C91EC0148BC8F30078164D /* CoreLocation.framework */,
 				86FB685014745981009EA788 /* Foundation.framework */,
-				86D01FC5148FAAEC0094B8AC /* libz.dylib */,
 				86D01FC3148FAADD0094B8AC /* MobileCoreServices.framework */,
 				86C4B5361484E5A30041D63F /* QuartzCore.framework */,
 				86FB686C14745981009EA788 /* SenTestingKit.framework */,
@@ -1664,6 +1653,10 @@
 				86F5902814A8460200AC5606 /* NSString+HTML.m */,
 				869A5C3E14841E5D00C004F3 /* UIImage+Thumbnail.h */,
 				869A5C3F14841E5D00C004F3 /* UIImage+Thumbnail.m */,
+				868E19F01490FE5D005652D9 /* UIButton+WebCache.h */,
+				868E19F11490FE5D005652D9 /* UIButton+WebCache.m */,
+				868E19F21490FE5D005652D9 /* UIImageView+WebCache.h */,
+				868E19F31490FE5D005652D9 /* UIImageView+WebCache.m */,
 				86A2D2E014F1194D005F6F21 /* Network.h */,
 				86A2D2E114F1194D005F6F21 /* Network.m */,
 			);

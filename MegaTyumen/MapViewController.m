@@ -10,8 +10,6 @@
  */
 
 #import "MapViewController.h"
-#import "Authorization.h"
-#import "AuthorizationView.h"
 #import "MBProgressHUD.h"
 
 @interface MapViewController()

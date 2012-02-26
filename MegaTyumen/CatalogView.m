@@ -273,15 +273,11 @@
         });
     }
     else {        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self.catalog getCatalogByDistance];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-                [self.hud hide:YES];
-            });
-        });
+        [self getCatalogByDistance];
     }
 }
+
+#pragma mark -
 
 //- (void)loadCatalog {
 //    self.catalog = [[Catalog alloc] initWithUserLocation:self.locationManager.location];
@@ -381,17 +377,14 @@
 //    [self initUI];
 //}
 
-- (void)getCatalogByDistance {    
-    //double lat = self.locationManager.location.coordinate.latitude;
-    //double lng = self.locationManager.location.coordinate.longitude;
-    //[self.catalog getCatalogByDistanceWithLat:lat andLng:lng];
-    
-    if ([CLLocationManager locationServicesEnabled]) {        
-        [self.locationManager startUpdatingLocation];
-    }
-//    else {
-//        [self.catalog getCatalogByDistance];
-//    }
+- (void)getCatalogByDistance {   
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self.catalog getCatalogByDistance];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            [self.hud hide:YES];
+        });
+    });
 }
 //
 //- (void)didGetCatalogByDistance:(NSNotification *)notification {
@@ -441,7 +434,12 @@
             [self getCatalogByBill];
             break;
         case 3: 
-            [self getCatalogByDistance];
+            if ([CLLocationManager locationServicesEnabled]) {        
+                [self.locationManager startUpdatingLocation];
+            }
+            else {
+                [self getCatalogByDistance];
+            }
             break;
     }    
 }
@@ -496,19 +494,21 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"CatalogCell";
+    static NSString *CellIdentifier = @"CatalogCategoryCell";
     
     UITableViewCell *cell = [tableView_ dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        [[NSBundle mainBundle] loadNibNamed:CellIdentifier owner:self options:nil];
-        cell = self.cell;
-        self.cell = nil;
+        NSArray *nibs = [[NSBundle mainBundle] loadNibNamed:CellIdentifier owner:self options:nil];
+        cell = [nibs objectAtIndex:0];
+        //self.cell = nil;
     }    
     
     UIImageView *view1 = (UIImageView *)[cell viewWithTag:1];
     UILabel *view2 = (UILabel *)[cell viewWithTag:2];
     UILabel *view3 = (UILabel *)[cell viewWithTag:3];
     UIButton *view4 = (UIButton *)[cell viewWithTag:4];
+    UILabel *view5 = (UILabel *)[cell viewWithTag:5];
+    UILabel *view6 = (UILabel *)[cell viewWithTag:6];    
     
     CatalogItem *item = [self.catalog.items objectForKey:indexPath];
     
@@ -516,24 +516,42 @@
         [view1 setImageWithURL:item.logo placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
         view2.text = item.name;
         view3.text = item.address;
-//        double distance = item.distance;
-//        NSString *distanceStr;
-//        if (distance < 1000) {
-//            distanceStr = @"м";
-//        }
-//        else {
-//            distance /= 1000;
-//            distanceStr = @"км";
-//        }
+        
         [view4 setTitle:item.distanceString forState:UIControlStateNormal];
         [view4 sizeToFit];
+        
+        view5.text = [NSString stringWithFormat:@"%d", item.checkinCount];
+        view6.text = [NSString stringWithFormat:@"%d", item.feedbacks.count];
     }
     else {
         view1.image = nil;
         view2.text = @"";
         view3.text = @"";
         [view4 setTitle:@"" forState:UIControlStateNormal];
+        view5.text = @"";
+        view6.text = @"";
     }
+    
+//    UIImageView *view1 = (UIImageView *)[cell viewWithTag:1];
+//    UILabel *view2 = (UILabel *)[cell viewWithTag:2];
+//    UILabel *view3 = (UILabel *)[cell viewWithTag:3];
+//    UIButton *view4 = (UIButton *)[cell viewWithTag:4];
+//    
+//    CatalogItem *item = [self.catalog.items objectForKey:indexPath];
+//    
+//    if (item) {
+//        [view1 setImageWithURL:item.logo placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:view1.frame.size];
+//        view2.text = item.name;
+//        view3.text = item.address;
+//        [view4 setTitle:item.distanceString forState:UIControlStateNormal];
+//        [view4 sizeToFit];
+//    }
+//    else {
+//        view1.image = nil;
+//        view2.text = @"";
+//        view3.text = @"";
+//        [view4 setTitle:@"" forState:UIControlStateNormal];
+//    }
     
     return cell;
 }

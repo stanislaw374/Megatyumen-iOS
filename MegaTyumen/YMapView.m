@@ -19,11 +19,11 @@
 @property (nonatomic, strong) Catalog *catalog;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 - (void)configureMapView;
-//- (void)loadMarkers;
+- (void)loadCatalog;
 @end
 
 @implementation YMapView
-//@synthesize loadAllMarkers = _loadAllMarkers;
+@synthesize loadEntireCatalog = _loadEntireCatalog;
 @synthesize hud = _hud;
 @synthesize catalog = _catalog;
 @synthesize catalogItems = _catalogItems;
@@ -38,6 +38,13 @@
     return _catalogItems;
 }
 
+- (CatalogItemView *)catalogItemView {
+    if (!_catalogItemView) {
+        _catalogItemView = [[CatalogItemView alloc] init];
+    }
+    return _catalogItemView;
+}
+
 - (CLLocationManager *)locationManager {
     if (!_locationManager) {
         _locationManager = [[CLLocationManager alloc] init];
@@ -48,18 +55,22 @@
     return _locationManager;
 }
 
+- (Catalog *)catalog {
+    if (!_catalog) {
+        _catalog = [[Catalog alloc] init];
+    }
+    return _catalog;
+}
+
+#pragma mark - CLLocationManagerDelegate
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    
+    self.locationManager.delegate = nil;
     [self.locationManager stopUpdatingLocation];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        self.catalog = [[Catalog alloc] initWithUserLocation:newLocation];
-        [self.catalog getCatalogByDistance];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            for (CatalogItem *item in self.catalog.items.allValues) {
-                [self addAnnotationForCatalogItem:item]; 
-            }
-            [self.hud hide:YES];
-        });
-    });
+    
+    self.catalog.userLocation = newLocation;
+    [self loadCatalog];
 }
 
 #pragma mark - View lifecycle
@@ -69,11 +80,11 @@
     [self configureMapView];
 }
 
-- (void)loadCatalog {
-    if (![CLLocationManager locationServicesEnabled]) return;
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [self.locationManager startUpdatingLocation];
-}
+//- (void)loadCatalog {
+//    if (![CLLocationManager locationServicesEnabled]) return;
+//    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [self.locationManager startUpdatingLocation];
+//}
 
 - (void)viewDidUnload {    
     self.catalogItems = nil;
@@ -111,7 +122,7 @@
 #pragma mark - Helpers
 
 - (void)configureMapView {
-    self.mapView.showsUserLocation = NO;
+    self.mapView.showsUserLocation = YES;
     self.mapView.showTraffic = NO;
 }
 
@@ -120,12 +131,47 @@
     pointAnnotation.title = catalogItem.name;
     pointAnnotation.subtitle = catalogItem.address;
     pointAnnotation.coordinate = YMKMapCoordinateMake(catalogItem.location.coordinate.latitude, catalogItem.location.coordinate.longitude);
+    //pointAnnotation.coordinate = YMKMapCoordinateMake(57, 66);
     pointAnnotation.catalogItem = catalogItem;
     
     [self.mapView setCenterCoordinate:catalogItem.location.coordinate atZoomLevel:13 animated:NO];
     [self.mapView addAnnotation:pointAnnotation];
     
     [self.catalogItems addObject:pointAnnotation];
+    
+    NSLog(@"Catalog item location: %@", catalogItem.location.description);
+}
+
+- (void)setLoadEntireCatalog:(BOOL)loadEntireCatalog {
+    _loadEntireCatalog = loadEntireCatalog;
+    
+    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    if (self.loadEntireCatalog) {
+        if ([CLLocationManager locationServicesEnabled]) {
+            [self.locationManager startUpdatingLocation];
+        }
+        else {
+            [self loadCatalog];
+        }
+    }
+}
+
+- (void)loadCatalog {
+    dispatch_queue_t queue = dispatch_queue_create("Map loading queue", 0);
+    
+    //dispatch_async(queue, ^{
+    {    [self.catalog getCatalogByDistance];
+        //dispatch_async(dispatch_get_main_queue(), ^{
+        {   
+            for (CatalogItem *item in self.catalog.items.allValues) {
+                [self addAnnotationForCatalogItem:item]; 
+            }
+            [self.hud hide:YES];
+        }
+    }
+    
+    dispatch_release(queue);
 }
 
 @end
