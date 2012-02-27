@@ -7,7 +7,7 @@
 //
 
 //#define kAPI_URL [NSURL URLWithString:@"http://v2.megatyumen.ru/api"]
-#define kAPI_URL [NSURL URLWithString:@"http://192.168.1.4/api"]
+#define kAPI_URL [NSURL URLWithString:@"http://192.168.88.51/api"]
 
 #define kWEBSITE @"http://megatyumen.ru"
 #define kWEBSITE_URL [NSURL URLWithString:kWEBSITE]
@@ -21,4 +21,4 @@
 #define KEY_WAS_LAUNCHED @"wasLaunched"
 #define KEY_RESPONSE @"response"
 #define KEY_IS_AUTHORIZED @"isAuthorized"
-#define kREQUEST_TIMEOUT 20
+#define kREQUEST_TIMEOUT 30

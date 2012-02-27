@@ -51,7 +51,7 @@
 //}
 
 - (void)getItems {
-    int limit = 70;
+    int limit = 100;
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"companies_feedback", KEY_REQUEST, [NSNumber numberWithInt:self.offset], @"offset", [NSNumber numberWithInt:limit], @"limit", nil];
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
@@ -60,6 +60,7 @@
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:[jsonWriter stringWithObject:dict] forKey:KEY_JSON_DATA];
+    request.timeOutSeconds = kREQUEST_TIMEOUT;
     //request.delegate = self;
     //request.didFinishSelector = @selector(didGetItems:);
     [request startSynchronous];

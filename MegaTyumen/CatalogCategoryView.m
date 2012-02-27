@@ -23,6 +23,7 @@
 @property (nonatomic, strong) MainMenu *mainMenu;
 //@property (strong, nonatomic) Catalog *catalog;
 @property (strong, nonatomic) MBProgressHUD *hud;
+@property (strong, nonatomic) CatalogView *catalogView;
 - (void)getCatalogByCategory;
 //- (void)didGetCatalogByCategory:(NSNotification *)notification;
 @end
@@ -44,6 +45,14 @@
 @synthesize hud = _hud;
 @synthesize parentCatalogView = _parentCatalogView;
 @synthesize mainMenu = _mainMenu;
+@synthesize catalogView = _catalogView;
+
+- (CatalogView *)catalogView {
+    if (!_catalogView) {
+        _catalogView = [[CatalogView alloc] init];
+    }
+    return _catalogView;
+}
 
 - (CLLocationManager *)locationManager {
     if (!_locationManager) {
@@ -63,6 +72,13 @@
     
     [self getCatalogByCategory];
 }
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    [self.locationManager stopUpdatingLocation];
+    [self getCatalogByCategory];
+}
+
+#pragma mark - 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -104,11 +120,15 @@
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil]; 
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetCatalogByCategory:) name:@"didGetCatalogByCategory" object:nil]; 
     
-    [self.btnType setImage:[UIImage imageNamed:@"catalog_byTypeButtonPressed.png"] forState:UIControlStateSelected];
-    [self.btnCuisine setImage:[UIImage imageNamed:@"catalog_byCuisineButtonPressed.png"] forState:UIControlStateSelected];
-    [self.btnBill setImage:[UIImage imageNamed:@"catalog_byBillButtonPressed.png"] forState:UIControlStateSelected];
-    [self.btnNearby setImage:[UIImage imageNamed:@"catalog_NearbyButtonPressed.png"] forState:UIControlStateSelected];
+//    [self.btnType setImage:[UIImage imageNamed:@"catalog_byTypeButtonPressed.png"] forState:UIControlStateSelected];
+//    [self.btnCuisine setImage:[UIImage imageNamed:@"catalog_byCuisineButtonPressed.png"] forState:UIControlStateSelected];
+//    [self.btnBill setImage:[UIImage imageNamed:@"catalog_byBillButtonPressed.png"] forState:UIControlStateSelected];
+//    [self.btnNearby setImage:[UIImage imageNamed:@"catalog_NearbyButtonPressed.png"] forState:UIControlStateSelected];
 }
+//
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//}
 
 - (void)viewDidUnload
 {
@@ -146,11 +166,18 @@
     }
 }
 
--(void)didPassAuthorization:(NSNotification *)notification {
-    self.navigationItem.rightBarButtonItem = nil;
-}
+//-(void)didPassAuthorization:(NSNotification *)notification {
+//    self.navigationItem.rightBarButtonItem = nil;
+//}
 
 - (void)setCategory:(NSDictionary *)category {
+    self.btnType.selected = NO;
+    self.btnCuisine.selected = NO;
+    self.btnBill.selected = NO;
+    self.btnNearby.selected = NO;
+    self.title = @"";
+    self.headerLabel.text = @"";
+    
     _category = category;
     switch ([[self.category objectForKey:@"index"] intValue]) {
         case 0: btnType.selected = YES; break;
@@ -163,14 +190,18 @@
     UIImage *image = [self.category objectForKey:@"image"];
     self.redImageView.image = [image thumbnailByScalingProportionallyAndCroppingToSize:CGSizeMake(64, 64)];
     
-    if ([CLLocationManager locationServicesEnabled]) {
+    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if ([CLLocationManager locationServicesEnabled] && status != kCLAuthorizationStatusDenied) {
         [self.locationManager startUpdatingLocation];
+    }
+    else {
+        [self getCatalogByCategory];
     }
 }
 
-- (void)getCatalogByCategory {
-    //self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
+- (void)getCatalogByCategory {    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.catalog getCatalogByCategory:self.category];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -302,14 +333,19 @@
 #pragma mark - UISearchBarDelegate
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar_ {
-    searchBar_.showsCancelButton = YES;
+    searchBar_.showsCancelButton = searchBar_.text.length != 0;
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar_ {
     searchBar_.showsCancelButton = NO;
 }
 
+- (void)searchBar:(UISearchBar *)searchBar_ textDidChange:(NSString *)searchText {
+    searchBar_.showsCancelButton = searchText.length != 0;
+}
+
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar_ {
+    searchBar_.showsCancelButton = NO;
     [searchBar_ resignFirstResponder];
     
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];

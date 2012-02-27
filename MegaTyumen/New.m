@@ -92,7 +92,7 @@
         NSDateFormatter *df = [[NSDateFormatter alloc] init];
         [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
         self.date = [df dateFromString:[dict2 objectForKey:@"date"]];
-        self.link = [dict2 objectForKey:@"link"];
+        self.link = [kWEBSITE stringByAppendingString:[dict2 objectForKey:@"link"]];
         self.comments = [[NSMutableArray alloc] init];
         NSArray *comments = [dict2 objectForKey:@"comments"];
         for (NSDictionary *comment in comments) {

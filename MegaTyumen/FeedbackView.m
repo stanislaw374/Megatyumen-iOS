@@ -140,13 +140,13 @@
         [self.scrollView addSubview:self.feedbackView];
     }
     
-//    if (self.feedbackView) {
-//        for (UIView *view in self.feedbackView.subviews) {
-//            [view removeFromSuperview];
-//        }
-//    }
+    if (self.feedbackView) {
+        for (UIView *view in self.feedbackView.subviews) {
+            [view removeFromSuperview];
+        }
+    }
     
-    //int height = 0;
+    self.height = 0;
     
     
     for (int i = self.offset; i < self.feedback.items.count; i++) {

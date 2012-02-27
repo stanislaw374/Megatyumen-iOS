@@ -27,7 +27,7 @@ static int kNumberOfPages = 0;
 @property (nonatomic, strong) MainMenu *mainMenu;
 - (void)didGetAnnounces;
 - (void)loadScrollViewWithPage:(int)page;
-- (void)didAuthorize:(NSNotification *)notification;
+//- (void)didAuthorize:(NSNotification *)notification;
 - (void)getAnnounces;
 @end
 
@@ -73,7 +73,7 @@ static int kNumberOfPages = 0;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAuthorize:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAuthorize:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetAnnounces:) name:kNOTIFICATION_DID_GET_ANNOUNCES object:nil];
     
     //[MainMenu addMainButtonForViewController:self];
@@ -89,7 +89,7 @@ static int kNumberOfPages = 0;
 - (void)viewDidUnload
 {
     //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_GET_ANNOUNCES object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     [self setPageControl:nil];
     [self setBtnCheckin:nil];
     [self setScrollView:nil];
@@ -104,9 +104,9 @@ static int kNumberOfPages = 0;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)didAuthorize:(NSNotification *)notification {
-    self.navigationItem.rightBarButtonItem = nil;
-}
+//- (void)didAuthorize:(NSNotification *)notification {
+//    self.navigationItem.rightBarButtonItem = nil;
+//}
 
 - (IBAction)onCheckinButtonClick {
     if (![Authorization sharedAuthorization].isAuthorized) {

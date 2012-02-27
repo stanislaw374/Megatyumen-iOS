@@ -39,6 +39,13 @@
 @synthesize mainMenu = _mainMenu;
 @synthesize isLoaded = _isLoaded;
 
+- (NewPhotoDetailView *)photoDetailView {
+    if (!_photoDetailView) {
+        _photoDetailView = [[NewPhotoDetailView alloc] init];
+    }
+    return _photoDetailView;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -137,9 +144,7 @@
 
 -(void)onPhotoClick:(id)sender {
     self.currentPhoto = ((UIButton *)sender).tag - 1;
-    if (!self.photoDetailView) {
-        self.photoDetailView = [[NewPhotoDetailView alloc] init];
-    }
+    
     self.photoDetailView.currentNew = self.currentNew;
     self.photoDetailView.currentPhoto = self.currentPhoto;
     [self.navigationController pushViewController:self.photoDetailView animated:YES];

@@ -199,6 +199,9 @@
 //}
 
 - (void)getCatalogByDistance {
+    self.allSections = 0;
+    [self.allRows removeAllObjects];
+    [self.allItems removeAllObjects];
     //int limit = 10;
     NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_by_distance", @"request", [NSNumber numberWithDouble:self.userLocation.coordinate.latitude], @"lat", [NSNumber numberWithDouble:self.userLocation.coordinate.longitude], @"lng", nil];
     
@@ -210,11 +213,11 @@
     request.timeOutSeconds = kREQUEST_TIMEOUT;
     [request startSynchronous];
     
-    if (request.error) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"O_O" message:request.error.description delegate:self cancelButtonTitle:@"Okay" otherButtonTitles: nil];
-        [alert show];
-        return;
-    }
+//    if (request.error) {
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"O_O" message:request.error.description delegate:self cancelButtonTitle:@"Okay" otherButtonTitles: nil];
+//        [alert show];
+//        return;
+//    }
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), requestDict.description);
     
@@ -268,18 +271,22 @@
         for (int i = 0; i < self.allSections; i++) {
             [self.allRows insertObject:[NSNumber numberWithInt:rows[i]] atIndex:i];
         }
-        self.searchString = @"";
     }
+    self.searchString = @"";
 }
 
 - (void)getCatalogByName:(NSString *)name {
+    
+    self.allSections = 0;
+    [self.allRows removeAllObjects];
+    [self.allItems removeAllObjects];
+    
     NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_by_name", @"request", [NSNumber numberWithDouble:self.userLocation.coordinate.latitude], @"lat", [NSNumber numberWithDouble:self.userLocation.coordinate.longitude], @"lng", name, @"name", nil];
     
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
-    //request.delegate = self;
-    //request.didFinishSelector = @selector(didGetCatalogByDistance:);
+    request.timeOutSeconds = kREQUEST_TIMEOUT;
     [request startSynchronous];
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), requestDict.description);
@@ -335,8 +342,8 @@
         for (int i = 0; i < self.allSections; i++) {
             [self.allRows insertObject:[NSNumber numberWithInt:rows[i]] atIndex:i];
         }
-        self.searchString = @"";
     }
+    self.searchString = @"";
 }
 
 //- (void)didGetCatalogByName:(ASIHTTPRequest *)request {
@@ -831,28 +838,25 @@
     return result;
 }
 
-- (void)getCatalogByCategory:(NSDictionary *)category {
-    //{ “request” : “catalog_by_type”, “type_id” : “id_типа”, “lat” : “широта”, “lng” : “долгота” }
-    NSDictionary *requestDict;
+- (void)getCatalogByCategory:(NSDictionary *)category { 
+    self.allSections = 0;
+    [self.allRows removeAllObjects];
+    [self.allItems removeAllObjects];
+    
+    NSString *requestValue;
     switch ([[category objectForKey:@"index"] intValue]) {
-        case 0:
-            requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_by_type", @"request", [NSNumber numberWithDouble:self.userLocation.coordinate.latitude], @"lat", [NSNumber numberWithDouble:self.userLocation.coordinate.longitude], @"lng", [category objectForKey:@"id"], @"id", nil];
-            break;
-//        case 1:
-//            requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_by_cuisine", @"request", lat_, @"lat", lng_, @"lng", [NSNumber numberWithInt:category.ID], @"cuisine_id", nil];
-//            break;
-//        case 2:
-//            requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_by_bill", @"request", lat_, @"lat", lng_, @"lng", [NSNumber numberWithInt:category.ID], @"bill_id", nil];
-//            break;
-    }    
+        case 0: requestValue = @"catalog_by_type"; break;
+        case 1: requestValue = @"catalog_by_cuisine"; break;
+        case 2: requestValue = @"catalog_by_bill"; break;
+    }
+    NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:requestValue, @"request", [NSNumber numberWithDouble:self.userLocation.coordinate.latitude], @"lat", [NSNumber numberWithDouble:self.userLocation.coordinate.longitude], @"lng", [category objectForKey:@"id"], @"id", nil];
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), requestDict);
     
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
-    //request.delegate = self;
-    //request.didFinishSelector = @selector(didGetCatalogByCategory:);
+    request.timeOutSeconds = kREQUEST_TIMEOUT;
     [request startSynchronous];
     
     SBJsonParser *parser = [[SBJsonParser alloc] init];
@@ -879,8 +883,8 @@
             [self.allItems setObject:c forKey:indexPath];
         }
         [self.allRows addObject:[NSNumber numberWithInt:row]];
-        self.searchString = @"";
     }
+    self.searchString = @"";
 }
 
 @end

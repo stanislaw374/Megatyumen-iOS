@@ -72,7 +72,6 @@
 }
 
 - (void)getCatalog { 
-    //self.catalog = [[Catalog alloc] initWithUserLocation:self.locationManager.location];
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -125,14 +124,19 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-    if ([CLLocationManager locationServicesEnabled]) {
+    [super viewWillAppear:animated];
+    
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if ([CLLocationManager locationServicesEnabled] && status != kCLAuthorizationStatusDenied) {
         [self.locationManager startUpdatingLocation];
     }
-    [super viewWillAppear:animated];
+    else {
+        [self getCatalog];
+    }    
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
-    [self.locationManager stopUpdatingLocation];
+    //[self.locationManager stopUpdatingLocation];
     [super viewWillDisappear:animated];
 }
 
@@ -155,17 +159,22 @@
 }
 
 #pragma mark - UISearchBarDelegate
+//
+//-(BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+//    searchBar.showsCancelButton = YES;
+//    return YES;
+//}
 
--(BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    searchBar.showsCancelButton = YES;
-    return YES;
-}
+//-(void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+//    searchBar.showsCancelButton = NO;
+//}
 
--(void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
-    searchBar.showsCancelButton = NO;
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar_ {
+    searchBar_.showsCancelButton = searchBar_.text.length != 0;
 }
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    searchBar.showsCancelButton = NO;
     [searchBar resignFirstResponder];
     
     self.catalog.searchString = searchBar.text;
@@ -173,13 +182,15 @@
 }
 
 -(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    searchBar.showsCancelButton = NO;
     [searchBar resignFirstResponder];
     searchBar.text = @"";
     self.catalog.searchString = searchBar.text;
     [self.tableView reloadData];
 }
 
--(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+- (void)searchBar:(UISearchBar *)searchBar_ textDidChange:(NSString *)searchText {
+    searchBar_.showsCancelButton = searchText.length != 0;
     if (!searchText.length) {
         self.catalog.searchString = @"";
         [self.tableView reloadData];
@@ -189,9 +200,15 @@
 #pragma mark - CLLocationManagerDelegate
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    NSLog(@"New location: %.4lf, %.4lf", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
+    //NSLog(@"New location: %.4lf, %.4lf", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
     [self.locationManager stopUpdatingLocation];
     self.catalog.userLocation = newLocation;
+    
+    [self getCatalog];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    [self.locationManager stopUpdatingLocation];
     [self getCatalog];
 }
 

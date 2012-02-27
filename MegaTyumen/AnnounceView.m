@@ -252,6 +252,7 @@
     [UIView beginAnimations:@"PageMinimization" context:nil];
     [UIView setAnimationDuration:0.5f];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    
     CGRect frame = self.view2.frame;
     frame.size.height = self.view1.frame.size.height;
     self.view2.frame = frame;

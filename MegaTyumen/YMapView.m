@@ -68,8 +68,13 @@
     
     self.locationManager.delegate = nil;
     [self.locationManager stopUpdatingLocation];
-    
     self.catalog.userLocation = newLocation;
+    [self loadCatalog];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    self.locationManager.delegate = nil;
+    [self.locationManager stopUpdatingLocation];
     [self loadCatalog];
 }
 
@@ -80,11 +85,14 @@
     [self configureMapView];
 }
 
-//- (void)loadCatalog {
-//    if (![CLLocationManager locationServicesEnabled]) return;
-//    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    [self.locationManager startUpdatingLocation];
-//}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.locationManager stopUpdatingLocation];
+}
 
 - (void)viewDidUnload {    
     self.catalogItems = nil;
@@ -122,7 +130,10 @@
 #pragma mark - Helpers
 
 - (void)configureMapView {
-    self.mapView.showsUserLocation = YES;
+    if ([CLLocationManager locationServicesEnabled]) {
+        self.mapView.showsUserLocation = YES;
+    }
+    
     self.mapView.showTraffic = NO;
 }
 
@@ -147,8 +158,11 @@
     
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
+    //NSLog(@"Location services enabled = %d", [CLLocationManager locationServicesEnabled]);
+    
     if (self.loadEntireCatalog) {
-        if ([CLLocationManager locationServicesEnabled]) {
+        CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+        if ([CLLocationManager locationServicesEnabled] && (status == kCLAuthorizationStatusAuthorized || status == kCLAuthorizationStatusNotDetermined)) {
             [self.locationManager startUpdatingLocation];
         }
         else {
@@ -158,20 +172,19 @@
 }
 
 - (void)loadCatalog {
-    dispatch_queue_t queue = dispatch_queue_create("Map loading queue", 0);
+    //dispatch_queue_t queue = dispatch_queue_create("Map loading queue", 0);
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     
-    //dispatch_async(queue, ^{
-    {    [self.catalog getCatalogByDistance];
-        //dispatch_async(dispatch_get_main_queue(), ^{
-        {   
+    dispatch_async(queue, ^{
+        [self.catalog getCatalogByDistance];
+        dispatch_async(dispatch_get_main_queue(), ^{           
             for (CatalogItem *item in self.catalog.items.allValues) {
                 [self addAnnotationForCatalogItem:item]; 
             }
             [self.hud hide:YES];
-        }
-    }
-    
-    dispatch_release(queue);
+        });
+    });
+    //dispatch_release(queue);
 }
 
 @end

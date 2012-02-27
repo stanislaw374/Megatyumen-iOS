@@ -42,6 +42,7 @@
 - (void)getCatalogByDistance;
 //- (void)didGetCatalogByDistance:(NSNotification *)notification;
 //- (void)didGetCatalogByName:(NSNotification *)notification;
+- (void)getCatalogByName;
 
 @end
 
@@ -149,6 +150,7 @@
     [self.navigationController pushViewController:self.catalogCategoryView animated:YES];
     self.catalogCategoryView.catalog = self.catalog;
     self.catalogCategoryView.category = [self.categories objectAtIndex:btn.tag];
+    self.catalogCategoryView.parentCatalogView = self;
 }
 
 - (IBAction)onCheckinButtonClick {
@@ -210,6 +212,31 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    [self.locationManager stopUpdatingLocation];
+    self.catalog.userLocation = newLocation;
+    
+    if (self.currentCategory == -1) {
+        [self getCatalogByName];
+    }
+    else {        
+        [self getCatalogByDistance];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    [self.locationManager stopUpdatingLocation];
+    
+    if (self.currentCategory == -1) {
+        [self getCatalogByName];
+    }
+    else {        
+        [self getCatalogByDistance];
+    }
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
@@ -246,38 +273,14 @@
     //[self.locationManager stopUpdatingLocation];
     
     
-    [self.btnType setImage:[UIImage imageNamed:@"catalog_byTypeButtonPressed.png"] forState:UIControlStateSelected];
-    [self.btnCuisine setImage:[UIImage imageNamed:@"catalog_byCuisineButtonPressed.png"] forState:UIControlStateSelected];
-    [self.btnBill setImage:[UIImage imageNamed:@"catalog_byBillButtonPressed.png"] forState:UIControlStateSelected];
-    [self.btnNearby setImage:[UIImage imageNamed:@"catalog_nearbyButtonPressed.png"] forState:UIControlStateSelected];
+//    [self.btnType setImage:[UIImage imageNamed:@"catalog_byTypeButtonPressed.png"] forState:UIControlStateSelected];
+//    [self.btnCuisine setImage:[UIImage imageNamed:@"catalog_byCuisineButtonPressed.png"] forState:UIControlStateSelected];
+//    [self.btnBill setImage:[UIImage imageNamed:@"catalog_byBillButtonPressed.png"] forState:UIControlStateSelected];
+//    [self.btnNearby setImage:[UIImage imageNamed:@"catalog_nearbyButtonPressed.png"] forState:UIControlStateSelected];
     self.btnType.selected = YES;
     
     [self onTypeButtonClick];
 }
-
-#pragma mark - CLLocationManagerDelegate
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    [self.locationManager stopUpdatingLocation];
-    self.catalog.userLocation = newLocation;
-
-    if (self.currentCategory == -1) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self.catalog getCatalogByName:self.searchBar.text];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.scrollView.hidden = YES;
-                self.tableView.hidden = NO;            
-                [self.tableView reloadData];
-                [self.hud hide:YES];
-            });
-        });
-    }
-    else {        
-        [self getCatalogByDistance];
-    }
-}
-
-#pragma mark -
 
 //- (void)loadCatalog {
 //    self.catalog = [[Catalog alloc] initWithUserLocation:self.locationManager.location];
@@ -285,15 +288,15 @@
 //    [self getCatalogTypes];  
 //}
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    //[self.locationManager startUpdatingLocation];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self.locationManager stopUpdatingLocation];
-}
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//    //[self.locationManager startUpdatingLocation];
+//}
+//
+//- (void)viewWillDisappear:(BOOL)animated {
+//    [super viewWillDisappear:animated];
+//    //[self.locationManager stopUpdatingLocation];
+//}
 
 - (void)viewDidUnload
 {
@@ -378,7 +381,7 @@
 //}
 
 - (void)getCatalogByDistance {   
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.catalog getCatalogByDistance];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
@@ -386,6 +389,19 @@
         });
     });
 }
+
+- (void)getCatalogByName {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.catalog getCatalogByName:self.searchBar.text];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.scrollView.hidden = YES;
+            self.tableView.hidden = NO;            
+            [self.tableView reloadData];
+            [self.hud hide:YES];
+        });
+    });
+}
+
 //
 //- (void)didGetCatalogByDistance:(NSNotification *)notification {
 //    [self.tableView reloadData];
@@ -434,13 +450,16 @@
             [self getCatalogByBill];
             break;
         case 3: 
-            if ([CLLocationManager locationServicesEnabled]) {        
+        {
+            CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+            if ([CLLocationManager locationServicesEnabled] && status != kCLAuthorizationStatusDenied) {        
                 [self.locationManager startUpdatingLocation];
             }
             else {
                 [self getCatalogByDistance];
             }
             break;
+        }
     }    
 }
 
@@ -571,22 +590,31 @@
 #pragma mark - UISearchBarDelegate
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar_ {
-    searchBar_.showsCancelButton = YES;
+    searchBar_.showsCancelButton = searchBar_.text.length != 0;
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar_ {
-    searchBar_.showsCancelButton = NO;
+    //searchBar_.showsCancelButton = NO;
+}
+
+- (void)searchBar:(UISearchBar *)searchBar_ textDidChange:(NSString *)searchText {
+    searchBar_.showsCancelButton = searchText.length != 0;
+    
+    //NSLog(@"%@ %@", NSStringFromSelector(_cmd), searchText);
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar_ {
+    searchBar_.showsCancelButton = NO;
     [searchBar_ resignFirstResponder];
-    
-    //double lat = self.locationManager.location.coordinate.latitude;
-    //double lng = self.locationManager.location.coordinate.longitude;
-    //[self.catalog getCatalogByName:searchBar_.text andLat:lat andLng:lng];
     self.currentCategory = -1;
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [self.locationManager startUpdatingLocation];
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if ([CLLocationManager locationServicesEnabled] && status != kCLAuthorizationStatusDenied) {
+        [self.locationManager startUpdatingLocation];
+    }
+    else {
+        [self getCatalogByName];
+    }
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar_ {

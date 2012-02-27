@@ -269,7 +269,7 @@
 - (IBAction)onTypeButtonClick {
     for (CatalogCategory *category in [self.catalog.categories objectAtIndex:0]) {
         if ([category.name rangeOfString:self.currentItem.type].location != NSNotFound && self.parentCatalogCategoryView) {
-            //self.parentCatalogCategoryView.currentCategory = category;
+            //self.parentCatalogCategoryView.currentCategory = self
             [self.navigationController popViewControllerAnimated:YES];
             break;
         }
@@ -286,7 +286,7 @@
         [[UIApplication sharedApplication] openURL:telURL];
     }
     else {
-        [Alerts showAlertViewWithTitle:@"Ошибка" message:@"Устройство не поддерживает телефон"];
+        [Alerts showAlertViewWithTitle:@"Ошибка" message:@"Устройство не поддерживает телефонные вызовы"];
     }
 }
 

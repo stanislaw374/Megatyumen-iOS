@@ -443,16 +443,16 @@
     AppDelegate *delegate = [UIApplication sharedApplication].delegate;
     
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                   //[Constants fb_APP_ID], @"app_id",
+                                   kFB_APP_ID, @"app_id",
                                    self.currentNew.link, @"link",
-                                   self.currentNew.image, @"picture",
+                                   self.currentNew.image.absoluteString, @"picture",
                                    self.currentNew.title, @"name",
                                    @"megatyumen.ru", @"caption",
                                    self.currentNew.title, @"description",
                                    //self.currentNew.text, @"message",
                                    nil];
     
-    //NSLog(@"Facebook: %@", params.description);
+    NSLog(@"%@: %@", NSStringFromSelector(_cmd), params.description);
     
     [delegate.facebook dialog:@"feed" andParams:params andDelegate:self];
 }
