@@ -87,11 +87,13 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.mapView.showsUserLocation = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.locationManager stopUpdatingLocation];
+    //[self.locationManager stopUpdatingLocation];
+    self.mapView.showsUserLocation = NO;
 }
 
 - (void)viewDidUnload {    

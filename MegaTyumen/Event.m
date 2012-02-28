@@ -87,7 +87,7 @@
 
 - (void)getImages {
     SBJsonWriter *writer = [[SBJsonWriter alloc] init];
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"news_images", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalogue_event_photos", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
     
@@ -100,10 +100,10 @@
     NSDictionary *dict2 = [parser objectWithString:request.responseString];
     BOOL response = [[dict2 objectForKey:@"response"] boolValue];
     if (response) {
-        NSArray *images = [dict2 objectForKey:@"images"];
+        NSArray *images = [dict2 objectForKey:@"photos"];
         int i = 0;
         for (NSDictionary *image in images) {
-            NSURL *url = [NSURL URLWithString:[image objectForKey:@"image"] relativeToURL:kWEBSITE_URL];
+            NSURL *url = [NSURL URLWithString:[image objectForKey:@"photo"] relativeToURL:kWEBSITE_URL];
             [self.images replaceObjectAtIndex:i++ withObject:url];
         }
     }

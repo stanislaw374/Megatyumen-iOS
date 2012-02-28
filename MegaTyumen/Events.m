@@ -59,8 +59,9 @@
     NSString *query = [writer stringWithObject:dict];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:query forKey:KEY_JSON_DATA];
-    request.delegate = self;
-    [request setDidFinishSelector:@selector(didGetItems:)];
+    //request.delegate = self;
+    //[request setDidFinishSelector:@selector(didGetItems:)];
+    request.timeOutSeconds = kREQUEST_TIMEOUT;
     [request startSynchronous];    
     
     self.isLoaded = YES;
@@ -90,6 +91,9 @@
             [self.items addObject:e];
         }
         self.offset += limit;
+    }
+    else {
+        self.isLoaded = YES;
     }
 }
 

@@ -144,7 +144,6 @@
 		865E4491147BDFA00085838A /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 865E448B147BDFA00085838A /* search.png */; };
 		865E4492147BDFA00085838A /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 865E448C147BDFA00085838A /* search@2x.png */; };
 		865EC17C14E8C66000349B2B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 865EC17A14E8C66000349B2B /* InfoPlist.strings */; };
-		865EC17E14E8C66D00349B2B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 865EC17A14E8C66000349B2B /* InfoPlist.strings */; };
 		86632B2D14AC4FEF0083B1B8 /* bars.png in Resources */ = {isa = PBXBuildFile; fileRef = 86632B2214AC4FEF0083B1B8 /* bars.png */; };
 		86632B2E14AC4FEF0083B1B8 /* blin.png in Resources */ = {isa = PBXBuildFile; fileRef = 86632B2314AC4FEF0083B1B8 /* blin.png */; };
 		86632B2F14AC4FEF0083B1B8 /* cafe.png in Resources */ = {isa = PBXBuildFile; fileRef = 86632B2414AC4FEF0083B1B8 /* cafe.png */; };
@@ -750,7 +749,7 @@
 		86F8F277149F314300D83C9F /* AnnounceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnounceView.h; path = MegaTyumen/AnnounceView.h; sourceTree = "<group>"; };
 		86F8F278149F314300D83C9F /* AnnounceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnounceView.m; path = MegaTyumen/AnnounceView.m; sourceTree = "<group>"; };
 		86F8F279149F314300D83C9F /* AnnounceView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AnnounceView.xib; path = ../MegaTyumen/AnnounceView.xib; sourceTree = "<group>"; };
-		86FB684A14745980009EA788 /* MegaTyumen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MegaTyumen.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		86FB684A14745980009EA788 /* megatyumen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = megatyumen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		86FB684E14745981009EA788 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		86FB685014745981009EA788 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		86FB685214745981009EA788 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1629,7 +1628,7 @@
 		86FB684B14745980009EA788 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				86FB684A14745980009EA788 /* MegaTyumen.app */,
+				86FB684A14745980009EA788 /* megatyumen.app */,
 				86FB686B14745981009EA788 /* MegaTyumenTests.octest */,
 			);
 			name = Products;
@@ -1721,9 +1720,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		86FB684914745980009EA788 /* MegaTyumen */ = {
+		86FB684914745980009EA788 /* megatyumen */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 86FB687D14745981009EA788 /* Build configuration list for PBXNativeTarget "MegaTyumen" */;
+			buildConfigurationList = 86FB687D14745981009EA788 /* Build configuration list for PBXNativeTarget "megatyumen" */;
 			buildPhases = (
 				86FB684614745980009EA788 /* Sources */,
 				86FB684714745980009EA788 /* Frameworks */,
@@ -1733,9 +1732,9 @@
 			);
 			dependencies = (
 			);
-			name = MegaTyumen;
+			name = megatyumen;
 			productName = MegaTyumen;
-			productReference = 86FB684A14745980009EA788 /* MegaTyumen.app */;
+			productReference = 86FB684A14745980009EA788 /* megatyumen.app */;
 			productType = "com.apple.product-type.application";
 		};
 		86FB686A14745981009EA788 /* MegaTyumenTests */ = {
@@ -1778,7 +1777,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				86FB684914745980009EA788 /* MegaTyumen */,
+				86FB684914745980009EA788 /* megatyumen */,
 				86FB686A14745981009EA788 /* MegaTyumenTests */,
 			);
 		};
@@ -1988,7 +1987,6 @@
 				863360CB14D8456900DB3802 /* Icon-Settings-29.png in Resources */,
 				863360CC14D8456900DB3802 /* Icon-Settings-29@2x.png in Resources */,
 				865EC17C14E8C66000349B2B /* InfoPlist.strings in Resources */,
-				865EC17E14E8C66D00349B2B /* InfoPlist.strings in Resources */,
 				864C27CD14FB842200F7D897 /* catalog_segment0.png in Resources */,
 				864C27CE14FB842200F7D897 /* catalog_segment0@2x.png in Resources */,
 				864C27CF14FB842200F7D897 /* catalog_segment1.png in Resources */,
@@ -2130,7 +2128,7 @@
 /* Begin PBXTargetDependency section */
 		86FB687114745981009EA788 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 86FB684914745980009EA788 /* MegaTyumen */;
+			target = 86FB684914745980009EA788 /* megatyumen */;
 			targetProxy = 86FB687014745981009EA788 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -2156,13 +2154,13 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		863BAE7E14F2502A00594C45 /* Distribution */ = {
+		863BAE7E14F2502A00594C45 /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stanislav Yazhenskikh (Q8995BS68E)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Creative LLC";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2171,13 +2169,13 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C75436CF-D1DD-464B-8CDC-A182E1D23C99";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0770625D-D305-4F0D-9A7D-AA23FD85F0DD";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Distribution;
+			name = AppStore;
 		};
-		863BAE7F14F2502A00594C45 /* Distribution */ = {
+		863BAE7F14F2502A00594C45 /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stanislav Yazhenskikh (Q8995BS68E)";
@@ -2197,9 +2195,9 @@
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
-			name = Distribution;
+			name = AppStore;
 		};
-		863BAE8014F2502A00594C45 /* Distribution */ = {
+		863BAE8014F2502A00594C45 /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MegaTyumen.app/MegaTyumen";
@@ -2214,7 +2212,7 @@
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
-			name = Distribution;
+			name = AppStore;
 		};
 		86FB687B14745981009EA788 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2302,6 +2300,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2EF9DE1C-6F39-4625-862C-1D00DBCEA6F5";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -2348,17 +2347,17 @@
 			buildConfigurations = (
 				86FB687B14745981009EA788 /* Debug */,
 				86FB687C14745981009EA788 /* Release */,
-				863BAE7E14F2502A00594C45 /* Distribution */,
+				863BAE7E14F2502A00594C45 /* AppStore */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		86FB687D14745981009EA788 /* Build configuration list for PBXNativeTarget "MegaTyumen" */ = {
+		86FB687D14745981009EA788 /* Build configuration list for PBXNativeTarget "megatyumen" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				86FB687E14745981009EA788 /* Debug */,
 				86FB687F14745981009EA788 /* Release */,
-				863BAE7F14F2502A00594C45 /* Distribution */,
+				863BAE7F14F2502A00594C45 /* AppStore */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2368,7 +2367,7 @@
 			buildConfigurations = (
 				86FB688114745981009EA788 /* Debug */,
 				86FB688214745981009EA788 /* Release */,
-				863BAE8014F2502A00594C45 /* Distribution */,
+				863BAE8014F2502A00594C45 /* AppStore */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

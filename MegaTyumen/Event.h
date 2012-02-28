@@ -25,13 +25,13 @@
 //@property (nonatomic, strong) NSString *user;
 
 
-//// Получение детальной информации о новости
-//- (void)getContent;
+// Получение детальной информации о новости
+- (void)getContent;
 //
-//// Загрузка фотографий новости
-//- (void)getImages;
+// Загрузка фотографий новости
+- (void)getImages;
 //
-//// Добавление комментария к новости
-//- (BOOL)addCommentWithName:(NSString *)name andText:(NSString *)text;
+// Добавление комментария к новости
+- (BOOL)addCommentWithName:(NSString *)name andText:(NSString *)text;
 
 @end

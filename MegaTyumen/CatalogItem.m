@@ -144,6 +144,9 @@
     if (gotPhotos) return;
     
     NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_photos", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
+
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), requestDict.description);
+    
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
@@ -153,6 +156,9 @@
     
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
     NSDictionary *dict = [jsonParser objectWithString:[request responseString]];
+    
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
+    
     BOOL response = [[dict objectForKey:@"response"] boolValue];
     if (response) {
         [self.photos removeAllObjects];
