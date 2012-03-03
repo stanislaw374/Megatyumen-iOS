@@ -14,7 +14,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "86FB684914745980009EA788"
-               BuildableName = "MegaTyumen.app"
+               BuildableName = "megatyumen.app"
                BlueprintName = "megatyumen"
                ReferencedContainer = "container:MegaTyumen.xcodeproj">
             </BuildableReference>
@@ -42,7 +42,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "86FB684914745980009EA788"
-            BuildableName = "MegaTyumen.app"
+            BuildableName = "megatyumen.app"
             BlueprintName = "megatyumen"
             ReferencedContainer = "container:MegaTyumen.xcodeproj">
          </BuildableReference>
@@ -61,7 +61,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "86FB684914745980009EA788"
-            BuildableName = "MegaTyumen.app"
+            BuildableName = "megatyumen.app"
             BlueprintName = "megatyumen"
             ReferencedContainer = "container:MegaTyumen.xcodeproj">
          </BuildableReference>
@@ -79,7 +79,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "86FB684914745980009EA788"
-            BuildableName = "MegaTyumen.app"
+            BuildableName = "megatyumen.app"
             BlueprintName = "megatyumen"
             ReferencedContainer = "container:MegaTyumen.xcodeproj">
          </BuildableReference>
