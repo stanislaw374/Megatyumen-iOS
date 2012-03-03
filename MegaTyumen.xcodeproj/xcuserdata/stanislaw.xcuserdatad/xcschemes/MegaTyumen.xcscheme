@@ -89,7 +89,8 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Ad-hoc"
-      revealArchiveInOrganizer = "YES">
+      buildConfiguration = "Ad Hoc"
+      customArchiveName = "megatyumen-AdHoc"
+      revealArchiveInOrganizer = "NO">
    </ArchiveAction>
 </Scheme>

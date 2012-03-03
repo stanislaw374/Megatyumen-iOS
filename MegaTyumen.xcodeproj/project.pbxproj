@@ -2214,6 +2214,67 @@
 			};
 			name = AppStore;
 		};
+		865BAC79150262630066776F /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Creative LLC";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "59FC1D64-3777-4A25-86B5-F1CA08805D0C";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Ad Hoc";
+		};
+		865BAC7A150262630066776F /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stanislav Yazhenskikh (Q8995BS68E)";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MegaTyumen/MegaTyumen-Prefix.pch";
+				INFOPLIST_FILE = "MegaTyumen/MegaTyumen-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/MegaTyumen/YandexMapKit\"",
+				);
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2EF9DE1C-6F39-4625-862C-1D00DBCEA6F5";
+				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = NO;
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Ad Hoc";
+		};
+		865BAC7B150262630066776F /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MegaTyumen.app/MegaTyumen";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MegaTyumen/MegaTyumen-Prefix.pch";
+				INFOPLIST_FILE = "MegaTyumenTests/MegaTyumenTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Ad Hoc";
+		};
 		86FB687B14745981009EA788 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2235,7 +2296,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C75436CF-D1DD-464B-8CDC-A182E1D23C99";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2EF9DE1C-6F39-4625-862C-1D00DBCEA6F5";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2255,7 +2316,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C75436CF-D1DD-464B-8CDC-A182E1D23C99";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2EF9DE1C-6F39-4625-862C-1D00DBCEA6F5";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2347,6 +2408,7 @@
 			buildConfigurations = (
 				86FB687B14745981009EA788 /* Debug */,
 				86FB687C14745981009EA788 /* Release */,
+				865BAC79150262630066776F /* Ad Hoc */,
 				863BAE7E14F2502A00594C45 /* AppStore */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -2357,6 +2419,7 @@
 			buildConfigurations = (
 				86FB687E14745981009EA788 /* Debug */,
 				86FB687F14745981009EA788 /* Release */,
+				865BAC7A150262630066776F /* Ad Hoc */,
 				863BAE7F14F2502A00594C45 /* AppStore */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -2367,6 +2430,7 @@
 			buildConfigurations = (
 				86FB688114745981009EA788 /* Debug */,
 				86FB688214745981009EA788 /* Release */,
+				865BAC7B150262630066776F /* Ad Hoc */,
 				863BAE8014F2502A00594C45 /* AppStore */,
 			);
 			defaultConfigurationIsVisible = 0;

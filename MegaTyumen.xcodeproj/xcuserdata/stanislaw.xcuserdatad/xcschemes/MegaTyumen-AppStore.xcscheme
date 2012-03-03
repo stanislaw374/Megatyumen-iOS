@@ -90,6 +90,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "AppStore"
-      revealArchiveInOrganizer = "YES">
+      customArchiveName = "megatyumen-AppStore"
+      revealArchiveInOrganizer = "NO">
    </ArchiveAction>
 </Scheme>
