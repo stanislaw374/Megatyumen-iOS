@@ -29,6 +29,7 @@
 //@synthesize error = _error;
 //@synthesize result = _RESULT;
 @synthesize offset = _offset;
+//@synthesize isEntirelyLoaded = _isEntirelyLoaded;
 
 - (NSMutableArray *)items {
     if (!_items) {
@@ -61,7 +62,7 @@
     [request setPostValue:query forKey:KEY_JSON_DATA];
     //request.delegate = self;
     //[request setDidFinishSelector:@selector(didGetItems:)];
-    request.timeOutSeconds = kREQUEST_TIMEOUT;
+    //request.timeOutSeconds = kREQUEST_TIMEOUT;
     [request startSynchronous];    
     
     self.isLoaded = YES;

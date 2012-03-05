@@ -13,17 +13,23 @@
 #import "Catalog.h"
 #import "SBJsonWriter.h"
 #import "SBJsonParser.h"
+#import "Items.h"
 
 @interface Feedbacks() 
 @property (nonatomic) int offset;
-@property (nonatomic) int loaded;
-//- (void)didGetItems:(ASIHTTPRequest *)request;
+//@property (nonatomic) int loadedCount;
+@property (nonatomic) int allCount;
+@property (nonatomic) BOOL isAllCountLoaded;
 @end
 
 @implementation Feedbacks
 @synthesize items = _items;
-@synthesize loaded = _loaded;
+//@synthesize loadedCount = _loadedCount;
 @synthesize offset = _offset;
+@synthesize isLoaded = _isLoaded;
+@synthesize allCount = _allCount;
+@synthesize isAllCountLoaded = _isAllCountLoaded;
+@synthesize isEntirelyLoaded = _isEntirelyLoaded;
 
 #pragma mark - Lazy Instantiation
 
@@ -34,35 +40,26 @@
     return _items;
 }
 
-//+ (int)readCount {
-//    static NSString *kFeedbacksReadCount = @"FeedbacksReadCount";
-//    
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    int read = 0;
-//    if ([defaults objectForKey:kFeedbacksReadCount]) {
-//        read = [defaults integerForKey:kFeedbacksReadCount];
-//    }
-//    
-//    return read;
-//}
-//
-//+ (int)count {
-//    return [Catalog feedbacksCount];
-//}
+- (int)allCount {
+    if (!self.isAllCountLoaded) {
+        _allCount = [[[Items getCount] objectForKey:KEY_COMMENTS_COUNT] intValue];
+        self.isAllCountLoaded = YES;
+    }
+    return _allCount;
+}
 
 - (void)getItems {
-    int limit = 100;
+    self.isLoaded = NO;
+    
+    int limit = 10;
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"companies_feedback", KEY_REQUEST, [NSNumber numberWithInt:self.offset], @"offset", [NSNumber numberWithInt:limit], @"limit", nil];
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
     
-    //self.offset += limit;
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:[jsonWriter stringWithObject:dict] forKey:KEY_JSON_DATA];
-    request.timeOutSeconds = kREQUEST_TIMEOUT;
-    //request.delegate = self;
-    //request.didFinishSelector = @selector(didGetItems:);
+    //request.timeOutSeconds = kREQUEST_TIMEOUT;
     [request startSynchronous];
     
     SBJsonParser *parser = [[SBJsonParser alloc] init];
@@ -88,39 +85,16 @@
             f.companyName = [comment objectForKey:@"company_name"];
             
             [self.items addObject:f];
+            
+            //self.loadedCount++;
         }
-        //[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
         self.offset += limit;
+        
+        self.isLoaded = YES;
+        if (self.items.count == self.allCount) {
+            self.isEntirelyLoaded = YES;
+        }
     }
 }
-
-//- (void)didGetItems:(ASIHTTPRequest *)request {
-//    SBJsonParser *parser = [[SBJsonParser alloc] init];
-//    NSDictionary *dict = [parser objectWithString:request.responseString];
-//    
-//    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
-//    
-//    BOOL result = [[dict objectForKey:@"response"] boolValue];
-//    
-//    if (result) {
-//        NSArray *comments = [dict objectForKey:@"comments"];
-//        
-//        for (NSDictionary *comment in comments) {
-//            Feedback *f = [[Feedback alloc] init];
-//            f.text = [comment objectForKey:@"text"];
-//            id attitudeObj = [comment objectForKey:@"attitude"];
-//            f.attitude = (!attitudeObj || [attitudeObj isKindOfClass:[NSNull class]]) ? 0 : [attitudeObj intValue];
-//            NSDateFormatter *df = [[NSDateFormatter alloc] init];
-//            [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-//            f.date = [df dateFromString:[comment objectForKey:@"date"]];
-//            id nameObj = [comment objectForKey:@"name"];
-//            f.name = (!nameObj || [nameObj isKindOfClass:[NSNull class]]) ? @"" : nameObj;
-//            
-//            [self.items addObject:f];
-//        }
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_FEEDBACK object:nil];
-//    }
-//    
-//}
 
 @end

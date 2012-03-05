@@ -220,7 +220,6 @@
         
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:cell animated:YES];
         UILabel *lbl = (UILabel *)[cell viewWithTag:1];
-        //CGSize winSize = [UIScreen mainScreen].bounds.size;
         hud.xOffset = -lbl.frame.size.width / 2;
         self.isLoading = YES;
         

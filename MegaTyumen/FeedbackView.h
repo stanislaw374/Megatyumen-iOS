@@ -10,11 +10,13 @@
 #import "MainMenu.h"
 #import "MBProgressHUD.h"
 
-@interface FeedbackView : UIViewController <UIAlertViewDelegate>
+@interface FeedbackView : UIViewController <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnAddFeedback;
-@property (unsafe_unretained, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (unsafe_unretained, nonatomic) IBOutlet UIButton *borderButton;
+//@property (unsafe_unretained, nonatomic) IBOutlet UIScrollView *scrollView;
+//@property (unsafe_unretained, nonatomic) IBOutlet UIButton *borderButton;
+@property (unsafe_unretained, nonatomic) IBOutlet UITableView *tableView;
+@property (unsafe_unretained, nonatomic) IBOutlet UIView *borderView;
 
 - (IBAction)onFeedbackButtonClick;
 
