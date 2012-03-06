@@ -13,9 +13,9 @@
 #import "CatalogCategory.h"
 #import "MainMenu.h"
 
-@interface CatalogItemView : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate>
+@interface CatalogItemView : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, CLLocationManagerDelegate>
 
-@property (nonatomic, unsafe_unretained) CatalogItem *currentItem;
+@property (nonatomic, strong) CatalogItem *currentItem;
 
 @property (unsafe_unretained, nonatomic) IBOutlet UIImageView *thumbnailImageView;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *nameLabel;

@@ -10,7 +10,7 @@
 #import "MainMenu.h"
 #import "Announce.h"
 
-@interface AnnounceView : UIViewController
+@interface AnnounceView : UIViewController <UIWebViewDelegate>
 
 @property (unsafe_unretained, nonatomic) IBOutlet UIView *view1;
 @property (unsafe_unretained, nonatomic) IBOutlet UIView *view2;

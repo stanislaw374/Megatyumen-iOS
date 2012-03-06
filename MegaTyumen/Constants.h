@@ -6,8 +6,8 @@
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
-#define kAPI_URL [NSURL URLWithString:@"http://itisntrandomhostname.megatyumen.ru/api"]
-//#define kAPI_URL [NSURL URLWithString:@"http://192.168.88.51/api"]
+//#define kAPI_URL [NSURL URLWithString:@"http://itisntrandomhostname.megatyumen.ru/api"]
+#define kAPI_URL [NSURL URLWithString:@"http://192.168.88.51/api"]
 
 #define kWEBSITE @"http://megatyumen.ru"
 #define kWEBSITE_URL [NSURL URLWithString:kWEBSITE]
@@ -22,3 +22,4 @@
 #define KEY_RESPONSE @"response"
 #define KEY_IS_AUTHORIZED @"isAuthorized"
 #define kREQUEST_TIMEOUT 30
+#define kDEFAULT_LOCATION [[CLLocation alloc] initWithLatitude:57.1196 longitude:65.5649]

@@ -76,6 +76,13 @@
 
 #pragma mark -
 
+- (id)initWithID:(int)ID {
+    if (self = [super init]) {
+        _ID = ID;
+    }
+    return self;
+}
+
 - (void)setDistance:(double)distance {
     _distance = distance;
     if (self.distance < 1000) {
@@ -87,20 +94,36 @@
 }
 
 - (void)getDetails {
+    [self getDetailsWithLocation:kDEFAULT_LOCATION];
+}
+
+- (void)getDetailsWithLocation:(CLLocation *)location {
     if (gotDetails) return;
     
-    NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_details", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
+    NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"company_details", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
+    
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), requestDict.description);
+    
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
-    //request.delegate = self;
-    //request.didFinishSelector = @selector(didGetDetails:);
     [request startSynchronous];
     
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
     NSDictionary *dict = [jsonParser objectWithString:[request responseString]];
+    
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
+    
     BOOL response = [[dict objectForKey:@"response"] boolValue];
     if (response) {
+        self.name = [dict objectForKey:@"name"];
+        self.logo = [NSURL URLWithString:[dict objectForKey:@"logo"] relativeToURL:kWEBSITE_URL];
+        self.address = [dict objectForKey:@"address"];
+        double lat = [[dict objectForKey:@"lat"] doubleValue];
+        double lng = [[dict objectForKey:@"lng"] doubleValue];
+        self.location = [[CLLocation alloc] initWithLatitude:lat longitude:lng];
+        self.distance = [location distanceFromLocation:self.location] / 1000;
+        
         self.description = [dict objectForKey:@"description"];
         NSArray *photos = [dict objectForKey:@"photos"];
         [self.photos removeAllObjects];
@@ -116,15 +139,19 @@
     if (gotCommon) return;
     
     NSDictionary *requestDict = [NSDictionary dictionaryWithObjectsAndKeys:@"catalog_details2", @"request", [NSNumber numberWithInt:self.ID], @"id", nil];
+    
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), requestDict.description);
+    
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:kAPI_URL];
     [request setPostValue:[jsonWriter stringWithObject:requestDict] forKey:@"jsonData"];
-    //request.delegate = self;
-    //request.didFinishSelector = @selector(didGetDetails:);
     [request startSynchronous];
     
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
     NSDictionary *dict = [jsonParser objectWithString:[request responseString]];
+    
+    NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);
+    
     BOOL response = [[dict objectForKey:@"response"] boolValue];
     if (response) {
         self.description = [dict objectForKey:@"description"];
@@ -272,7 +299,7 @@
         NSArray *feedbacks = [dict2 objectForKey:@"feedbacks"];
         for (NSDictionary *feedback in feedbacks) {
             Feedback *f = [[Feedback alloc] init];
-            f.text = [feedback objectForKey:@"text"];
+            f.text = [feedback objectForKey:@"text"];            
             f.attitude = [[feedback objectForKey:@"attitude"] intValue];
             NSDateFormatter *df = [[NSDateFormatter alloc] init];
             [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];

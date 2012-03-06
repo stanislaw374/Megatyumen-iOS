@@ -498,7 +498,8 @@
             break;
         case 1: headerText = [NSString stringWithFormat:@"В радиусе 100 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
         case 2: headerText = [NSString stringWithFormat:@"В радиусе 150 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
-        case 3: headerText = [NSString stringWithFormat:@"В радиусе более 300 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
+        case 3: headerText = [NSString stringWithFormat:@"В радиусе 300 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
+        case 4: headerText = [NSString stringWithFormat:@"В радиусе более 300 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
     }
     
     label.text = headerText;

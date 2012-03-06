@@ -11,9 +11,10 @@
 #import "MBProgressHUD.h"
 #import "Catalog.h"
 #import "CatalogItem.h"
+#import "Constants.h"
 
 @interface YMapView()
-@property (nonatomic, strong) NSMutableArray *catalogItems;
+@property (nonatomic, strong) NSMutableArray *annonations;
 @property (nonatomic, strong) CatalogItemView *catalogItemView;
 @property (nonatomic, strong) MBProgressHUD *hud;
 @property (nonatomic, strong) Catalog *catalog;
@@ -26,16 +27,16 @@
 @synthesize loadEntireCatalog = _loadEntireCatalog;
 @synthesize hud = _hud;
 @synthesize catalog = _catalog;
-@synthesize catalogItems = _catalogItems;
+@synthesize annonations = _annonations;
 @synthesize showDisclosureButton = _showDisclosureButton;
 @synthesize catalogItemView = _catalogItemView;
 @synthesize locationManager = _locationManager;
 
 - (NSMutableArray *)catalogItems {
-    if (!_catalogItems) {
-        _catalogItems = [[NSMutableArray alloc] init];
+    if (!_annonations) {
+        _annonations = [[NSMutableArray alloc] init];
     }
-    return _catalogItems;
+    return _annonations;
 }
 
 - (CatalogItemView *)catalogItemView {
@@ -65,16 +66,17 @@
 #pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    
-    self.locationManager.delegate = nil;
-    [self.locationManager stopUpdatingLocation];
+    [manager stopUpdatingLocation]; 
+    //[self.mapView setCenterCoordinate:newLocation.coordinate atZoomLevel:13 animated:YES];
     self.catalog.userLocation = newLocation;
     [self loadCatalog];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    self.locationManager.delegate = nil;
-    [self.locationManager stopUpdatingLocation];
+    [manager stopUpdatingLocation];
+    //[self.mapView setCenterCoordinate:kDEFAULT_LOCATION.coordinate atZoomLevel:13 animated:YES];
+    //self.locationManager.delegate = nil;
+    //[self.locationManager stopUpdatingLocation];
     [self loadCatalog];
 }
 
@@ -92,12 +94,12 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    //[self.locationManager stopUpdatingLocation];
     self.mapView.showsUserLocation = NO;
+    [self.mapView removeAnnotations:self.annonations];
 }
 
 - (void)viewDidUnload {    
-    self.catalogItems = nil;
+    self.annonations = nil;
     [super viewDidUnload];
 }
 
@@ -132,25 +134,27 @@
 #pragma mark - Helpers
 
 - (void)configureMapView {
-    if ([CLLocationManager locationServicesEnabled]) {
-        self.mapView.showsUserLocation = YES;
+    if ([CLLocationManager locationServicesEnabled] && [CLLocationManager authorizationStatus] != kCLAuthorizationStatusDenied) {
+        self.mapView.showsUserLocation = YES;   
+        //[self.locationManager startUpdatingLocation];
     }
-    
+    [self.mapView setCenterCoordinate:kDEFAULT_LOCATION.coordinate atZoomLevel:13 animated:YES];
     self.mapView.showTraffic = NO;
 }
 
-- (void)addAnnotationForCatalogItem:(CatalogItem *)catalogItem {
+- (void)addAnnotationForCatalogItem:(CatalogItem *)catalogItem center:(BOOL)center {
     PointAnnotation *pointAnnotation = [PointAnnotation pointAnnotation];
     pointAnnotation.title = catalogItem.name;
     pointAnnotation.subtitle = catalogItem.address;
-    pointAnnotation.coordinate = YMKMapCoordinateMake(catalogItem.location.coordinate.latitude, catalogItem.location.coordinate.longitude);
-    //pointAnnotation.coordinate = YMKMapCoordinateMake(57, 66);
+    pointAnnotation.coordinate = YMKMapCoordinateMake(catalogItem.location.coordinate.latitude, catalogItem.location.coordinate.longitude);    
     pointAnnotation.catalogItem = catalogItem;
     
-    [self.mapView setCenterCoordinate:catalogItem.location.coordinate atZoomLevel:13 animated:NO];
-    [self.mapView addAnnotation:pointAnnotation];
+    if (center) {
+        [self.mapView setCenterCoordinate:catalogItem.location.coordinate atZoomLevel:13 animated:NO];
+    }
     
-    [self.catalogItems addObject:pointAnnotation];
+    [self.mapView addAnnotation:pointAnnotation];
+    [self.annonations addObject:pointAnnotation];
     
     NSLog(@"Catalog item location: %@", catalogItem.location.description);
 }
@@ -158,13 +162,11 @@
 - (void)setLoadEntireCatalog:(BOOL)loadEntireCatalog {
     _loadEntireCatalog = loadEntireCatalog;
     
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    //NSLog(@"Location services enabled = %d", [CLLocationManager locationServicesEnabled]);
+    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];    
     
     if (self.loadEntireCatalog) {
         CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-        if ([CLLocationManager locationServicesEnabled] && (status == kCLAuthorizationStatusAuthorized || status == kCLAuthorizationStatusNotDetermined)) {
+        if ([CLLocationManager locationServicesEnabled] && status != kCLAuthorizationStatusDenied) {
             [self.locationManager startUpdatingLocation];
         }
         else {
@@ -181,7 +183,7 @@
         [self.catalog getCatalogByDistance];
         dispatch_async(dispatch_get_main_queue(), ^{           
             for (CatalogItem *item in self.catalog.items.allValues) {
-                [self addAnnotationForCatalogItem:item]; 
+                [self addAnnotationForCatalogItem:item center:NO]; 
             }
             [self.hud hide:YES];
         });

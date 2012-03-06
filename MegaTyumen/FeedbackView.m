@@ -17,6 +17,8 @@
 #import "UIImageView+WebCache.h"
 #import "Constants.h"
 #import "UIImage+Thumbnail.h"
+#import "CatalogItemView.h"
+#import "CatalogItem.h"
 
 @interface FeedbackView()
 //@property (nonatomic, strong) AuthorizationView *authorizationView;
@@ -28,6 +30,7 @@
 @property (nonatomic) int offset;
 @property (nonatomic) int height;
 @property (nonatomic) BOOL isLoading;
+@property (nonatomic, strong) CatalogItemView *companyView;
 //- (void)didPassAuthorization:(NSNotification *)notification;
 //- (void)didGetFeedback;
 //- (void)getFeedback;
@@ -48,6 +51,7 @@
 @synthesize offset = _offset;
 @synthesize height = _height;
 @synthesize isLoading = _isLoading;
+@synthesize companyView = _companyView;
 
 - (Feedbacks *)feedbacks {
     if (!_feedbacks) {
@@ -68,6 +72,13 @@
         _checkinView = [[CheckinCatalogView alloc] init];
     }
     return _checkinView;
+}
+
+- (CatalogItemView *)companyView {
+    if (!_companyView) {
+        _companyView = [[CatalogItemView alloc] init];
+    }
+    return _companyView;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -304,6 +315,7 @@
             MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:cell animated:YES];
             UILabel *lbl = (UILabel *)[cell viewWithTag:1];
             hud.xOffset = -lbl.frame.size.width / 2;
+            cell.selectionStyle = UITableViewCellSelectionStyleGray;
         }
         
         if (!self.isLoading) {
@@ -324,6 +336,7 @@
         if (!cell) {
             NSArray *nibs = [[NSBundle mainBundle] loadNibNamed:kFeedbackCell owner:nil options:nil];
             cell = [nibs objectAtIndex:0];
+            cell.selectionStyle = UITableViewCellSelectionStyleGray;
         }
         Feedback *f = [self.feedbacks.items objectAtIndex:indexPath.row];
         int height = 0;
@@ -382,5 +395,13 @@
 }
 
 #pragma mark - UITableViewDelegate
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    
+    Feedback *f = [self.feedbacks.items objectAtIndex:indexPath.row];
+    CatalogItem *company = [[CatalogItem alloc] initWithID:f.companyID];
+    self.companyView.currentItem = company;
+    [self.navigationController pushViewController:self.companyView animated:YES];    
+}
 
 @end

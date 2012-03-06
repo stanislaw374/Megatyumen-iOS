@@ -272,13 +272,32 @@
     //CGSize size = [self.txtTitle sizeThatFits:self.txtTitle.frame.size];
     [self.txtTitle sizeToFit];
     //self.borderButton.frame = CGRectMake(self.borderButton.frame.origin.x, self.borderButton.frame.origin.y, size.width, size.height);
+    NSString *text = self.announce.text;
     
-    NSString *text = [[@"<html><body style=\"background-color: black; font-size: 16; font-family: Helvetica; color: #FFFFFF\">" stringByAppendingString:self.announce.text] stringByAppendingString:@"</body></html>"];
+    text = [text stringByReplacingOccurrencesOfString:@"style" withString:@"lol"];
+    //NSLog(@"%@ : %@", NSStringFromSelector(_cmd), text);
+    
+//    text = [text stringByReplacingOccurrencesOfString:@"</span>" withString:@""];
+    
+    text = [[@"<html><body style=\"background-color: black; font-size: 16; font-family: Helvetica; color: #FFFFFF\">" stringByAppendingString:text] stringByAppendingString:@"</body></html>"];
     text = [text stringByReplacingOccurrencesOfString:@"Что:" withString:@"<span style=\"color:#FF9600\">Что:</span>"];
     text = [text stringByReplacingOccurrencesOfString:@"Где:" withString:@"<span style=\"color:#FF9600\">Где:</span>"];
     text = [text stringByReplacingOccurrencesOfString:@"Когда:" withString:@"<span style=\"color:#FF9600\">Когда:</span>"];
-    //self.textView.text = [self.announce.text stringByStrippingHTML];
     [self.textWebView loadHTMLString:text baseURL:nil];
+}
+
+#pragma mark - UIWebViewDelegate
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    NSLog(@"%@", NSStringFromSelector(_cmd));    
+    
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        [[UIApplication sharedApplication] openURL:[request URL]];
+        return NO;
+    }
+    else {
+        
+    }
+    return YES;
 }
 
 @end

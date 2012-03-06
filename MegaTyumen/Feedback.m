@@ -14,5 +14,6 @@
 @synthesize attitude = _attitude;
 @synthesize userName = _userName;
 @synthesize companyName = _companyName;
+@synthesize companyID = _companyID;
 
 @end

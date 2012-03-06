@@ -16,7 +16,6 @@
 @property (nonatomic) BOOL loadEntireCatalog;
 
 //- (void)loadCatalog;
-- (void)addAnnotationForCatalogItem:(CatalogItem *)catalogItem;
-
+- (void)addAnnotationForCatalogItem:(CatalogItem *)catalogItem center:(BOOL)center;
 
 @end

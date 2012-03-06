@@ -82,6 +82,7 @@
             f.date = [df dateFromString:[comment objectForKey:@"date"]];
             id nameObj = [comment objectForKey:@"user_name"];
             f.userName = (!nameObj || [nameObj isKindOfClass:[NSNull class]]) ? @"" : nameObj;
+            f.companyID = [[comment objectForKey:@"company_id"] intValue];
             f.companyName = [comment objectForKey:@"company_name"];
             
             [self.items addObject:f];

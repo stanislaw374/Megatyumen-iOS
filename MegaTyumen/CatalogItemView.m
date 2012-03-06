@@ -34,7 +34,11 @@
 @property (nonatomic) BOOL hasMenu;
 @property (nonatomic) BOOL hasFeedbacks;
 @property (strong, nonatomic) MBProgressHUD *hud;
+@property (strong, nonatomic) CLLocationManager *locationManager;
+//@property (nonatomic) BOOL isLoading;
 
+- (void)showInfo;
+- (void)setInfo;
 - (void)showCommon;
 - (void)showPhotos;
 //- (void)didGetPhotos:(NSNotification *)notification;
@@ -93,6 +97,53 @@
 @synthesize mainMenu = _mainMenu;
 @synthesize hasMenu = _hasMenu;
 @synthesize hasFeedbacks = _hasFeedbacks;
+@synthesize locationManager = _locationManager;
+
+#pragma mark - Lazy Instantiation
+- (CLLocationManager *)locationManager {
+    if (!_locationManager) {
+        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        _locationManager.distanceFilter = kCLDistanceFilterNone;
+        _locationManager.delegate = self;
+    }
+    return _locationManager;
+}
+
+- (MBProgressHUD *)hud {
+    if (!_hud) {
+        _hud = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:self.hud];
+    }
+    return _hud;
+}
+
+#pragma mark - CLLocationManagerDelegate
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    [self.locationManager stopUpdatingLocation];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [self.currentItem getDetailsWithLocation:newLocation]; 
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self setInfo];
+            //[self.hud hide:YES];            
+        });
+    });
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    [self.locationManager stopUpdatingLocation];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [self.currentItem getDetails]; 
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self setInfo];
+            //[self.hud hide:YES];            
+        });
+    });
+}
+
+#pragma mark -
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -157,16 +208,16 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    //[self.locationManager startUpdatingLocation];
-    
     self.nameLabel.text = @"";
     self.thumbnailImageView.image = nil;
     self.addressLabel.text = @"";
-    [self.distanceButton setTitle:@"" forState:UIControlStateNormal];
+    //[self.distanceButton setTitle:@"" forState:UIControlStateNormal];
+    self.distanceButton.hidden = YES;
     self.lblType.text = self.lblPhone.text = self.lblAddress.text = self.lblWebsite.text = self.lblBusinessHours.text = self.lblAbout.text = @"";
     
     [self hideUI];    
-    [self showCommon];
+    [self showInfo];
+    //[self showCommon];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -305,6 +356,9 @@
     
     UIButton *button = (UIButton *)sender;
     self.selectedMenuIndex = button.tag;
+    
+    //[self.hud show:YES];
+    
     switch (button.tag) {
         case 0: [self showCommon]; break;
         case 1: [self showPhotos]; break;
@@ -315,19 +369,47 @@
     }
 }
 
-- (void)showCommon {
-    self.btnCommon.selected = YES;
-    self.scrollView0.hidden = NO;
-    self.btnCheckin.hidden = NO;
-    self.title = @"Просмотр заведения";
+- (void)showInfo {
+    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.hud show:YES];
     
+    if ([CLLocationManager locationServicesEnabled] && [CLLocationManager authorizationStatus] != kCLAuthorizationStatusDenied) {
+        [self.locationManager startUpdatingLocation];
+    }
+    else {        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [self.currentItem getDetails]; 
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self setInfo];    
+                //[self showCommon];
+            });
+        });
+    }
+}
+
+- (void)setInfo {
     [self.thumbnailImageView setImageWithURL:self.currentItem.logo placeholderImage:kPLACEHOLDER_IMAGE andScaleTo:self.thumbnailImageView.frame.size]; 
     self.nameLabel.text = self.currentItem.name;
     self.addressLabel.text = self.currentItem.address;
     [self.distanceButton setTitle:self.currentItem.distanceString forState:UIControlStateNormal];
+    self.distanceButton.hidden = NO;
     [self.distanceButton sizeToFit]; 
     
+    [self.hud hide:YES];
+    
+    [self showCommon];
+}
+
+- (void)showCommon {
+    self.btnCommon.selected = YES;
+    self.scrollView0.hidden = NO;
+    self.btnCheckin.hidden = NO;
+    self.title = @"Просмотр заведения";    
+    
+    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //[self.hud show:YES];
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [self.currentItem getCommon];        
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -338,6 +420,10 @@
             self.lblBusinessHours.text = self.currentItem.weekdayHours;
             
             self.lblAbout.text = self.currentItem.description;
+            CGRect frame = self.lblAbout.frame;
+            frame.size.width = 280;
+            self.lblAbout.frame = frame;
+            NSLog(@"%@ : description width: %lf", NSStringFromSelector(_cmd), self.lblAbout.frame.size.width);
             [self.lblAbout sizeToFit];
             
             int height = self.lblAbout.frame.origin.y + self.lblAbout.frame.size.height;
@@ -353,7 +439,8 @@
 - (void)showPhotos {
     self.title = @"Фото заведения";
     
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.hud show:YES];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.currentItem getPhotos];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -391,6 +478,7 @@
             self.scrollView1.contentSize = CGSizeMake(320, self.photosView.frame.origin.y + self.photosView.frame.size.height + 20);
             self.borderButton1.frame = CGRectMake(10, -10, 300, self.scrollView1.contentSize.height);
             
+            //[MBProgressHUD hideHUDForView:self.view animated:YES];
             [self.hud hide:YES];
         });
     });    
@@ -407,7 +495,8 @@
 - (void)showMenu {
     self.title = @"Меню";
     
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.hud show:YES];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.currentItem getMenu];
@@ -416,6 +505,7 @@
             self.tableView.hidden = NO;
             self.btnCheckin.hidden = NO;
             [self.tableView reloadData];
+//            [MBProgressHUD hideHUDForView:self.view animated:YES];
             [self.hud hide:YES];
         });
     });    
@@ -424,7 +514,8 @@
 - (void)showFeedback {
     self.title = @"Отзывы";
     
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.hud show:YES];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.currentItem getFeedbacks];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -523,6 +614,7 @@
             self.scrollView2.contentSize = CGSizeMake(320, height + 10);
             self.borderButton2.frame = CGRectMake(10, -10, 300, self.scrollView2.contentSize.height);
             
+            //[MBProgressHUD hideHUDForView:self.view animated:YES];
             [self.hud hide:YES];
         });
     });    
@@ -531,8 +623,8 @@
 - (void)showEvents {
     self.title = @"События";
     
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
+    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.hud show:YES];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.currentItem getEvents];
         dispatch_async(dispatch_get_main_queue(), ^{            
@@ -540,6 +632,7 @@
             self.btnCheckin.hidden = NO;
             self.tableView.hidden = NO;
             [self.tableView reloadData];
+            //[MBProgressHUD hideHUDForView:self.view animated:YES];
             [self.hud hide:YES];
         });
     });
@@ -555,7 +648,7 @@
     }
     
     [self.navigationController pushViewController:self.catalogItemMapView animated:YES];
-    [self.catalogItemMapView addAnnotationForCatalogItem:self.currentItem];
+    [self.catalogItemMapView addAnnotationForCatalogItem:self.currentItem center:YES];
 }
 
 #pragma mark - UITableViewDataSource

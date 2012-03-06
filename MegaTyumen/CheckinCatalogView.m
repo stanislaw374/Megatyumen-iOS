@@ -200,7 +200,8 @@
 #pragma mark - CLLocationManagerDelegate
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    //NSLog(@"New location: %.4lf, %.4lf", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
+    NSLog(@"%@ : %.4lf, %.4lf", NSStringFromSelector(_cmd), newLocation.coordinate.latitude, newLocation.coordinate.longitude);
+    
     [self.locationManager stopUpdatingLocation];
     self.catalog.userLocation = newLocation;
     
@@ -248,8 +249,9 @@
             break;
         case 1: headerText = [NSString stringWithFormat:@"В радиусе 100 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
         case 2: headerText = [NSString stringWithFormat:@"В радиусе 150 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
-        case 3: headerText = [NSString stringWithFormat:@"В радиусе более 300 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
-        }
+        case 3: headerText = [NSString stringWithFormat:@"В радиусе 300 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
+        case 4: headerText = [NSString stringWithFormat:@"В радиусе более 300 метров (%d)", [[self.catalog.rows objectAtIndex:section] intValue]]; break;
+    }
     
     label.text = headerText;
     

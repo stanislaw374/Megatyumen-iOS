@@ -80,8 +80,8 @@
 }
 
 - (id)init {
-    CLLocation *location = [[CLLocation alloc] initWithLatitude:57 longitude:65];
-    return [self initWithUserLocation:location];
+    //CLLocation *location = [[CLLocation alloc] initWithLatitude:57 longitude:65];
+    return [self initWithUserLocation:kDEFAULT_LOCATION];
 }
 
 - (id)initWithUserLocation:(CLLocation *)location {
@@ -229,8 +229,8 @@
     BOOL result = [[dict objectForKey:@"response"] boolValue];
     
     if (result) {
-        self.allSections = 4;
-        const int rowsCnt = 4;
+        self.allSections = 5;
+        const int rowsCnt = 5;
         int rows[rowsCnt] = { };
         
         NSArray *catalog = [dict objectForKey:@"catalog"];
@@ -243,19 +243,21 @@
             NSString *image = [company objectForKey:@"image"];
             
             int section;
-            if (distance < 100) {
+            if (distance < 50) {
                 section = 0;
             }
-            else if (distance < 150) {
+            else if (distance < 100) {
                 section = 1;
             }
-            else if (distance < 300) {
+            else if (distance < 150) {
                 section = 2;
             }
-            else section = 3;
+            else if (distance < 300) {
+                section = 3;
+            }
+            else section = 4;
             
-            CatalogItem *c = [[CatalogItem alloc] init];
-            c.ID = ID;
+            CatalogItem *c = [[CatalogItem alloc] initWithID:ID];
             c.name = name;
             c.address = address;
             c.logo = [NSURL URLWithString:image relativeToURL:kWEBSITE_URL];
@@ -324,8 +326,8 @@
             }
             else section = 3;
             
-            CatalogItem *c = [[CatalogItem alloc] init];
-            c.ID = ID;
+            CatalogItem *c = [[CatalogItem alloc] initWithID:ID];
+            //c.ID = ID;
             c.name = name;
             c.address = address;
             c.logo = [NSURL URLWithString:image relativeToURL:kWEBSITE_URL];
@@ -872,8 +874,8 @@
         int row = 0;
         NSArray *catalog = [dict objectForKey:@"catalog"];
         for (NSDictionary *company in catalog) {
-            CatalogItem *c = [[CatalogItem alloc] init];
-            c.ID = [[company objectForKey:@"id"] intValue];
+            CatalogItem *c = [[CatalogItem alloc] initWithID:[[company objectForKey:@"id"] intValue]];
+            //c.ID = [[company objectForKey:@"id"] intValue];
             c.name = [company objectForKey:@"name"];
             c.address = [company objectForKey:@"address"];
             c.checkinCount = [[company objectForKey:@"comments_count"] intValue];
