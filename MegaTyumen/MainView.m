@@ -222,12 +222,15 @@
 }
 
 - (void)refreshFeedbacksBadge:(int)value {
-    CustomBadge *feedbackBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", value]];
-    CGRect frame = feedbackBadge.frame;
-    frame.origin.x = self.feedbackButton.frame.origin.x + self.feedbackButton.frame.size.width - frame.size.width / 2;
-    frame.origin.y = self.feedbackButton.frame.origin.y - feedbackBadge.frame.size.height / 2;
-    feedbackBadge.frame = frame;
-    [self.view addSubview:feedbackBadge];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    if (![appDelegate isFirstTimeLaunch]) {    
+        CustomBadge *feedbackBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", value]];
+        CGRect frame = feedbackBadge.frame;
+        frame.origin.x = self.feedbackButton.frame.origin.x + self.feedbackButton.frame.size.width - frame.size.width / 2;
+        frame.origin.y = self.feedbackButton.frame.origin.y - feedbackBadge.frame.size.height / 2;
+        feedbackBadge.frame = frame;
+        [self.view addSubview:feedbackBadge];
+    }
 }
 
 - (void)refreshAnnouncesBadge:(int)value {

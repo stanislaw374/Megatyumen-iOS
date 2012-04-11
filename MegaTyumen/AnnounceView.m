@@ -266,23 +266,28 @@
     [UIView commitAnimations];
 }
 
+
 - (void)initUI {    
-    [self.btnImage setImageWithURL:self.announce.image];
+    NSLog(@"announce image: %@", self.announce.image.description);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSData *data = [NSData dataWithContentsOfURL:self.announce.image];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIImage *image = [UIImage imageWithData:data];
+            [self.btnImage setBackgroundImage:image forState:UIControlStateNormal];
+        });
+    });
+
     self.txtTitle.text = self.announce.title;
     //CGSize size = [self.txtTitle sizeThatFits:self.txtTitle.frame.size];
     [self.txtTitle sizeToFit];
     //self.borderButton.frame = CGRectMake(self.borderButton.frame.origin.x, self.borderButton.frame.origin.y, size.width, size.height);
     NSString *text = self.announce.text;
     
-    text = [text stringByReplacingOccurrencesOfString:@"style" withString:@"lol"];
-    //NSLog(@"%@ : %@", NSStringFromSelector(_cmd), text);
-    
-//    text = [text stringByReplacingOccurrencesOfString:@"</span>" withString:@""];
-    
+    text = [text stringByStrippingHTML];
     text = [[@"<html><body style=\"background-color: black; font-size: 16; font-family: Helvetica; color: #FFFFFF\">" stringByAppendingString:text] stringByAppendingString:@"</body></html>"];
-    text = [text stringByReplacingOccurrencesOfString:@"Что:" withString:@"<span style=\"color:#FF9600\">Что:</span>"];
-    text = [text stringByReplacingOccurrencesOfString:@"Где:" withString:@"<span style=\"color:#FF9600\">Где:</span>"];
-    text = [text stringByReplacingOccurrencesOfString:@"Когда:" withString:@"<span style=\"color:#FF9600\">Когда:</span>"];
+    text = [text stringByReplacingOccurrencesOfString:@"Что:" withString:@"<span style=\"color:#FF9600;font-weight:bold\">Что:</span>"];
+    text = [text stringByReplacingOccurrencesOfString:@"Где:" withString:@"<br/><span style=\"color:#FF9600;font-weight:bold\">Где:</span>"];
+    text = [text stringByReplacingOccurrencesOfString:@"Когда:" withString:@"<br/><span style=\"color:#FF9600;font-weight:bold\">Когда:</span>"];
     [self.textWebView loadHTMLString:text baseURL:nil];
 }
 

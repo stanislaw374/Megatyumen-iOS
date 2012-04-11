@@ -61,6 +61,12 @@
 @property (unsafe_unretained, nonatomic) Catalog *catalog;
 
 //- (void)didPassAuthorization:(NSNotification *)notification;
+@property (unsafe_unretained, nonatomic) IBOutlet UIView *fieldType;
+@property (unsafe_unretained, nonatomic) IBOutlet UIView *fieldPhone;
+@property (unsafe_unretained, nonatomic) IBOutlet UIView *fieldAddress;
+@property (unsafe_unretained, nonatomic) IBOutlet UIView *fieldSite;
+@property (unsafe_unretained, nonatomic) IBOutlet UIView *fieldHours;
+@property (unsafe_unretained, nonatomic) IBOutlet UILabel *lblAboutTitle;
 
 - (IBAction)onMenuButtonClick:(id)sender;
 - (IBAction)onPhotoButtonClick:(id)sender;

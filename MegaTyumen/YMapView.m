@@ -117,6 +117,7 @@
             UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
             view.rightCalloutAccessoryView = rightButton;            
         }
+        view.image = [UIImage imageNamed:@"map_pin.png"];
     }
     
     return view;
@@ -188,7 +189,6 @@
             [self.hud hide:YES];
         });
     });
-    //dispatch_release(queue);
 }
 
 @end

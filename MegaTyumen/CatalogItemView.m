@@ -53,6 +53,12 @@
 @end
 
 @implementation CatalogItemView
+@synthesize fieldType;
+@synthesize fieldPhone;
+@synthesize fieldAddress;
+@synthesize fieldSite;
+@synthesize fieldHours;
+@synthesize lblAboutTitle;
 @synthesize thumbnailImageView;
 @synthesize nameLabel;
 @synthesize addressLabel;
@@ -256,6 +262,12 @@
     [self setScrollView2:nil];
     [self setBorderButton2:nil];
     [self setEventCell:nil];
+    [self setFieldPhone:nil];
+    [self setFieldAddress:nil];
+    [self setFieldSite:nil];
+    [self setFieldHours:nil];
+    [self setLblAboutTitle:nil];
+    [self setFieldType:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -406,24 +418,71 @@
     self.btnCheckin.hidden = NO;
     self.title = @"Просмотр заведения";    
     
-    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    //[self.hud show:YES];
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [self.currentItem getCommon];        
         dispatch_async(dispatch_get_main_queue(), ^{
+            UIView *fieldVisible = self.fieldType;            
             self.lblType.text = self.currentItem.type;
             self.lblPhone.text = self.currentItem.phone;
+            if (self.currentItem.phone.length == 0) {
+                self.fieldPhone.hidden = YES;
+            }
+            else {
+                self.fieldPhone.hidden = NO;
+                fieldVisible = self.fieldPhone;
+            }
             self.lblAddress.text = self.currentItem.address;
+            if (self.currentItem.address.length == 0) {
+                self.fieldAddress.hidden = YES;
+            }
+            else {
+                self.fieldAddress.hidden = NO;
+                CGRect frame = self.fieldAddress.frame;
+                frame.origin.y = fieldVisible.frame.origin.y + fieldVisible.frame.size.height;
+                self.fieldAddress.frame = frame;
+                fieldVisible = self.fieldAddress;
+            }
             self.lblWebsite.text = self.currentItem.website;
+            if (self.currentItem.website.length == 0) {
+                self.fieldSite.hidden = YES;
+            }
+            else {
+                self.fieldSite.hidden = NO;
+                CGRect frame = self.fieldSite.frame;
+                frame.origin.y = fieldVisible.frame.origin.y + fieldVisible.frame.size.height;
+                self.fieldSite.frame = frame;
+                fieldVisible = self.fieldSite;
+            }
             self.lblBusinessHours.text = self.currentItem.weekdayHours;
+            if (self.currentItem.weekdayHours.length == 0) {
+                self.fieldHours.hidden = YES;
+            }   
+            else {
+                self.fieldHours.hidden = NO;
+                CGRect frame = self.fieldHours.frame;
+                frame.origin.y = fieldVisible.frame.origin.y + fieldVisible.frame.size.height;
+                self.fieldHours.frame = frame;
+                fieldVisible = self.fieldHours;
+            }
+            
+            int sy = 8;
+//            CGPoint descriptionOrigin = CGPointMake(20, self.fieldType.frame.origin.y + self.fieldType.frame.size.height + sy);
+//            if (!self.fieldPhone.hidden) { descriptionOrigin.y += self.fieldPhone.frame.size.height; }
+//            if (!self.fieldAddress.hidden) { descriptionOrigin.y += self.fieldAddress.frame.size.height; }
+//            if (!self.fieldSite.hidden) { descriptionOrigin.y += self.fieldSite.frame.size.height; }
+//            if (!self.fieldHours.hidden) { descriptionOrigin.y += self.fieldHours.frame.size.height; }
+            CGRect frame = self.lblAboutTitle.frame;
+            frame.origin.y = fieldVisible.frame.origin.y + fieldVisible.frame.size.height + sy;
+            self.lblAboutTitle.frame = frame;
             
             self.lblAbout.text = self.currentItem.description;
-            CGRect frame = self.lblAbout.frame;
+            frame = self.lblAbout.frame;
+            frame.origin.y = self.lblAboutTitle.frame.origin.y + self.lblAboutTitle.frame.size.height + sy;
             frame.size.width = 280;
             self.lblAbout.frame = frame;
-            NSLog(@"%@ : description width: %lf", NSStringFromSelector(_cmd), self.lblAbout.frame.size.width);
+            //NSLog(@"%@ : description width: %lf", NSStringFromSelector(_cmd), self.lblAbout.frame.size.width);
             [self.lblAbout sizeToFit];
             
             int height = self.lblAbout.frame.origin.y + self.lblAbout.frame.size.height;

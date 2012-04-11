@@ -19,6 +19,8 @@
 #import "UIImage+Thumbnail.h"
 #import "New.h"
 #import "NewDetailView.h"
+#import "CatalogItem.h"
+#import "CatalogItemView.h"
 
 @interface EventsView()
 @property (nonatomic, strong) CheckinCatalogView *checkinView;
@@ -151,8 +153,12 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     Event *event = [self.events.items objectAtIndex:indexPath.row];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:event.companyName message:event.title delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
-    [alert show];
+    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:event.companyName message:event.title delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    //[alert show];
+    CatalogItem *catalogItem = [[CatalogItem alloc] initWithID:event.companyID];
+    CatalogItemView *catalogItemView = [[CatalogItemView alloc] init];
+    catalogItemView.currentItem = catalogItem;
+    [self.navigationController pushViewController:catalogItemView animated:YES];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

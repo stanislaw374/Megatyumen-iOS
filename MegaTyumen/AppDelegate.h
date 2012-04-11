@@ -11,7 +11,7 @@
 #import "Reachability.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
-
+- (BOOL)isFirstTimeLaunch;
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) Facebook *facebook;
 @property (strong, nonatomic) Reachability *reachability;

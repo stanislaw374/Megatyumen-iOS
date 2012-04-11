@@ -457,10 +457,6 @@
     [delegate.facebook dialog:@"feed" andParams:params andDelegate:self];
 }
 
-- (void)dialogDidComplete:(FBDialog *)dialog {
-    //NSLog(@"Разместил на стене facebook успешно");
-}
-
 #pragma mark VK Button
 
 -(void)onVKButtonClick {

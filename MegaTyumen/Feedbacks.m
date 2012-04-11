@@ -51,7 +51,7 @@
 - (void)getItems {
     self.isLoaded = NO;
     
-    int limit = 10;
+    int limit = 20;
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"companies_feedback", KEY_REQUEST, [NSNumber numberWithInt:self.offset], @"offset", [NSNumber numberWithInt:limit], @"limit", nil];
     
     NSLog(@"%@ : %@", NSStringFromSelector(_cmd), dict.description);

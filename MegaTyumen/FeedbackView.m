@@ -118,6 +118,13 @@
     self.borderView.layer.borderWidth = 1;
     self.borderView.layer.borderColor = [[UIColor colorWithRed:228/255.0 green:212/255.0 blue:196/255.0 alpha:1] CGColor];
     self.borderView.layer.cornerRadius = 10;
+    
+    NSUserDefaults *userDefauls = [NSUserDefaults standardUserDefaults];
+    [userDefauls setObject:[NSDate date] forKey:@"LastLaunchDate"];
+    
+    NSLog(@"Set last launch date");
+    
+    [userDefauls synchronize];
 }
 
 //- (void)viewDidAppear:(BOOL)animated {

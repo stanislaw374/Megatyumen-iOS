@@ -68,7 +68,7 @@
             Announce *a = [[Announce alloc] init];
             a.title = [announce objectForKey:@"title"];
             a.text = [announce objectForKey:@"text"];
-            a.image = [NSURL URLWithString:[dict2 objectForKey:@"image"] relativeToURL:kWEBSITE_URL];
+            a.image = [NSURL URLWithString: [kWEBSITE stringByAppendingPathComponent:[announce objectForKey:@"image"]]];
             
             [self.items addObject:a];
         }
