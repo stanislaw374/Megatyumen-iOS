@@ -15,6 +15,7 @@
     NSString *s = [self copy]; 
     while ((r = [s rangeOfString:@"<[^a>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
         s = [s stringByReplacingCharactersInRange:r withString:@""];
+    s = [s stringByReplacingOccurrencesOfString:@"style" withString:@"dsfsdf"];
     return s; 
 }
 

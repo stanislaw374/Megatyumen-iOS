@@ -284,6 +284,9 @@
     NSString *text = self.announce.text;
     
     text = [text stringByStrippingHTML];
+    
+    NSLog(@"extracted html: %@", text);
+    
     text = [[@"<html><body style=\"background-color: black; font-size: 16; font-family: Helvetica; color: #FFFFFF\">" stringByAppendingString:text] stringByAppendingString:@"</body></html>"];
     text = [text stringByReplacingOccurrencesOfString:@"Что:" withString:@"<span style=\"color:#FF9600;font-weight:bold\">Что:</span>"];
     text = [text stringByReplacingOccurrencesOfString:@"Где:" withString:@"<br/><span style=\"color:#FF9600;font-weight:bold\">Где:</span>"];

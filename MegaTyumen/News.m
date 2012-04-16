@@ -187,7 +187,7 @@
             New *new = [[New alloc] init];
             new.ID = [[title objectForKey:@"id"] intValue];
             new.title = [title objectForKey:@"title"];
-            new.image = [NSURL URLWithString:[title objectForKey:@"image"] relativeToURL:kWEBSITE_URL];
+            new.image = [NSURL URLWithString: [kWEBSITE stringByAppendingPathComponent:[title objectForKey:@"image"]]];
 
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:offsets[section] + i++ inSection:section];
             [self.items setObject:new forKey:indexPath];
