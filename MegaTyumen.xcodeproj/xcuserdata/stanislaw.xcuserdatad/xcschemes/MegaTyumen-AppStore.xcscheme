@@ -54,6 +54,7 @@
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
+      ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       enablesOpenGLESFrameCapture = "YES"
       allowLocationSimulation = "YES">
@@ -91,6 +92,6 @@
    <ArchiveAction
       buildConfiguration = "AppStore"
       customArchiveName = "megatyumen-AppStore"
-      revealArchiveInOrganizer = "NO">
+      revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
