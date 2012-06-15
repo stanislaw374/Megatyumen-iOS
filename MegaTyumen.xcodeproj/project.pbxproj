@@ -1960,7 +1960,7 @@
 		863BAE7F14F2502A00594C45 /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stanislav Yazhenskikh (Q8995BS68E)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Кирилл Кунст (7J3RNQ6456)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Code/Supporting files/MegaTyumen-Prefix.pch";
@@ -1972,7 +1972,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2EF9DE1C-6F39-4625-862C-1D00DBCEA6F5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "95215C43-1FCE-423E-A24E-B271F8BDA150";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -2021,7 +2021,7 @@
 		865BAC7A150262630066776F /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stanislav Yazhenskikh (Q8995BS68E)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Кирилл Кунст (7J3RNQ6456)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Code/Supporting files/MegaTyumen-Prefix.pch";
@@ -2033,7 +2033,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2EF9DE1C-6F39-4625-862C-1D00DBCEA6F5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "95215C43-1FCE-423E-A24E-B271F8BDA150";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = NO;
@@ -2110,7 +2110,7 @@
 		86FB687E14745981009EA788 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stanislav Yazhenskikh (Q8995BS68E)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Кирилл Кунст (7J3RNQ6456)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Code/Supporting files/MegaTyumen-Prefix.pch";
@@ -2122,7 +2122,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2EF9DE1C-6F39-4625-862C-1D00DBCEA6F5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "95215C43-1FCE-423E-A24E-B271F8BDA150";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2131,7 +2131,7 @@
 		86FB687F14745981009EA788 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stanislav Yazhenskikh (Q8995BS68E)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Кирилл Кунст (7J3RNQ6456)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Code/Supporting files/MegaTyumen-Prefix.pch";
@@ -2143,7 +2143,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2EF9DE1C-6F39-4625-862C-1D00DBCEA6F5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "95215C43-1FCE-423E-A24E-B271F8BDA150";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = NO;

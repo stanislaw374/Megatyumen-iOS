@@ -204,6 +204,9 @@
     if ([category isEqualToString:@"type"]) {
         [Catalog getCatalogByTypeID:[self.type objectForKey:@"id"] nearCoordinate:self.locationManager.location.coordinate withDelegate:self];
     }
+    if ([category isEqualToString:@"cuisine"]) {
+        [Catalog getCatalogByCuisineID:[self.type objectForKey:@"id"] nearCoordinate:self.locationManager.location.coordinate withDelegate:self];
+    } 
 }
 
 #pragma mark - UITableViewDataSource
@@ -234,12 +237,12 @@
     }
     view2.text = company.name;
     view3.text = company.address;
-    if (company.distance < 1000) {
-        [view4 setTitle:[NSString stringWithFormat:@"%.0lf м", company.distance] forState:UIControlStateNormal];
-    }
-    else {
-        [view4 setTitle:[NSString stringWithFormat:@"%.1lf км", company.distance / 1000] forState:UIControlStateNormal];
-    }
+//    if (company.distance < 1000) {
+//        [view4 setTitle:[NSString stringWithFormat:@"%.0lf м", company.distance] forState:UIControlStateNormal];
+//    }
+//    else {
+//        [view4 setTitle:[NSString stringWithFormat:@"%.1lf км", company.distance / 1000] forState:UIControlStateNormal];
+//    }
     [view4 sizeToFit];
     view5.text = [NSString stringWithFormat:@"%d", company.checkinCount];
     view6.text = [NSString stringWithFormat:@"%d", company.feedbacksCount];

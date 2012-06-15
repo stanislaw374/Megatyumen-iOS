@@ -6,7 +6,7 @@
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
-#define kAPI_URL [NSURL URLWithString:@"http://megatyumen.ru/api"]
+#define kAPI_URL [NSURL URLWithString:@"http://kunst.dev.megatyumen.ru/api"]
 //#define kAPI_URL [NSURL URLWithString:@"http://192.168.88.51/api"]
 
 #define kWEBSITE @"http://megatyumen.ru"

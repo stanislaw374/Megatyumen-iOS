@@ -43,7 +43,7 @@
         c.coordinate = CLLocationCoordinate2DMake(lat, lng);
         c.description = [company objectForKey:@"description"];
         c.feedbacksCount = [[company objectForKey:@"feedbacks_count"] intValue];
-        c.distance = [[company objectForKey:@"distance"] doubleValue] * 1000;
+        //c.distance = [[company objectForKey:@"distance"] doubleValue] * 1000;
         
         [result addObject:c];
     }
@@ -122,7 +122,7 @@
 + (void)getCatalogByCuisineID:(NSString *)ID nearCoordinate:(CLLocationCoordinate2D)coordinate withDelegate:(id<CatalogDelegate>)delegate {
     NSString *params = [[NSString stringWithFormat:@"?request=catalog_by_cuisine&lat=%lf&lng=%lf&id=%@", coordinate.latitude, coordinate.longitude, ID] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL *url = [NSURL URLWithString:params relativeToURL:kAPI_URL];    
-    
+        NSLog([url description]);
     __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setCompletionBlock:^{
         NSDictionary *rd = [request.responseString JSONValue];
