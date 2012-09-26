@@ -14,10 +14,12 @@
 static User *_user;
 
 @implementation User
+@synthesize lastVisit = _lastVisit;
 @synthesize email = _email;
 @synthesize password = _password;
 @synthesize name = _name;
 @synthesize token = _token;
+@synthesize isSave = _isSave;
 @synthesize delegate = _delegate;
 
 + (User *)sharedUser {
@@ -29,31 +31,42 @@ static User *_user;
 }
 
 - (void)login {
-    NSString *params = [[NSString stringWithFormat:@"?request=login&email=%@&password=%@", self.email, self.password] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSURL *url = [NSURL URLWithString:params relativeToURL:kAPI_URL];
     
-    __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-
-    [request setCompletionBlock:^{
-        //NSLog(@"%@, %@", NSStringFromSelector(_cmd), request.responseString);
-        NSDictionary *responseDict = [request.responseString JSONValue];
-        BOOL response = [[responseDict objectForKey:@"response"] boolValue];
-        if (response) {
-            self.token = [responseDict objectForKey:@"token"];
-            [self saveUser];
-            [self.delegate userDidLoginWithMesssage:[responseDict objectForKey:@"message"]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_USER_DID_LOGIN object:nil];
-        }
-        else {
-            [self.delegate userLoginDidFailWithError:[responseDict objectForKey:@"error"]];
-        }
-    }];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *token =[userDefaults objectForKey:@"userToken"];
+    if (token != nil && token != @"")
+    {
+        [self.delegate userDidLoginWithMesssage:@"Message"];
+    }
+    else {
+        NSString *params = [[NSString stringWithFormat:@"?request=login&email=%@&password=%@", self.email, self.password] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSURL *url = [NSURL URLWithString:params relativeToURL:kAPI_URL];
+        
+        __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+        
+        [request setCompletionBlock:^{
+            //NSLog(@"%@, %@", NSStringFromSelector(_cmd), request.responseString);
+            NSDictionary *responseDict = [request.responseString JSONValue];
+            BOOL response = [[responseDict objectForKey:@"response"] boolValue];
+            if (response) {
+                self.token = [responseDict objectForKey:@"token"];
+                self.lastVisit = [NSDate date];
+                [self saveUser];
+                [self.delegate userDidLoginWithMesssage:[responseDict objectForKey:@"message"]];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_USER_DID_LOGIN object:nil];
+            }
+            else {
+                [self.delegate userLoginDidFailWithError:[responseDict objectForKey:@"error"]];
+            }
+        }];
+        
+        [request setFailedBlock:^{
+            [self.delegate userLoginDidFailWithError:request.error.localizedDescription];                                                
+        }];
+        
+        [request startAsynchronous]; 
+    }
     
-    [request setFailedBlock:^{
-        [self.delegate userLoginDidFailWithError:request.error.localizedDescription];                                                
-    }];
-    
-    [request startAsynchronous];
 }
 
 - (void)signUp {    
@@ -133,16 +146,45 @@ static User *_user;
 
 - (void)saveUser {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:self.email forKey:@"userEmail"];
-    [userDefaults setObject:self.password forKey:@"userPassword"];
-    //[userDefaults setObject:self.token forKey:@"userToken"];
+    if (self.isSave == YES) {
+        [userDefaults setObject:self.email forKey:@"userEmail"];
+        [userDefaults setObject:self.password forKey:@"userPassword"];
+        [userDefaults setObject:@"yes" forKey:@"userIsSave"];
+    } else{
+        [userDefaults setObject:@"no" forKey:@"userIsSave"];
+    }
+    
+    [userDefaults setObject:self.token forKey:@"userToken"];
+    [userDefaults setObject:[NSDate date] forKey:@"lastVisit"];
 }
 
 - (void)loadUser {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     self.email = [userDefaults objectForKey:@"userEmail"];
     self.password = [userDefaults objectForKey:@"userPassword"];
-    //self.token = [userDefaults objectForKey:@"token"];
+    self.token = [userDefaults objectForKey:@"userToken"];
+    self.lastVisit = [userDefaults objectForKey:@"lastVisit"];
+    NSString *isSave = [userDefaults objectForKey:@"userSave"];
+    if ([isSave isEqualToString:@"yes"])
+        self.isSave = YES;
+    else {
+        self.isSave = NO;
+    }
+}
+
+-(void)clear{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    [userDefaults removeObjectForKey:@"userToken"];
+    [User sharedUser].token = nil;
+    if ([User sharedUser].isSave == NO) {
+        [userDefaults removeObjectForKey:@"userEmail"];
+        [userDefaults removeObjectForKey:@"userPassword"];
+        [userDefaults removeObjectForKey:@"userSave"];
+        [userDefaults removeObjectForKey:@"lastVisit"];
+        [User sharedUser].email = nil;
+        [User sharedUser].password = nil;
+    }
 }
 
 @end

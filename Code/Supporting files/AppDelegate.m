@@ -47,7 +47,11 @@
         DemoScreenView *demoScreenView = [[DemoScreenView alloc] init];
         self.viewController = demoScreenView;
     }
-    else self.viewController = [[MainView alloc] init];
+    else 
+    {
+        self.viewController = [[MainView alloc] init];
+    }
+        
     
     self.navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     

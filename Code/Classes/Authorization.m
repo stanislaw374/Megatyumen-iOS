@@ -28,10 +28,6 @@
 static Authorization *authorization;
 
 @interface Authorization()
-//- (void)didAuthorize:(ASIHTTPRequest *)request;
-//- (void)didRegister:(ASIHTTPRequest *)request;
-//- (void)didGetUserAgreement:(ASIHTTPRequest *)request;
-//- (void)didRestorePassword:(ASIHTTPRequest *)request;
 @end
 
 @implementation Authorization
@@ -47,7 +43,6 @@ static Authorization *authorization;
 
 - (NSDictionary *)authorizeWithLogin:(NSString *)login andPassword:(NSString *)password {
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:VALUE_AUTHORIZATION, KEY_REQUEST, login, KEY_EMAIL, password, KEY_PASSWORD, nil];
-    
     NSLog(@"Авторизация: %@", dict.description);   
     
     SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
@@ -65,7 +60,9 @@ static Authorization *authorization;
     BOOL result = [[dict2 objectForKey:KEY_RESPONSE] boolValue];
     if (result) {
         _isAuthorized = YES;
-        _token = [dict2 objectForKey:KEY_TOKEN];
+        _token = [dict2 objectForKey:@"UserToken"];
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        [userDefaults setObject:_token forKey:KEY_TOKEN];
         [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
         return [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:result], KEY_RESPONSE, nil];
     }
@@ -75,23 +72,7 @@ static Authorization *authorization;
     }
 }
 
-//- (void)didAuthorize:(ASIHTTPRequest *)request {
-//    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-//    NSDictionary *dict = [jsonParser objectWithString:[request responseString]];
-//    
-//    NSLog(@"Авторизация(ответ): %@", dict.description); 
-//    
-//    _result = [[dict objectForKey:KEY_RESPONSE] boolValue];
-//    if (_result) {
-//        _isAuthorized = YES;
-//        _token = [dict objectForKey:KEY_TOKEN];
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-//    }
-//    else {
-//        _error = @"Неверное имя пользователя или пароль";
-//    }
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_AUTHORIZE object:self];
-//}
+
 
 - (NSDictionary *)registerWithLogin:(NSString *)login Password:(NSString *)password andName:(NSString *)name {
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:VALUE_REGISTRATION, KEY_REQUEST, login, KEY_EMAIL, password, KEY_PASSWORD, name, KEY_NAME, nil];
@@ -120,24 +101,6 @@ static Authorization *authorization;
     return dict2;
 }
 
-//- (void)didRegister:(ASIHTTPRequest *)request {
-//    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-//    NSDictionary *dict = [jsonParser objectWithString:[request responseString]];
-//    
-//    NSLog(@"Регистрация (ответ): %@", dict.description);
-//    
-////    _result = [[dict objectForKey:KEY_RESPONSE] boolValue];
-////    if (!_result) {
-////        _error = [dict objectForKey:KEY_ERROR];
-////    }
-////    else {
-////        _isAuthorized = YES;
-////        _token = [dict objectForKey:KEY_TOKEN];
-//////        [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_PASS_AUTHORIZATION object:self];
-////    }
-////    [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_REGISTER object:self];
-////    [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_AUTHORIZE object:self];
-//}
 
 - (NSString *)getUserAgreement {
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:VALUE_USER_AGGREEMENT, KEY_REQUEST, nil];
@@ -153,16 +116,7 @@ static Authorization *authorization;
     return [dict2 objectForKey:KEY_RESPONSE];
 }
 
-//- (void)didGetUserAgreement:(ASIHTTPRequest *)request {
-//    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-//    NSDictionary *dict = [jsonParser objectWithString:[request responseString]];
-//    
-//    NSLog(@"Текст пользовательского соглашения: %@", dict.description);
-//    
-//    _result = YES;
-//    _userAgreement = [dict objectForKey:KEY_RESPONSE];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_GET_USER_AGREEMENT object:self];
-//}
+
 
 - (NSDictionary *)restorePasswordWithEmail:(NSString *)email {
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:VALUE_RESTORE_PASSWORD, KEY_REQUEST, email, KEY_EMAIL, nil];
@@ -184,155 +138,5 @@ static Authorization *authorization;
     return dict2;
 }
 
-//- (void)didRestorePassword:(ASIHTTPRequest *)request {
-//    SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
-//    NSDictionary *dict = [jsonParser objectWithString:[request responseString]];
-//    
-//    NSLog(@"Восстановление пароля (ответ): %@", dict.description);
-//          
-////    _result = [[dict objectForKey:KEY_RESPONSE] boolValue];
-////    if (!_result) {
-////        _error = [dict objectForKey:KEY_ERROR];
-////    }
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_DID_RESTORE_PASSWORD object:self];
-//}
-
-//- (void)addDelegate:(id<AuthorizationDelegate>)delegate {
-//    [self.delegates addObject:delegate];
-//}
-//
-//- (void)removeDelegate:(id<AuthorizationDelegate>)delegate {
-//    [self.delegates removeObject:delegate];
-//}
-
-//--------СТАРОЕ---------------------------------------------------------------------
-
-// Отправка асинхронного запроса
-//+(void)sendRequest:(NSDictionary *)requestDictionary withDelegate:(id<NSURLConnectionDataDelegate>)delegate {
-//    NSData *json = [jsonWriter dataWithObject:requestDictionary];
-//    
-//    NSMutableData *requestData = [NSMutableData dataWithData:[@"jsonData=" dataUsingEncoding:NSUTF8StringEncoding]]; 
-//    [requestData appendData:json];
-//    
-//    // Отправка асинхронного запроса 
-//    NSURL *url = [NSURL URLWithString:[Constants api]];
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-//    [request setHTTPMethod:@"POST"];
-//    [request setHTTPBody:requestData];
-//    
-//    // Получение ответа
-//    [NSURLConnection connectionWithRequest:request delegate:delegate];
-//}
-//
-//+(NSData *)sendSynchronousRequest:(NSDictionary *)requestDictionary {
-//    NSError *error;
-//    NSData *json = [jsonWriter dataWithObject:requestDictionary];
-//    
-//    
-//    //NSString *str = [jsonWriter stringWithObject:requestDictionary];
-//    //NSLog(@"Отправил: %@", str);
-//    
-//    
-//    NSMutableData *requestData = [NSMutableData dataWithData:[@"jsonData=" dataUsingEncoding:NSUTF8StringEncoding]]; 
-//    [requestData appendData:json];
-//    
-//    // Отправка синхронного запроса 
-//    NSURL *url = [NSURL URLWithString:[Constants api]];
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-//    [request setHTTPMethod:@"POST"];
-//    [request setHTTPBody:requestData];
-//    
-//    // Получение ответа
-//    NSURLResponse *response;
-//    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-//    if (error) { NSLog(@"Error: %@", error.localizedDescription); } 
-//    return responseData;
-//}
-//
-//+(BOOL)sendAuthorizationRequest:(NSDictionary *)requestDictionary {
-//    NSData *responseData = [Authorization sendSynchronousRequest:requestDictionary];
-//    if (!responseData) {
-//        [Auxiliary showAlertViewWithTitle:@"Ошибка" message:@"Ошибка соединения"];
-//        return NO;
-//    }
-//    
-//    // Разбор результата
-//    //NSError *error;
-//    NSDictionary *responseDictionary = [jsonParser objectWithData:responseData];
-//    int result = [[responseDictionary objectForKey:@"response"] intValue];
-//    if (result) {
-//        IsAuthorized = YES;
-//        Token = (NSString *)[responseDictionary objectForKey:@"token"];
-//        NSLog(@"Получил токен: %@", Token);
-//        [Auxiliary showAlertViewWithTitle:@"" message:@"Успешно авторизовался"];
-//        return YES;
-//    }
-//    else {
-//        [Auxiliary showAlertViewWithTitle:@"Ошибка" message:@"Неверное имя пользователя или пароль"];
-//        return NO;
-//    }
-//}
-//
-//+(BOOL)sendRegistrationRequest:(NSDictionary *)requestDictionary {
-//    NSData *responseData = [Authorization sendSynchronousRequest:requestDictionary];
-//    if (!responseData) {
-//        [Auxiliary showAlertViewWithTitle:@"Ошибка" message:@"Ошибка соединения"];
-//        return NO;
-//    }
-//    
-//    // Разбор результата
-//    NSDictionary *responseDictionary = [jsonParser objectWithData:responseData];
-//    int result = [[responseDictionary objectForKey:@"response"] intValue];
-//    if (result) {        
-//        [Auxiliary showAlertViewWithTitle:@"" message:@"Успешная регистрация"];
-//        //IsAuthorized = YES;
-//        //Token = (NSString *)[responseDictionary objectForKey:@"token"];
-//        return YES;
-//    }
-//    else {
-//        NSString *errorMessage = (NSString *)[responseDictionary objectForKey:@"error"];
-//        [Auxiliary showAlertViewWithTitle:@"Ошибка" message:errorMessage];
-//        return NO;
-//    }
-//}
-//
-//+(void)sendUserAgreementRequest:(NSDictionary *)requestDictionary withDelegate:(id<NSURLConnectionDataDelegate>)delegate {
-//    [Authorization sendRequest:requestDictionary withDelegate:delegate];
-//    //NSData *responseData = [Authorization sendSynchronousRequest:requestDictionary];
-////    if (!responseData) {
-////        [Auxiliary showAlertViewWithTitle:@"Ошибка" message:@"Ошибка соединения"];
-////        return @"";
-////    }
-//    
-//    // Разбор результата
-//    //NSError *error;
-////    NSDictionary *responseDictionary = [jsonParser objectWithData:responseData];
-////    NSString *result = (NSString *)[responseDictionary objectForKey:@"response"];
-////    //NSString *str = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-////    //return str;
-////    return result;
-//}
-//
-//+(BOOL)sendRestorePasswordRequest:(NSDictionary *)requestDictionary {
-//    NSData *responseData = [Authorization sendSynchronousRequest:requestDictionary];
-//    if (!responseData) {
-//        [Auxiliary showAlertViewWithTitle:@"Ошибка" message:@"Ошибка соединения"];
-//        return NO;
-//    }
-//    
-//    // Разбор результата
-//    //NSError *error;
-//    NSDictionary *responseDictionary = [jsonParser objectWithData:responseData];
-//    int result = [[responseDictionary objectForKey:@"response"] intValue];
-//    if (result) {        
-//        [Auxiliary showAlertViewWithTitle:@"" message:@"Новый пароль был выслан на ваш e-mail"];
-//        return YES;
-//    }
-//    else {
-//        NSString *errorMessage = (NSString *)[responseDictionary objectForKey:@"error"];
-//        [Auxiliary showAlertViewWithTitle:@"Ошибка" message:errorMessage];
-//        return NO;
-//    }
-//}
 
 @end

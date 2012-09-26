@@ -32,6 +32,8 @@
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *token;
+@property (nonatomic, strong) NSDate *lastVisit;
+@property  BOOL *isSave;
 
 + (User *)sharedUser;
 
@@ -39,6 +41,7 @@
 - (void)signUp;
 - (void)getUserAgreement;
 - (void)restorePassword;
+-(void)clear;
 
 - (void)saveUser;
 - (void)loadUser;

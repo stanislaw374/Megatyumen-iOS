@@ -16,11 +16,12 @@
 - (void)addBackButton;
 - (void)addAuthorizeButton;
 - (void)addHiddenBackButton;
+- (void) addLogoutButton;
 
 - (void)onMainButtonClick;
 - (void)onBackButtonClick;
 - (void)onAuthorizeButtonClick;
-
+- (void)onLogoutButtonClick;
 //- (void)didPassAuthorization:(NSNotification *)notification;
 - (void)userDidLogin:(NSNotification *)notification;
 

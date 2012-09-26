@@ -109,96 +109,105 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (!self.news.count) {
-        [News get:self.page++ withDelegate:self];
-    }
-    _row = 0;
-    
-    for (int i = 0; i < 5; i++) {
-        _newsCount[i] = 0;
-    }
-    
-    for (New *new in self.news) {
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-        NSDateComponents *ndc = [calendar components:NSDayCalendarUnit fromDate:new.date];
-        NSDateComponents *tdc = [calendar components:NSDayCalendarUnit fromDate:[NSDate date]];
-        if (ndc.day == tdc.day) _newsCount[0]++;
-        else if (ndc.day == tdc.day - 1) _newsCount[1]++;
-        else if (ndc.day >= tdc.day - 3 && ndc.day < tdc.day - 1) _newsCount[2]++;
-        else if (ndc.day >= tdc.day - 7 && ndc.day < tdc.day - 3) _newsCount[3]++;
-        else _newsCount[4]++;
-    }
-
-    return 5;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 23)];
-    view.backgroundColor = [UIColor yellowColor];
-    
-    UIImageView *bg = [[UIImageView alloc] initWithFrame:view.frame];
-    bg.image = [UIImage imageNamed:@"sectionHeader.png"];
-    [view addSubview:bg];
-    
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, view.frame.origin.y, view.frame.size.width, view.frame.size.height)];
-    label.backgroundColor = [UIColor clearColor];
-    label.textColor = [UIColor whiteColor];
-    label.font = [UIFont boldSystemFontOfSize:18];
-    [view addSubview:label];
-    
-    NSString *headerText;
-    switch (section) {
-        case 0: headerText = [NSString stringWithFormat:@"Сегодня (%d)", _newsCount[0]]; break;
-        case 1: headerText = [NSString stringWithFormat:@"Вчера (%d)", _newsCount[1]]; break;
-        case 2: headerText = [NSString stringWithFormat:@"3 дня назад (%d)", _newsCount[2]]; break;
-        case 3: headerText = [NSString stringWithFormat:@"На прошлой неделе (%d)", _newsCount[3]]; break;
-        case 4: headerText = [NSString stringWithFormat:@"Давно (%d)", _newsCount[4]]; break;
-    }
-    label.text = headerText;
-    return view;
-}
+//#pragma mark - Table view data source
+//
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+//    if (!self.news.count) {
+//        [News get:self.page++ withDelegate:self];
+//    }
+//    _row = 0;
+//    
+//    for (int i = 0; i < 5; i++) {
+//        _newsCount[i] = 0;
+//    }
+//    
+//    for (New *new in self.news) {
+//        NSCalendar *calendar = [NSCalendar currentCalendar];
+//        NSDateComponents *ndc = [calendar components:NSDayCalendarUnit fromDate:new.date];
+//        NSDateComponents *tdc = [calendar components:NSDayCalendarUnit fromDate:[NSDate date]];
+//        if (ndc.day == tdc.day) _newsCount[0]++;
+//        else if (ndc.day == tdc.day - 1) _newsCount[1]++;
+//        else if (ndc.day >= tdc.day - 3 && ndc.day < tdc.day - 1) _newsCount[2]++;
+//        else if (ndc.day >= tdc.day - 7 && ndc.day < tdc.day - 3) _newsCount[3]++;
+//        else _newsCount[4]++;
+//    }
+//
+//    return 5;
+//}
+//
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+//    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 23)];
+//    view.backgroundColor = [UIColor yellowColor];
+//    
+//    UIImageView *bg = [[UIImageView alloc] initWithFrame:view.frame];
+//    bg.image = [UIImage imageNamed:@"sectionHeader.png"];
+//    [view addSubview:bg];
+//    
+//    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, view.frame.origin.y, view.frame.size.width, view.frame.size.height)];
+//    label.backgroundColor = [UIColor clearColor];
+//    label.textColor = [UIColor whiteColor];
+//    label.font = [UIFont boldSystemFontOfSize:18];
+//    [view addSubview:label];
+//    
+//    NSString *headerText;
+//    switch (section) {
+//        case 0: headerText = [NSString stringWithFormat:@"Сегодня (%d)", _newsCount[0]]; break;
+//        case 1: headerText = [NSString stringWithFormat:@"Вчера (%d)", _newsCount[1]]; break;
+//        case 2: headerText = [NSString stringWithFormat:@"3 дня назад (%d)", _newsCount[2]]; break;
+//        case 3: headerText = [NSString stringWithFormat:@"На прошлой неделе (%d)", _newsCount[3]]; break;
+//        case 4: headerText = [NSString stringWithFormat:@"Давно (%d)", _newsCount[4]]; break;
+//    }
+//    label.text = headerText;
+//    return view;
+//}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {   
-    if (section == 4) return _newsCount[section] + 1;
-    return _newsCount[section] ? _newsCount[section] : 0;
+//    if (section == 4) return _newsCount[section] + 1;
+//    return _newsCount[section] ? _newsCount[section] : 0;
+    return self.news.count + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {   
     static NSString *kNewCell = @"NewCell";
+    static NSString *kEventCell = @"EventCell"; 
     static NSString *kLoadingCell = @"LoadingCell";
     
-    NSIndexSet *indexes = [self.news indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-        New *new = (New *)obj;
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-        NSDateComponents *ndc = [calendar components:NSDayCalendarUnit fromDate:new.date];
-        NSDateComponents *tdc = [calendar components:NSDayCalendarUnit fromDate:[NSDate date]];
-        switch (indexPath.section) {
-            case 0:
-                if (ndc.day == tdc.day) return YES;
-                break;
-            case 1:
-                if (ndc.day == tdc.day - 1) return YES;
-                break;
-            case 2:
-                if (ndc.day >= tdc.day - 3 && ndc.day < tdc.day - 1) return YES;
-                break;
-            case 3:
-                if (ndc.day >= tdc.day - 7 && ndc.day < tdc.day - 3) return YES;
-                break;
-            case 4:
-                if (ndc.day < tdc.day - 7) return YES;
-                break;
-        }
-        return NO;
-    }];
-    
-    NSArray *news = [self.news objectsAtIndexes:indexes];
+//    NSIndexSet *indexes = [self.news indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+//        New *new = nil;
+//        if ([obj isKindOfClass:[Event class]]){
+//            new = (Event *)obj;
+//        } else {
+//            new = (New *)obj;
+//        }
+//        
+//        
+//        NSCalendar *calendar = [NSCalendar currentCalendar];
+//        NSDateComponents *ndc = [calendar components:NSDayCalendarUnit fromDate:new.date];
+//        NSDateComponents *tdc = [calendar components:NSDayCalendarUnit fromDate:[NSDate date]];
+//        switch (indexPath.section) {
+//            case 0:
+//                if (ndc.day == tdc.day) return YES;
+//                break;
+//            case 1:
+//                if (ndc.day == tdc.day - 1) return YES;
+//                break;
+//            case 2:
+//                if (ndc.day >= tdc.day - 3 && ndc.day < tdc.day - 1) return YES;
+//                break;
+//            case 3:
+//                if (ndc.day >= tdc.day - 7 && ndc.day < tdc.day - 3) return YES;
+//                break;
+//            case 4:
+//                if (ndc.day < tdc.day - 7) return YES;
+//                break;
+//        }
+//        return NO;
+//    }];
+//    
+//    NSArray *news = [self.news objectsAtIndexes:indexes];
     
     UITableViewCell *cell;
-    if (indexPath.row == news.count) {
+    if (indexPath.row == self.news.count) {
         cell = [tableView dequeueReusableCellWithIdentifier:kLoadingCell];
         if (!cell) {
             NSArray *nibs = [[NSBundle mainBundle] loadNibNamed:kLoadingCell owner:nil options:nil];
@@ -209,38 +218,88 @@
         [News get:self.page++ withDelegate:self];
     }
     else {
-        cell = [tableView dequeueReusableCellWithIdentifier:kNewCell];
-        if (!cell) {
-            cell = [[[NSBundle mainBundle] loadNibNamed:kNewCell owner:nil options:nil] objectAtIndex:0];
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            UIImageView *view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell.png"]];
-            cell.backgroundView = view;
-            cell.textLabel.backgroundColor = [UIColor clearColor];
-        }
-        New *new = [news objectAtIndex:indexPath.row];
-        
-        UILabel *textLabel = (UILabel *)[cell viewWithTag:2];
-        UIImageView *imageView = (UIImageView *)[cell viewWithTag:1];
-        textLabel.text = new.title;
-        imageView.image = nil;
-        if (!new.thumbnailURL) {
-            imageView.image = kPLACEHOLDER_IMAGE;
-        }
-        else {
-            UIActivityIndicatorView *hud = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            hud.center = CGPointMake(imageView.frame.size.width / 2, imageView.frame.size.height / 2);
-            [imageView addSubview:hud];
-            [hud startAnimating];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                NSData *data = [NSData dataWithContentsOfURL:new.thumbnailURL];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    UIImage *image = [UIImage imageWithData:data];
-                    imageView.image = image;
-                    [hud stopAnimating];
-                    [hud removeFromSuperview];
+        NSObject *n = [self.news objectAtIndex:indexPath.row];
+        if ([n isKindOfClass:[Event class]]){
+            cell = [tableView dequeueReusableCellWithIdentifier:kEventCell];
+            if (!cell) {
+                NSArray *nibs = [[NSBundle mainBundle] loadNibNamed:kEventCell owner:nil options:nil];
+                cell = [nibs objectAtIndex:0];
+            }
+            Event *event = [self.news objectAtIndex:indexPath.row];
+            UIImageView *view1 = (UIImageView *)[cell viewWithTag:1];
+            UILabel *view2 = (UILabel *)[cell viewWithTag:2];
+            UITextView *view3 = (UITextView *)[cell viewWithTag:3];
+            UILabel *view4 = (UILabel *)[cell viewWithTag:4];
+            UIImage *placeHolder = [UIImage imageNamed:@"no_photo.png"];
+            view1.image = placeHolder;
+            if (event.thumbnailURL) {
+                
+                //[view1 setImageWithURL:event.thumbnailURL placeholderImage:image];
+                
+                [view1 setImageWithURL:event.thumbnailURL placeholderImage:placeHolder success:^(UIImage *image) {
+                    CGImageRef cgref = [image CGImage];
+                    CIImage *cim = [image CIImage];
+                    
+                    if (cim == nil && cgref == NULL)  
+                        view1.image = placeHolder;
+                    else 
+                        view1.image = image;
+                } failure:^(NSError *error) {
+                    
+                }];
+            }
+            
+            
+            view2.text = event.companyName;
+            view3.text = event.title;
+            
+            NSDateFormatter *df = [[NSDateFormatter alloc] init];
+            df.dateFormat = @"dd MMMM HH:mm";
+            view4.text = [df stringFromDate:event.date]; 
+        } else {
+            New *new = [self.news objectAtIndex:indexPath.row];
+            cell = [tableView dequeueReusableCellWithIdentifier:kNewCell];
+            if (!cell) {
+                cell = [[[NSBundle mainBundle] loadNibNamed:kNewCell owner:nil options:nil] objectAtIndex:0];
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                UIImageView *view = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell.png"]];
+                cell.backgroundView = view;
+                cell.textLabel.backgroundColor = [UIColor clearColor];
+            }
+            
+            
+            UILabel *textLabel = (UILabel *)[cell viewWithTag:2];
+            UILabel *date = (UILabel *)[cell viewWithTag:4];
+            UIImageView *imageView = (UIImageView *)[cell viewWithTag:1];
+            imageView.contentMode = UIViewContentModeScaleAspectFit;
+            textLabel.text = new.title;
+            NSDateFormatter *df = [[NSDateFormatter alloc] init];
+            df.dateFormat = @"dd MMMM HH:mm";
+            date.text = [df stringFromDate:new.date];
+            imageView.image = nil;
+            if (!new.thumbnailURL) {
+                imageView.image = kPLACEHOLDER_IMAGE;
+            }
+            else {
+                UIActivityIndicatorView *hud = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+                hud.center = CGPointMake(imageView.frame.size.width / 2, imageView.frame.size.height / 2);
+                [imageView addSubview:hud];
+                [hud startAnimating];
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                    NSData *data = [NSData dataWithContentsOfURL:new.thumbnailURL];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIImage *image = [UIImage imageWithData:data];
+                        imageView.image = image;
+                        [hud stopAnimating];
+                        [hud removeFromSuperview];
+                    });
                 });
-            });
+            }
+            
+            
         }
+        
+        
         //[imageView setImageWithURL:new.thumbnailURL placeholderImage:kPLACEHOLDER_IMAGE];
     }
     
@@ -250,32 +309,32 @@
 #pragma mark - Table view delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NewDetailView *view = [[NewDetailView alloc] init];
-    NSIndexSet *indexes = [self.news indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-        New *new = (New *)obj;
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-        NSDateComponents *ndc = [calendar components:NSDayCalendarUnit fromDate:new.date];
-        NSDateComponents *tdc = [calendar components:NSDayCalendarUnit fromDate:[NSDate date]];
-        switch (indexPath.section) {
-            case 0:
-                if (ndc.day == tdc.day) return YES;
-                break;
-            case 1:
-                if (ndc.day == tdc.day - 1) return YES;
-                break;
-            case 2:
-                if (ndc.day >= tdc.day - 3 && ndc.day < tdc.day - 1) return YES;
-                break;
-            case 3:
-                if (ndc.day >= tdc.day - 7 && ndc.day < tdc.day - 3) return YES;
-                break;
-            case 4:
-                if (ndc.day < tdc.day - 7) return YES;
-                break;
-        }
-        return NO;
-    }];
-    NSArray *news = [self.news objectsAtIndexes:indexes];
-    view.currentNew = [news objectAtIndex:indexPath.row];
+//    NSIndexSet *indexes = [self.news indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+//        New *new = (New *)obj;
+//        NSCalendar *calendar = [NSCalendar currentCalendar];
+//        NSDateComponents *ndc = [calendar components:NSDayCalendarUnit fromDate:new.date];
+//        NSDateComponents *tdc = [calendar components:NSDayCalendarUnit fromDate:[NSDate date]];
+//        switch (indexPath.section) {
+//            case 0:
+//                if (ndc.day == tdc.day) return YES;
+//                break;
+//            case 1:
+//                if (ndc.day == tdc.day - 1) return YES;
+//                break;
+//            case 2:
+//                if (ndc.day >= tdc.day - 3 && ndc.day < tdc.day - 1) return YES;
+//                break;
+//            case 3:
+//                if (ndc.day >= tdc.day - 7 && ndc.day < tdc.day - 3) return YES;
+//                break;
+//            case 4:
+//                if (ndc.day < tdc.day - 7) return YES;
+//                break;
+//        }
+//        return NO;
+//    }];
+//    NSArray *news = [self.news objectsAtIndexes:indexes];
+    view.currentNew = [self.news objectAtIndex:indexPath.row];
     [self.navigationController pushViewController:view animated:YES];
 }
 /*

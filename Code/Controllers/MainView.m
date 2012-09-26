@@ -28,7 +28,7 @@
 #import "ASIFormDataRequest.h"
 #import "Config.h"
 #import "Items.h"
-#import "CustomBadge.h"
+
 #import "Reachability.h"
 #import "User.h"
 #import "MapViewController.h"
@@ -64,7 +64,12 @@
 @synthesize feedbackButton = _feedbackButton;
 @synthesize announcesButton = _announcesButton;
 @synthesize eventsButton = _eventsButton;
-//@synthesize newsBadge = _newsBadge;
+@synthesize seenNews = _seenNews;
+@synthesize seenAnnounces = _seenAnnounces;
+@synthesize seenFeedbacks = _seenFeedbacks;
+@synthesize seenCompaniesNews = _seenCompaniesNews;
+
+@synthesize newsBadge = _newsBadge;
 //@synthesize data = _data;
 //@synthesize newsView = _newsView;
 //@synthesize authorizationView = _authorizationView;
@@ -77,9 +82,9 @@
 //@synthesize eventsView = _eventsView;
 //@synthesize feedbackView = _feedbackView;
 //@synthesize announcesView = _announcesView;
-//@synthesize feedbackBadge = _feedbackBadge;
-//@synthesize announceBadge = _announceBadge;
-//@synthesize eventsBadge = _eventsBadge;
+@synthesize feedbackBadge = _feedbackBadge;
+@synthesize announceBadge = _announceBadge;
+@synthesize eventsBadge = _eventsBadge;
 //@synthesize announces = _announces;
 //@synthesize feedback = _feedback;
 //@synthesize events = _events;
@@ -162,18 +167,31 @@
 
 - (void)viewDidLoad
 {
+    
+    [User sharedUser].delegate = self;
+    [[User sharedUser] login];
+    
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
-    [self.mainMenu addAuthorizeButton];
+    if ([User sharedUser].token != nil)
+        [self.mainMenu addLogoutButton];
+    else
+        [self.mainMenu addAuthorizeButton];
     
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didCheckin:) name:kNOTIFICATION_DID_CHECKIN object:nil];
     
     [self refreshBadges];
     self.title = @"МегаЕда";
+    
+    self.seenNews = NO;
+    self.seenFeedbacks = NO;
+    self.seenCompaniesNews = NO;
+    self.seenAnnounces = NO;
 }
+
 
 - (void)viewDidUnload
 {
@@ -191,10 +209,28 @@
     // e.g. self.myOutlet = nil;
 }
 
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [self refreshBadges];
+    [super viewWillAppear:YES];
+        
+    
+}
+
+#pragma mark - UserDelegate
+- (void)userLoginDidFailWithError:(NSString *)error {
+    [User sharedUser].delegate = nil;
+//    [MBProgressHUD hideHUDForView:self.view animated:YES];
 //    
-//}
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:error message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//    [alert show];
+}
+
+- (void)userDidLoginWithMesssage:(NSString *)message {
+    
+}
+
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -222,50 +258,72 @@
 }
 
 - (void)refreshFeedbacksBadge:(int)value {
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    if (![appDelegate isFirstTimeLaunch]) {    
-        CustomBadge *feedbackBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", value]];
-        feedbackBadge.badgeInsetColor = [UIColor colorWithRed:1 green:172 / 255.0 blue:53 / 255.0 alpha:1];
-        feedbackBadge.badgeFrameColor = [UIColor redColor];
-        CGRect frame = feedbackBadge.frame;
-        frame.origin.x = self.feedbackButton.frame.origin.x + self.feedbackButton.frame.size.width - frame.size.width / 2;
-        frame.origin.y = self.feedbackButton.frame.origin.y - feedbackBadge.frame.size.height / 2;
-        feedbackBadge.frame = frame;
-        [self.view addSubview:feedbackBadge];
+    if (value != 0 && self.seenFeedbacks == NO)
+    {
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        if (![appDelegate isFirstTimeLaunch]) {    
+            self.feedbackBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", value]];
+            self.feedbackBadge.badgeInsetColor = [UIColor colorWithRed:1 green:172 / 255.0 blue:53 / 255.0 alpha:1];
+            self.feedbackBadge.badgeFrameColor = [UIColor redColor];
+            CGRect frame = self.feedbackBadge.frame;
+            frame.origin.x = self.feedbackButton.frame.origin.x + self.feedbackButton.frame.size.width - frame.size.width / 2;
+            frame.origin.y = self.feedbackButton.frame.origin.y - self.feedbackBadge.frame.size.height / 2;
+            self.feedbackBadge.frame = frame;
+            [self.view addSubview:self.feedbackBadge];
+        }
+    } else {
+        [self.feedbackBadge setHidden:YES];
     }
+    
 }
 
 - (void)refreshAnnouncesBadge:(int)value {
-    CustomBadge *announcesBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", value]];
-    announcesBadge.badgeInsetColor = [UIColor colorWithRed:1 green:172 / 255.0 blue:53 / 255.0 alpha:1];
-    announcesBadge.badgeFrameColor = [UIColor redColor];
-    CGRect frame = announcesBadge.frame;
-    frame.origin.x = self.announcesButton.frame.origin.x + self.announcesButton.frame.size.width - frame.size.width / 2;
-    frame.origin.y = self.announcesButton.frame.origin.y - announcesBadge.frame.size.height / 2;
-    announcesBadge.frame = frame;
-    [self.view addSubview:announcesBadge];
+    if (value != 0 && self.seenAnnounces == NO) {
+        self.announceBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", value]];
+        self.announceBadge.badgeInsetColor = [UIColor colorWithRed:1 green:172 / 255.0 blue:53 / 255.0 alpha:1];
+        self.announceBadge.badgeFrameColor = [UIColor redColor];
+        CGRect frame = self.announceBadge.frame;
+        frame.origin.x = self.announcesButton.frame.origin.x + self.announcesButton.frame.size.width - frame.size.width / 2;
+        frame.origin.y = self.announcesButton.frame.origin.y - self.announceBadge.frame.size.height / 2;
+        self.announceBadge.frame = frame;
+        [self.view addSubview:self.announceBadge];
+    }
+    else {
+        [self.announceBadge setHidden:YES];
+    }
+    
 }
 
 - (void)refreshEventsBadge:(int)value {
-    CustomBadge *eventsBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", value]];
-    eventsBadge.badgeInsetColor = [UIColor colorWithRed:1 green:172 / 255.0 blue:53 / 255.0 alpha:1];
-    eventsBadge.badgeFrameColor = [UIColor redColor];
-    CGRect frame = eventsBadge.frame;
-    frame.origin.x = self.eventsButton.frame.origin.x + self.eventsButton.frame.size.width - frame.size.width / 2;
-    frame.origin.y = self.eventsButton.frame.origin.y - eventsBadge.frame.size.height / 2;
-    eventsBadge.frame = frame;
-    [self.view addSubview:eventsBadge];
+    if (value != 0 && self.seenCompaniesNews == NO) {
+        self.eventsBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", value]];
+        self.eventsBadge.badgeInsetColor = [UIColor colorWithRed:1 green:172 / 255.0 blue:53 / 255.0 alpha:1];
+        self.eventsBadge.badgeFrameColor = [UIColor redColor];
+        CGRect frame = self.eventsBadge.frame;
+        frame.origin.x = self.eventsButton.frame.origin.x + self.eventsButton.frame.size.width - frame.size.width / 2;
+        frame.origin.y = self.eventsButton.frame.origin.y - self.eventsBadge.frame.size.height / 2;
+        self.eventsBadge.frame = frame;
+        [self.view addSubview:self.eventsBadge];
+    } else {
+        [self.eventsBadge setHidden:YES];
+    }
+    
 }
 
 - (void)refreshNewsBadge:(int)value {
-    CustomBadge *newsBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", value]];
-    newsBadge.badgeInsetColor = [UIColor colorWithRed:1 green:172 / 255.0 blue:53 / 255.0 alpha:1];
-    newsBadge.badgeFrameColor = [UIColor redColor];
-    CGRect frame = newsBadge.frame;
-    frame.origin.x = self.newsButton.frame.origin.x + self.newsButton.frame.size.width - frame.size.width / 2;
-    frame.origin.y = self.newsButton.frame.origin.y - newsBadge.frame.size.height / 2;
-    newsBadge.frame = frame;
-    [self.view addSubview:newsBadge];
+    if (value != 0 && self.seenNews == NO){
+        self.newsBadge = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d", value]];
+        self.newsBadge.badgeInsetColor = [UIColor colorWithRed:1 green:172 / 255.0 blue:53 / 255.0 alpha:1];
+        self.newsBadge.badgeFrameColor = [UIColor redColor];
+        CGRect frame = self.newsBadge.frame;
+        frame.origin.x = self.newsButton.frame.origin.x + self.newsButton.frame.size.width - frame.size.width / 2;
+        frame.origin.y = self.newsButton.frame.origin.y - self.newsBadge.frame.size.height / 2;
+        self.newsBadge.frame = frame;
+        [self.view addSubview:self.newsBadge]; 
+    } else {
+        [self.newsBadge setHidden:YES];
+    }
+    
 }
 #pragma mark -
 
@@ -275,6 +333,8 @@
         return;
     }
     NewsView *newsView = [[NewsView alloc] init];
+    [self setSeenNews:YES];
+    [self.newsBadge setHidden:YES];
     [self.navigationController pushViewController:newsView animated:YES];
 }
 
@@ -335,6 +395,8 @@
         return;
     }
     FeedbackView *feedbackView = [[FeedbackView alloc] init];
+    [self setSeenFeedbacks:YES];
+    [self.feedbackBadge setHidden:YES];
     [self.navigationController pushViewController:feedbackView animated:YES];
 }
 
@@ -344,6 +406,8 @@
         return;
     }
     AnnouncesView *announcesView = [[AnnouncesView alloc] init];
+    [self setSeenAnnounces:YES];
+    [self.announceBadge setHidden:YES];
     [self.navigationController pushViewController:announcesView animated:YES];
 }
 
@@ -353,6 +417,8 @@
         return;
     }
     EventsView *eventsView = [[EventsView alloc] init];
+    [self setSeenCompaniesNews:YES];
+    [self.eventsBadge setHidden:YES];
     [self.navigationController pushViewController:eventsView animated:YES];
 }
 

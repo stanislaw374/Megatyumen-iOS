@@ -15,8 +15,6 @@
 
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic) BOOL isLoaded;
-//@property (nonatomic) BOOL isEntirelyLoaded;
-
 - (void)getItems;
 
 @end

@@ -131,6 +131,18 @@
     [self.viewController.navigationController pushViewController:self.authorizationView animated:YES];
 }
 
+-(void)addLogoutButton{
+    UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:@"Выйти" style:UIBarButtonItemStyleBordered target:self action:@selector(onLogoutButtonClick)];
+    self.viewController.navigationItem.rightBarButtonItem = nil;
+    self.viewController.navigationItem.rightBarButtonItem = logoutButton;
+}
+
+-(void)onLogoutButtonClick{    
+    [[User sharedUser] clear];
+    self.viewController.navigationItem.rightBarButtonItem = nil;
+    [self addAuthorizeButton];
+}
+
 - (void)addHiddenBackButton {
     self.viewController.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Назад" style:UIBarButtonItemStyleBordered target:self action:nil];
 }

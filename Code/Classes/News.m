@@ -11,13 +11,10 @@
 #import "Config.h"
 #import "New.h"
 #import "ASIFormDataRequest.h"
+#import "Event.h"
 
 @interface News()
-//@property (nonatomic) int loadingCount;
-//@property (nonatomic) int section;
-//@property (nonatomic) int row;
-//@property (nonatomic, strong) NSMutableArray *rows;
-//- (void)didGetCount:(ASIHTTPRequest *)request;
+
 @end
 
 @implementation News
@@ -33,12 +30,7 @@
 @synthesize threeDaysAgoLoaded = _threeDaysAgoLoaded;
 @synthesize weekAgoLoaded = _weekAgoLoaded;
 @synthesize othersLoaded = _othersLoaded;
-//@synthesize loadingCount = _loadingCount;
-//@synthesize section = _section;
-//@synthesize row = _row;
-//@synthesize rows = _rows;
-//@synthesize isLoaded = _isLoaded;
-//@synthesize offset = _offset;
+
 
 #pragma mark - Lazy Instantiation
 
@@ -109,6 +101,7 @@
     }
 }
 
+
 + (void)get:(int)page withDelegate:(id<NewsDelegate>)delegate {
     NSString *params = [[NSString stringWithFormat:@"?request=news_titles&page=%d", page] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL *url = [NSURL URLWithString:params relativeToURL:kAPI_URL];
@@ -120,17 +113,40 @@
             NSArray *titles = [rd objectForKey:@"news_titles"];
             NSMutableArray *result = [NSMutableArray array];
             for (NSDictionary *title in titles) {
-                New *n = [[New alloc] init];
-                n.ID = [[title objectForKey:@"id"] intValue];
-                n.title = [title objectForKey:@"title"];
-                n.thumbnailURL = [NSURL URLWithString:[title objectForKey:@"thumbnail"] relativeToURL:kWEBSITE_URL];
-                NSDateFormatter *df = [[NSDateFormatter alloc] init];
-                // 2012-04-13 13:35:58
-                df.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-                n.date = [df dateFromString:[title objectForKey:@"date"]];
-
+                NSString *type = [title objectForKey:@"type"];
+                if ([type isEqualToString:@"news"])
+                {
+                    New *n = [[New alloc] init];
+                    n.ID = [[title objectForKey:@"id"] intValue];
+                    n.type = type;
+                    n.title = [title objectForKey:@"title"];
+                    n.thumbnailURL = [NSURL URLWithString:[title objectForKey:@"thumbnail"] relativeToURL:kWEBSITE_URL];
+                    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+                    // 2012-04-13 13:35:58
+                    df.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+                    n.date = [df dateFromString:[title objectForKey:@"date"]];
+                    [result addObject:n];
+                } else {
+                    Event *e = [[Event alloc] init];
+                    e.ID = [[title objectForKey:@"id"] intValue];
+                    e.companyID = [[title objectForKey:@"company_id"] intValue];
+                    e.companyName = [title objectForKey:@"company_name"];
+                    e.title = [title objectForKey:@"title"];
+                    e.text = [title objectForKey:@"text"];
+                    e.type = type;
+                    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+                    df.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+                    e.date = [df dateFromString:[title objectForKey:@"date"]];
+                    id thumbObj = [title objectForKey:@"thumbnail"];
+                    if (![thumbObj isEqual:[NSNull null]]) {
+                        NSString *str = (NSString *)[title objectForKey:@"thumbnail"];
+                        //e.thumbnailURL = [NSURL URLWithString:[event objectForKey:@"thumbnail"] relativeToURL:kWEBSITE_URL];
+                        e.thumbnailURL = [NSURL URLWithString:[kWEBSITE stringByAppendingPathComponent:str]];
+                        NSLog(@"Event thumb: %@", e.thumbnailURL.description);
+                    }
+                    [result addObject:e];
+                }
                 
-                [result addObject:n];
             }
             [delegate newsDidLoad:result];
         }

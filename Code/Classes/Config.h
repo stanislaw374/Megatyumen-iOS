@@ -6,10 +6,10 @@
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
-#define kAPI_URL [NSURL URLWithString:@"http://kunst.dev.megatyumen.ru/api"]
+#define kAPI_URL [NSURL URLWithString:@"http://megatyumen.ru/api"]
 //#define kAPI_URL [NSURL URLWithString:@"http://192.168.88.51/api"]
 
-#define kWEBSITE @"http://megatyumen.ru"
+#define kWEBSITE @"http://megatyumen.ru" 
 #define kWEBSITE_URL [NSURL URLWithString:kWEBSITE]
 #define kFB_APP_ID @"251079404955893"
 #define kPLACEHOLDER_IMAGE [UIImage imageNamed:@"placeholder.png"]

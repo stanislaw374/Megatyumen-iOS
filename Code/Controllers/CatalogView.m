@@ -1,11 +1,3 @@
-//
-//  CatalogView.m
-//  MegaTyumen
-//
-//  Created by Yazhenskikh Stanislaw on 13.12.11.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
-//
-
 #import "CatalogView.h"
 #import "Authorization.h"
 #import "AuthorizationView.h"
@@ -20,6 +12,7 @@
 #import "UIImageView+WebCache.h"
 #import "Config.h"
 #import "Company.h"
+#import "User.h"
 
 typedef enum { CATEGORY_TYPES, CATEGORY_CUISINES, CATEGORY_NEARBY, CATEGORY_BY_NAME } Category;
 
@@ -144,11 +137,10 @@ typedef enum { CATEGORY_TYPES, CATEGORY_CUISINES, CATEGORY_NEARBY, CATEGORY_BY_N
 }
 
 - (IBAction)onCheckinButtonClick {
-    if (![Authorization sharedAuthorization].isAuthorized) {
-        [Alerts showAuthorizationAlertViewWithTitle:@"Ошибка" message:@"Для того, чтобы отметиться, нужно авторизоваться" delegate:self];
+    if (![User sharedUser].token) {
+        [Alerts showAlertViewWithTitle:@"Ошибка" message:@"Для того, чтобы отметиться, нужно авторизоваться"];
         return;
-    }
-    
+    }    
     CheckinCatalogView *view = [[CheckinCatalogView alloc] init];
     [self.navigationController pushViewController:view animated:YES];
 }
@@ -223,7 +215,10 @@ typedef enum { CATEGORY_TYPES, CATEGORY_CUISINES, CATEGORY_NEARBY, CATEGORY_BY_N
 
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addMainButton];
-    [self.mainMenu addAuthorizeButton];
+    if ([User sharedUser].token != nil)
+        [self.mainMenu addLogoutButton];
+    else
+        [self.mainMenu addAuthorizeButton];
     
     self.tableView.rowHeight = 104;  
     

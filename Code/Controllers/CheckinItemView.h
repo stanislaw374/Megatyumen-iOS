@@ -35,6 +35,7 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *checkinLabel;
 @property (unsafe_unretained, nonatomic) IBOutlet UITextView *descriptionTextView;
 @property (nonatomic) BOOL isFeedbackMode;
+@property (unsafe_unretained, nonatomic) IBOutlet UIWebView *textWebView;
 
 - (IBAction)onCheckinButtonClick;
 - (IBAction)onAddFeedbackButtonClick;

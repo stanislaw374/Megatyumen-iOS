@@ -164,6 +164,14 @@
     [self.navigationController pushViewController:cview animated:YES];
 }
 
+-(void)mapView:(YMKMapView *)mapView annotationViewCalloutTapped:(YMKAnnotationView *)view{
+    CatalogItemView *cview = [[CatalogItemView alloc] init];
+    CompanyAnnotation *annotaion = (CompanyAnnotation *)view.annotation;
+    cview.company = annotaion.company;
+    [self.navigationController pushViewController:cview animated:YES];
+}
+
+
 #pragma mark - Properties
 
 @synthesize mapView;

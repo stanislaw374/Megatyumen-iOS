@@ -78,7 +78,10 @@
     self.title = @"Новости компаний";
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addMainButton];
-    [self.mainMenu addAuthorizeButton];
+    if ([User sharedUser].token != nil)
+        [self.mainMenu addLogoutButton];
+    else
+        [self.mainMenu addAuthorizeButton];
     
     self.tableView.rowHeight = 104;
 }
@@ -169,17 +172,25 @@
         UILabel *view2 = (UILabel *)[cell viewWithTag:2];
         UITextView *view3 = (UITextView *)[cell viewWithTag:3];
         UILabel *view4 = (UILabel *)[cell viewWithTag:4];
-        
-        view1.image = kPLACEHOLDER_IMAGE;
+        UIImage *placeHolder = [UIImage imageNamed:@"no_photo.png"];
+        view1.image = placeHolder;
         if (event.thumbnailURL) {
-            [view1 setImageWithURL:event.thumbnailURL placeholderImage:kPLACEHOLDER_IMAGE];
-//            [view1 setImageWithURL:event.thumbnailURL placeholderImage:kPLACEHOLDER_IMAGE success:^(UIImage *image) {
-//                if (image) view1.image = image;
-//                else view1.image = kPLACEHOLDER_IMAGE;
-//            } failure:^(NSError *error) {
-//                
-//            }];
+            
+            //[view1 setImageWithURL:event.thumbnailURL placeholderImage:image];
+
+            [view1 setImageWithURL:event.thumbnailURL placeholderImage:placeHolder success:^(UIImage *image) {
+                CGImageRef cgref = [image CGImage];
+                CIImage *cim = [image CIImage];
+
+                if (cim == nil && cgref == NULL)  
+                    view1.image = placeHolder;
+                else 
+                    view1.image = image;
+            } failure:^(NSError *error) {
+                
+            }];
         }
+        
         
         view2.text = event.companyName;
         view3.text = event.title;

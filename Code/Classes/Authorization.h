@@ -10,12 +10,8 @@
 #import "ASIHTTPRequestDelegate.h"
 #import "ASIHTTPRequest.h"
 
-//#define kNOTIFICATION_DID_AUTHORIZE @"megatyumen.didAuthorize"
 #define kNOTIFICATION_DID_PASS_AUTHORIZATION @"megatyumen.didPassAuthorization"
-//#define kNOTIFICATION_DID_REGISTER @"megatyumen.didRegister"
-//#define kNOTIFICATION_DID_PASS_REGISTRATION @"megatyumen.didPassRegistration"
-//#define kNOTIFICATION_DID_GET_USER_AGREEMENT @"megatyumen.didGetUserAgreement"
-//#define kNOTIFICATION_DID_RESTORE_PASSWORD @"megatyumen.didRestorePassword"
+
 
 @protocol AuthorizationDelegate;
 
@@ -23,9 +19,7 @@
 
 @property (nonatomic, readonly) BOOL isAuthorized;
 @property (nonatomic, strong, readonly) NSString *token;
-//@property (nonatomic, readonly) BOOL result;
-//@property (nonatomic, strong, readonly) NSString *error;
-//@property (nonatomic, strong, readonly) NSString *userAgreement;
+
 
 // Синглетон авторизации
 + (Authorization *)sharedAuthorization; 

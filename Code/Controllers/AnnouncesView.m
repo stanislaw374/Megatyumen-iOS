@@ -175,9 +175,6 @@ static int kNumberOfPages = 0;
 
 - (void)scrollViewDidScroll:(UIScrollView *)sender
 {
-    // We don't want a "feedback loop" between the UIPageControl and the scroll delegate in
-    // which a scroll event generated from the user hitting the page control triggers updates from
-    // the delegate method. We use a boolean to disable the delegate logic when the page control is used.
     if (pageControlUsed)
     {
         // do nothing - the scroll was initiated from the page control, not the user dragging
@@ -231,17 +228,6 @@ static int kNumberOfPages = 0;
 - (void)getAnnounces {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [Announce getWithDelegate:self];
-    
-//    dispatch_queue_t queue = dispatch_queue_create("Announces queue", NULL);
-//    dispatch_async(queue, ^{
-//        [self.announces getItems];
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self didGetAnnounces];
-//        });
-//    });
-//    
-//    dispatch_release(queue);
 }
 
 #pragma mark - AnnounceDelegate

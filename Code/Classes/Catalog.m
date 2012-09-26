@@ -178,9 +178,11 @@
                     image = [UIImage imageNamed:@"conditer.png"];
                 }
                 else if ([name isEqualToString:@"Кулинария"]) {
+                    name = @"Кулинарии";
                     image = [UIImage imageNamed:@"kulinaria.png"];
                 }
                 else if ([name isEqualToString:@"Пекарня"]) {
+                    name = @"Пекарни";
                     image = [UIImage imageNamed:@"pekar.png"];
                 }
                 else if ([name isEqualToString:@"Пиццерии"]) {
@@ -194,6 +196,12 @@
                 }
                 else if ([name isEqualToString:@"Фаст-фуды"]) {
                     image = [UIImage imageNamed:@"fastfood.png"];
+                }
+                else if ([name isEqualToString:@"Кейтеринг"]) {
+                    image = [UIImage imageNamed:@"catering.png"];
+                }
+                else if ([name isEqualToString:@"Доставка еды"]) {
+                    image = [UIImage imageNamed:@"delivery.png"];
                 }
                 
                 NSDictionary *t = [NSDictionary dictionaryWithObjectsAndKeys:ID, @"id", name, @"name", image, @"image", @"type", @"category", nil];

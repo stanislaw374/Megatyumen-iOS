@@ -14,7 +14,7 @@
 #import "Config.h"
 #import "AppDelegate.h"
 #import "MainMenu.h"
-
+#import "User.h"
 @interface NewDetailView() <NewDelegate>
 @property (strong, nonatomic) UILabel *headerLabel;
 @property (strong, nonatomic) UIImageView *photoImageView;
@@ -44,6 +44,8 @@
 
 @implementation NewDetailView
 @synthesize scrollView = _scrollView;
+@synthesize btnCountPhoto = _btnCountPhoto;
+@synthesize labelCountPhoto = _labelCountPhoto;
 @synthesize photosCountLabel = _photosCountLabel;
 @synthesize headerLabel = _headerLabel;
 @synthesize photoImageView = _photoImageView;
@@ -96,6 +98,11 @@
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didGetNewDetails:) name:kNOTIFICATION_DID_GET_NEW_DETAILS object:nil];
     
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
+    self.textWebView.delegate = self;
+    if ([User sharedUser].token != nil)
+        [self.mainMenu addLogoutButton];
+    else
+        [self.mainMenu addAuthorizeButton];
     [self.mainMenu addBackButton];
     [self.mainMenu addMainButton];
     [self.mainMenu addAuthorizeButton];
@@ -144,6 +151,8 @@
     [self setGoToCommentsButton:nil];
     [self setTextLabel:nil];
     [self setCommentsView:nil];
+    [self setBtnCountPhoto:nil];
+    [self setLabelCountPhoto:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -229,13 +238,14 @@
     //self.shareButtonsHeader = nil;
     
     self.facebookButton = [[UIButton alloc] init];
-    [self.facebookButton setImage:[UIImage imageNamed:@"facebookButton.png"] forState:UIControlStateNormal];
+    [self.facebookButton setImage:[UIImage imageNamed:@"fb_like.png"] forState:UIControlStateNormal];
     [self.facebookButton addTarget:self action:@selector(onFacebookButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.scrollView addSubview:self.facebookButton];
     //self.facebookButton = nil;
     
     self.vkButton = [[UIButton alloc] init];
-    [self.vkButton setImage:[UIImage imageNamed:@"vkButton.png"] forState:UIControlStateNormal];
+    [self.vkButton setImage:[UIImage imageNamed:@"vk_share.png"] forState:UIControlStateNormal];
+    [self.vkButton addTarget:self action:@selector(onVkButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.scrollView addSubview:self.vkButton];
     //self.vkButton = nil;
     
@@ -248,6 +258,8 @@
     self.commentsCountLabel2.adjustsFontSizeToFitWidth = YES;
     [self.scrollView addSubview:self.commentsCountLabel2];
     //self.commentsCountLabel2 = nil;
+    
+   
 }
 
 -(void)initUI {
@@ -270,9 +282,17 @@
     height += dd + self.photoImageView.frame.size.height;
     
     self.photosButton.frame = CGRectMake(self.photoImageView.frame.origin.x + self.photoImageView.frame.size.width + 17, self.photoImageView.frame.origin.y + 15, 75, 75);
+    if (self.currentNew.images.count == 0)
+    {
+        [self.photosCountLabel setHidden:YES];
+        [self.photosButton setHidden:YES];
+    }
+    else 
+    {
+        self.photosCountLabel.text = [NSString stringWithFormat:@"%d фото", self.currentNew.images.count];
+        self.photosCountLabel.frame = CGRectMake(self.photosButton.frame.origin.x + 17, self.photosButton.frame.origin.y + 38, 42, 21);
+    }
     
-    self.photosCountLabel.text = [NSString stringWithFormat:@"%d фото", self.currentNew.images.count];
-    self.photosCountLabel.frame = CGRectMake(self.photosButton.frame.origin.x + 17, self.photosButton.frame.origin.y + 38, 42, 21);
     
     self.dateLabel.frame = CGRectMake(dx, self.photoImageView.frame.origin.y + self.photoImageView.frame.size.height + dd, 0, 0);
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
@@ -308,6 +328,13 @@
     self.textWebView.backgroundColor = [UIColor clearColor];
     [self.scrollView addSubview:self.textWebView];
     self.textWebView.frame = CGRectMake(dx, self.commentsHeaderButton.frame.origin.y + self.commentsHeaderButton.frame.size.height + dd, 280, 0);
+    
+//    NSError *error = NULL;
+//    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"<img.*?>" options:NSRegularExpressionCaseInsensitive error:&error];
+//    NSString *modifiedText = [regex stringByReplacingMatchesInString:self.currentNew.text options:0 range:NSMakeRange(0, [self.currentNew.text length]) withTemplate:@""];
+//    
+//    
+//    [self.textWebView loadHTMLString:modifiedText baseURL:nil];
     [self.textWebView loadHTMLString:self.currentNew.text baseURL:nil];
     self.textWebView.delegate = self;
     
@@ -315,7 +342,25 @@
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, height + 3 *dd);
 }
 
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        [[UIApplication sharedApplication] openURL:request.URL];
+        return false;
+    }
+    return true;
+
+}
+
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
+    
+    NSString *addImagesScript = @"function addHttp(){ var doc = document; var imgs = doc.getElementsByTagName('img'); for(i = 0; i < imgs.length; i++) { var src = imgs[i].src; var new_src = 'http://megatyumen.ru/'+src; img[i].src=new_src; alery(new_src);} }addHttp();";
+    [self.textWebView stringByEvaluatingJavaScriptFromString:addImagesScript];
+    NSString *html = [self.textWebView stringByEvaluatingJavaScriptFromString: 
+                      @"document.body.innerHTML"];
+    
+    NSLog(@"%@",html);
+   
+
     int dx = 20;
     //int dy = 64;
     int dd = 8;
@@ -329,11 +374,11 @@
     self.shareButtonsHeader.image = [UIImage imageNamed:@"shareButtonsHeader.png"];
     height += dd + self.shareButtonsHeader.frame.size.height;
     
-    self.facebookButton.frame = CGRectMake(self.shareButtonsHeader.frame.origin.x + 5, self.shareButtonsHeader.frame.origin.y + 5, 94, 36);
+    self.facebookButton.frame = CGRectMake(self.shareButtonsHeader.frame.origin.x + 5, self.shareButtonsHeader.frame.origin.y + 15, 49, 20);
     //self.facebookButton.hidden = YES;
     
-    self.vkButton.frame = CGRectMake(self.facebookButton.frame.origin.x + self.facebookButton.frame.size.width + 5, self.shareButtonsHeader.frame.origin.y + 5, 94, 36);
-    self.vkButton.hidden = YES;
+    self.vkButton.frame = CGRectMake(self.facebookButton.frame.origin.x + self.facebookButton.frame.size.width + 150, self.shareButtonsHeader.frame.origin.y + 15, 91, 21);
+    //self.vkButton.hidden = YES;
     
     self.commentMark.frame = CGRectMake(dx, self.shareButtonsHeader.frame.origin.y + self.shareButtonsHeader.frame.size.height + 2 * dd, 19, 18);
     self.commentMark.image = [UIImage imageNamed:@"commentMark.png"];
@@ -479,6 +524,11 @@
 
 - (IBAction)onScrollToCommentsButtonClick {
     [self.scrollView scrollRectToVisible:self.commentMark.frame animated:YES];
+}
+
+- (IBAction)onVkButtonClick {
+    NSString *postUrl = [[NSString alloc] initWithFormat:@"http://vk.com/share.php?title=%@&url=%@",self.currentNew.title,self.currentNew.link];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: [postUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 }
 
 #pragma mark - NewDelegate

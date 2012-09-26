@@ -24,5 +24,6 @@
 - (IBAction)onForgotPasswordButtonClick;
 - (IBAction)onRegisterButtonClick;
 - (IBAction)onBgClick:(id)sender;
+@property (unsafe_unretained, nonatomic) IBOutlet UISwitch *rememberMeSwitcher;
 
 @end

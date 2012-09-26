@@ -37,17 +37,8 @@
     }
     return _items;
 }
-//
-//+ (int)readCount {
-//    static NSString *kEventsReadCount = @"EventsReadCount";
-//    
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    int read = 0;
-//    if ([defaults objectForKey:kEventsReadCount]) {
-//        read = [defaults integerForKey:kEventsReadCount];
-//    }
-//    return read;
-//}
+
+
 
 - (void)getItems {
     self.isLoaded = NO;

@@ -72,7 +72,8 @@
             id imageObj = [rd objectForKey:@"image"];
             if (![imageObj isEqual:[NSNull null]]) {
                 self.imageURL = [NSURL URLWithString:[rd objectForKey:@"image"] relativeToURL:kWEBSITE_URL];
-            }            
+            }
+            NSLog([imageObj description]);
             self.text = [rd objectForKey:@"text"];
             self.user = [rd objectForKey:@"user_name"];
             int images_count = [[rd objectForKey:@"images_count"] intValue];

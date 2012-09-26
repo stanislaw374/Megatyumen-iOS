@@ -34,7 +34,7 @@
 @property (nonatomic, strong) NSMutableArray *thumbnails;
 @property (nonatomic, strong) NSMutableArray *comments;     // Массив комментариев к новости
 @property (nonatomic, strong) NSString *link;               // Ссылка новости
-
+@property (nonatomic, strong) NSString *type;
 // Получение детальной информации о новости
 - (void)getContent;
 

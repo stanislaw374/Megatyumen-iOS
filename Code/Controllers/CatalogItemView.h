@@ -14,7 +14,7 @@
 #import "MainMenu.h"
 #import "Company.h"
 
-@interface CatalogItemView : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, CLLocationManagerDelegate>
+@interface CatalogItemView : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, CLLocationManagerDelegate, UIWebViewDelegate>
 
 @property (nonatomic, strong) Company *company;
 
@@ -36,6 +36,7 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *lblWebsite;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *lblBusinessHours;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *lblAbout;
+@property (strong, nonatomic) IBOutlet UIWebView *aboutWebView;
 
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnCheckin;
 @property (unsafe_unretained, nonatomic) IBOutlet UILabel *lblCheckin;

@@ -197,11 +197,11 @@
         imgvAttitude.image = [imgAttitude thumbnailByScalingProportionallyAndCroppingToSize:CGSizeMake(32, 32)]; 
         
         UILabel *lblUserName = (UILabel *)[cell viewWithTag:2];
-        lblUserName.text = f.userName;
+        lblUserName.text = f.companyName;
         height += lblUserName.frame.size.height + dy;
         
         UILabel *lblCompanyName = (UILabel *)[cell viewWithTag:3];
-        lblCompanyName.text = f.companyName;
+        lblCompanyName.text = f.userName;
         height += lblCompanyName.frame.size.height + dy;
         
         UIImageView *imgvAttitude2 = (UIImageView *)[cell viewWithTag:4];

@@ -15,7 +15,7 @@
 #import "UIImageView+WebCache.h"
 #import "UIImage+Thumbnail.h"
 #import "Config.h"
-
+#import "User.h"
 @interface CatalogCategoryView() <CatalogDelegate>
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) MainMenu *mainMenu;
@@ -122,7 +122,10 @@
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addBackButton];
     [self.mainMenu addMainButton];
-    [self.mainMenu addAuthorizeButton];
+    if ([User sharedUser].token != nil)
+        [self.mainMenu addLogoutButton];
+    else
+        [self.mainMenu addAuthorizeButton];
     
     self.tableView.rowHeight = 104;
     

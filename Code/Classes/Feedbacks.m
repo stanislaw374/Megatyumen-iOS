@@ -33,20 +33,7 @@
 
 #pragma mark - Lazy Instantiation
 
-//- (NSMutableArray *)items {
-//    if (!_items) {
-//        _items = [[NSMutableArray alloc] init];
-//    }
-//    return _items;
-//}
-//
-//- (int)allCount {
-//    if (!self.isAllCountLoaded) {
-//        _allCount = [[[Items getCount] objectForKey:KEY_COMMENTS_COUNT] intValue];
-//        self.isAllCountLoaded = YES;
-//    }
-//    return _allCount;
-//}
+
 
 - (void)getItems {
     self.isLoaded = NO;

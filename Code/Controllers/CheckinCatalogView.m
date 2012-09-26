@@ -5,7 +5,7 @@
 //  Created by Stanislaw Lazienki on 04.12.11.
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
-
+typedef enum { CATEGORY_TYPES, CATEGORY_CUISINES, CATEGORY_NEARBY, CATEGORY_BY_NAME } Category;
 #import "CheckinCatalogView.h"
 #import "Authorization.h"
 #import "Alerts.h"
@@ -15,6 +15,9 @@
 #import "UIImageView+WebCache.h"
 #import "Config.h"
 #import "Company.h"
+#import "Catalog.h"
+#import "Company.h"
+#import "User.h"
 
 @interface CheckinCatalogView() <CatalogDelegate>
 @property (nonatomic, strong) MainMenu *mainMenu;
@@ -23,6 +26,8 @@
 @property (nonatomic, strong) NSArray *companies;
 @property (nonatomic, strong) NSArray *dataSource;
 @property (nonatomic, strong) NSString *searchString;
+@property (nonatomic) Category category;
+
 @end
 
 @implementation CheckinCatalogView
@@ -31,6 +36,7 @@
 @synthesize isFeedbackMode = _isFeedbackMode;
 @synthesize searchBar = _searchBar;
 @synthesize mainMenu = _mainMenu;
+@synthesize category = _category;
 @synthesize companies = _companies;
 @synthesize dataSource = _dataSource;
 @synthesize searchString = _searchString;
@@ -152,7 +158,16 @@
     searchBar.showsCancelButton = NO;
     [searchBar resignFirstResponder];
     self.searchString = searchBar.text;
-    [self.tableView reloadData];
+    self.category = CATEGORY_BY_NAME;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if ([CLLocationManager locationServicesEnabled] && status != kCLAuthorizationStatusDenied) {
+        [self.locationManager startUpdatingLocation];
+    }
+    else {
+        [self getCatalogByName];
+    }
+
 }
 
 -(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
@@ -167,16 +182,26 @@
     searchBar_.showsCancelButton = searchText.length != 0;
 }
 
-#pragma mark - CLLocationManagerDelegate
--(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    //NSLog(@"%@ : %.4lf, %.4lf", NSStringFromSelector(_cmd), newLocation.coordinate.latitude, newLocation.coordinate.longitude);
-    [manager stopUpdatingLocation];   
-    [self getCatalog];
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    [self.locationManager stopUpdatingLocation];
+    
+    if (self.category == CATEGORY_BY_NAME) {
+        [self getCatalogByName];
+    }
+    else {        
+        [self getCatalog];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    [manager stopUpdatingLocation];
-    [self getCatalog];
+    [self.locationManager stopUpdatingLocation];
+    
+    if (self.category == CATEGORY_BY_NAME) {
+        [self getCatalogByName];
+    }
+    else {        
+        [self getCatalog];
+    }
 }
 
 #pragma mark - UITableViewDataSourceDelegate
@@ -277,10 +302,16 @@
     
 }
 
+
+- (void)getCatalogByName {
+    [Catalog getCatalogByName:self.searchString nearCoordinate:self.locationManager.location.coordinate withDelegate:self];
+}
+
+
 #pragma mark - CatalogDelegate
 - (void)catalogDidLoad:(NSArray *)companies {
-    //[self.companies addObjectsFromArray:companies];
-    //NSLog(@"loaded %d companies", companies.count);
+    //self.scrollView.hidden = YES;
+    self.tableView.hidden = NO;
     
     NSMutableArray *c1 = [NSMutableArray array];
     NSMutableArray *c2 = [NSMutableArray array];
@@ -288,12 +319,12 @@
     NSMutableArray *c4 = [NSMutableArray array];
     NSMutableArray *c5 = [NSMutableArray array];
     for (Company *c in companies) {
-        CLLocation *cl = [[CLLocation alloc] initWithLatitude:c.coordinate.latitude longitude:c.coordinate.longitude];
-        double distance = [cl distanceFromLocation:self.locationManager.location];
-        if (distance < 50) [c1 addObject:c];
-        else if (distance < 100) [c2 addObject:c];
-        else if (distance < 150) [c3 addObject:c];
-        else if (distance < 300) [c4 addObject:c];
+        //CLLocation *cl = [[CLLocation alloc] initWithLatitude:c.coordinate.latitude longitude:c.coordinate.longitude];
+        //double distance = [cl distanceFromLocation:self.locationManager.location];
+        if (c.distance < 50) [c1 addObject:c];
+        else if (c.distance < 100) [c2 addObject:c];
+        else if (c.distance < 150) [c3 addObject:c];
+        else if (c.distance < 300) [c4 addObject:c];
         else [c5 addObject:c];
     }
     self.allCompanies = companies;

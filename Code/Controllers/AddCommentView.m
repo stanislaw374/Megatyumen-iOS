@@ -24,21 +24,6 @@
 @synthesize keyboardListener = _keyboardListener;
 @synthesize mainMenu = _mainMenu;
 
-//-(void)didPassAuthorization:(NSNotification *)notification {
-//    self.navigationItem.rightBarButtonItem = nil;
-//}
-
-//- (void)didAddComment:(NSNotification *)notification {
-//    int result = [[notification.userInfo objectForKey:@"result"] intValue];
-//    if (result) {
-//        [Alerts showAlertViewWithTitle:@"" message:@"Комментарий добавлен"];
-//        [self.navigationController popViewControllerAnimated:YES];
-//    }
-//    else {
-//        [Alerts showAlertViewWithTitle:@"Ошибка" message:@""]; 
-//    }
-//    [self.hud hide:YES];
-//}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -62,12 +47,7 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassAuthorization:) name:kNOTIFICATION_DID_PASS_AUTHORIZATION object:nil];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAddComment:) name:kNOTIFICATION_DID_ADD_COMMENT object:nil];
-    
+    [super viewDidLoad];    
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addBackButton];
     [self.mainMenu addMainButton];
@@ -124,13 +104,7 @@
     self.keyboardListener.activeControl = textField;
     return YES;
 }
-//-(void)textFieldDidBeginEditing:(UITextField *)textField {
-//    self.keyboardListener.activeControl = self.tableView;
-//}
-//
-//-(void)textFieldDidEndEditing:(UITextField *)textField {
-//    self.keyboardListener.activeControl = nil;
-//}
+
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
     if (textField.returnKeyType == UIReturnKeyNext) {

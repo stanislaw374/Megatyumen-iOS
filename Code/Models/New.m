@@ -45,6 +45,7 @@
 @synthesize images = _images;
 @synthesize text = _text;
 @synthesize link = _link;
+@synthesize type = _type;
 //@synthesize image = _image;
 @synthesize thumbnailURL = _thumbnailURL;
 @synthesize thumbnails = _thumbnails;
@@ -152,14 +153,15 @@
     [request startAsynchronous];
 }
 
-- (void)addCommentWithName:(NSString *)name andText:(NSString *)text {
+- (void)addCommentWithName:(NSString *)name andText:(NSString *)text{
     text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     
-    NSString *params = [NSString stringWithFormat:@"?request=new_add_comment&id=%d&comment=%@&name=%@", self.ID, text, name];
+    NSString *params = [NSString stringWithFormat:@"?request=new_add_comment&id=%d&comment=%@&name=%@&type=%@", self.ID, text, name, self.type];
     if ([User sharedUser].token) {
         params = [params stringByAppendingString:[NSString stringWithFormat:@"&token=%@", [User sharedUser].token]];
     }
     params = [params stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSLog(params);
     NSURL *url = [NSURL URLWithString:params relativeToURL:kAPI_URL];
     __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setCompletionBlock:^{

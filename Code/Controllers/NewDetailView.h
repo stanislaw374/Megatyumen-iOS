@@ -20,12 +20,15 @@
 @property (strong, nonatomic) New *currentNew;
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *borderButton;
 @property (unsafe_unretained, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (unsafe_unretained, nonatomic) IBOutlet UIButton *btnCountPhoto;
+@property (unsafe_unretained, nonatomic) IBOutlet UILabel *labelCountPhoto;
 
 //- (void)didPassAuthorization:(NSNotification *)notification;
 - (IBAction)onPhotosButtonClick;
 - (IBAction)onFacebookButtonClick;
 - (void)onVKButtonClick;
 - (IBAction)onScrollToCommentsButtonClick;
+- (IBAction)onVkButtonClick;
 
 //- (void)didGetNewDetails:(NSNotification *)notification;
 - (IBAction)onAddCommentButtonClick;

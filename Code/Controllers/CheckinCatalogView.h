@@ -19,5 +19,6 @@
 @property (unsafe_unretained, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) BOOL isFeedbackMode;
 @property (unsafe_unretained, nonatomic) IBOutlet UISearchBar *searchBar;
+-(void) getCatalogByName;
 
 @end

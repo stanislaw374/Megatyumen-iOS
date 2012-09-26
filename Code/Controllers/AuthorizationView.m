@@ -27,6 +27,7 @@
 @end
 
 @implementation AuthorizationView
+@synthesize rememberMeSwitcher = _rememberMeSwitcher;
 @synthesize scrollView = _scrollView;
 @synthesize textField = _textField;
 @synthesize tableView = _tableView;
@@ -109,6 +110,7 @@
     [self setRegisterButton:nil];
     [self setScrollView:nil];
     [self setTextField:nil];
+    [self setRememberMeSwitcher:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -136,6 +138,10 @@
     [User sharedUser].delegate = self;
     [User sharedUser].email = email;
     [User sharedUser].password = password;
+    if (self.rememberMeSwitcher.on) 
+        [User sharedUser].isSave = YES;
+    else
+        [User sharedUser].isSave = NO;
     [[User sharedUser] login];
     
     
@@ -296,6 +302,9 @@
     [alert show];
     
     [self.navigationController popViewControllerAnimated:YES];
+    [self.mainMenu addLogoutButton];
+
+    
 }
 
 @end

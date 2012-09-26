@@ -12,6 +12,7 @@
 #import "UIImageView+WebCache.h"
 #import "Config.h"
 #import "PhotosView.h"
+#import "NSString+HTML.h"
 
 @interface CheckinItemView() <CompanyDelegate>
 //@property (nonatomic, strong) CheckinView *checkinView;
@@ -43,6 +44,7 @@
 //@synthesize checkinView = _checkinView;
 //@synthesize hud = _hud;
 @synthesize isFeedbackMode = _isFeedbackMode;
+@synthesize textWebView = _textWebView;
 //@synthesize locationManager = _locationManager;
 @synthesize mainMenu = _mainMenu;
 @synthesize userLocation = _userLocation;
@@ -64,6 +66,7 @@
 }
 
 - (void)initUI {
+    self.textWebView.delegate = self;
     self.imageView.image = kPLACEHOLDER_IMAGE;
     if (self.company.logoURL) {
         [self.imageView setImageWithURL:self.company.logoURL placeholderImage:kPLACEHOLDER_IMAGE];
@@ -82,6 +85,15 @@
     
     self.descriptionTextView.text = self.company.description;
     [self.descriptionTextView sizeToFit];
+    
+    NSString *about = self.company.description;
+    about = [about stringByStrippingHTML];
+    
+    [_textWebView loadHTMLString:about baseURL:nil];
+    [self.textWebView sizeToFit];
+    
+    
+    
     //self.descriptionLabel.text = self.currentItem.description;
     //[self.descriptionLabel sizeToFit];
     
@@ -89,6 +101,12 @@
     
     //self.borderButton.frame = CGRectMake(self.borderButton.frame.origin.x, self.borderButton.frame.origin.y, self.borderButton.frame.size.width, height);
     //self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, height);
+}
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView{
+    [self.textWebView sizeToFit];
+    int height = _textWebView.frame.origin.y + self.textWebView.frame.size.height;
+    self.scrollView.contentSize = CGSizeMake(320, height + 10 + 8);
 }
 
 - (void)onMainButtonClick {
@@ -204,6 +222,7 @@
     [self setCheckinLabel:nil];
     [self setDescriptionTextView:nil];
     [self setAddFeedbackButton:nil];
+    [self setTextWebView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -233,7 +252,7 @@
     int row = 0, column = 0, height = 0;
     for (int i = 0; i < self.company.images.count; i++) {        
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(column * 72 + 20, row * 72 + 8 + self.descriptionTextView.frame.size.height + self.descriptionTextView.frame.origin.y, 64, 64);
+        button.frame = CGRectMake(column * 72 + 20, row * 72 + 8 + self.textWebView.frame.size.height + self.textWebView.frame.origin.y, 64, 64);
         button.tag = i;
         button.imageView.contentMode = UIViewContentModeScaleAspectFill;
         [button addTarget:self action:@selector(onImageClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -263,10 +282,12 @@
             column++;
         }
     }
-    CGRect frame = self.borderButton.frame;
-    frame.size.height += height - 10;
-    self.borderButton.frame = frame;
+    
+    
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.frame.size.height + height);
+    CGRect frame = self.borderButton.frame;
+    frame.size.height += self.scrollView.frame.size.height - 10;
+    self.borderButton.frame = frame;
 }
 
 - (void)onImageClick:(UIButton *)sender {

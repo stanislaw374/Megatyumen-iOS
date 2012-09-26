@@ -24,6 +24,8 @@
 #import "PhotosView.h"
 #import "User.h"
 #import "PhotosView.h"
+#import "NSString+HTML.h"
+#import "NewDetailView.h"
 
 @interface CatalogItemView() <CompanyDelegate> 
 {
@@ -69,6 +71,7 @@
 @synthesize lblWebsite;
 @synthesize lblBusinessHours;
 @synthesize lblAbout;
+@synthesize aboutWebView;
 @synthesize btnCheckin;
 @synthesize lblCheckin;
 @synthesize scrollView0;
@@ -116,11 +119,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.aboutWebView.delegate = self;
     // Do any additional setup after loading the view from its nib.
     self.mainMenu = [[MainMenu alloc] initWithViewController:self];
     [self.mainMenu addBackButton];
     [self.mainMenu addMainButton];
-    [self.mainMenu addAuthorizeButton];
+    if ([User sharedUser].token != nil)
+        [self.mainMenu addLogoutButton];
+    else
+        [self.mainMenu addAuthorizeButton];
     
     [self.btnCommon setBackgroundImage:[UIImage imageNamed:@"catalog_headerPressed.png"] forState:UIControlStateSelected];
     [self.btnPhoto setBackgroundImage:[UIImage imageNamed:@"catalog_headerPressed.png"] forState:UIControlStateSelected];
@@ -141,6 +148,11 @@
     [self.btnEvents setTitle:@"События" forState:UIControlStateSelected];
     [self.btnMap setTitleColor:[UIColor colorWithRed:106/255.0 green:2/255.0 blue:12/255.0 alpha:1] forState:UIControlStateSelected];
     [self.btnMap setTitle:@"На карте" forState:UIControlStateSelected];
+    
+    
+    self.aboutWebView.opaque = NO;
+    self.aboutWebView.backgroundColor = [UIColor clearColor];
+    
     
     self.tableView.rowHeight = 104;
     
@@ -221,9 +233,14 @@
     [self setFieldHours:nil];
     [self setLblAboutTitle:nil];
     [self setFieldType:nil];
+    [self setAboutWebView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView{
+    [aboutWebView sizeToFit];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -399,14 +416,19 @@
     frame.origin.y = fieldVisible.frame.origin.y + fieldVisible.frame.size.height + sy;
     self.lblAboutTitle.frame = frame;
     
-    self.lblAbout.text = self.company.description;
-    frame = self.lblAbout.frame;
-    frame.origin.y = self.lblAboutTitle.frame.origin.y + self.lblAboutTitle.frame.size.height + sy;
-    frame.size.width = 280;
-    self.lblAbout.frame = frame;
-    [self.lblAbout sizeToFit];
     
-    int height = self.lblAbout.frame.origin.y + self.lblAbout.frame.size.height;
+//    self.lblAbout.text = self.company.description;
+//    frame = self.lblAbout.frame;
+//    frame.origin.y = self.lblAboutTitle.frame.origin.y + self.lblAboutTitle.frame.size.height + sy;
+//    frame.size.width = 280;
+//    self.lblAbout.frame = frame;
+//    [self.lblAbout sizeToFit];
+    NSString *about = self.company.description;
+    about = [about stringByStrippingHTML];
+    
+    [aboutWebView loadHTMLString:about baseURL:nil];
+    
+    int height = self.aboutWebView.frame.origin.y + self.aboutWebView.frame.size.height;
     
     self.scrollView0.contentSize = CGSizeMake(320, height + 10 + 8);
     self.borderButton0.frame = CGRectMake(10, -10, 300, self.scrollView0.contentSize.height);
@@ -701,6 +723,15 @@
         }
     }
     return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (self.selectedMenuIndex == 4) {
+        Event *event = [self.company.events objectAtIndex:indexPath.row];
+        NewDetailView *view = [[NewDetailView alloc] init];
+        view.currentNew = event;
+        [self.navigationController pushViewController:view animated:YES];
+    }
 }
 
 #pragma mark - UITableViewDelegate
